@@ -35,6 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    packagingOptions {
+        resources.excludes += "DebugProbesKt.bin"
+    }
 }
 
 dependencies {

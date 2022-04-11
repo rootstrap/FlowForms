@@ -1,22 +1,26 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 object Dependencies {
-    //std lib
+    // Kotlin
     private const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+    private const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesCore}"
 
-    //android ui
+    // Android ui
+
     private const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
     private const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     private const val material = "com.google.android.material:material:${Versions.material}"
     private const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
 
-    //test libs
+    // Test libs
+
     private const val junit = "junit:junit:${Versions.junit}"
     private const val extJUnit = "androidx.test.ext:junit:${Versions.extJunit}"
     private const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espresso}"
 
     val kotlinLibraries = arrayListOf<String>().apply {
         add(kotlinStdLib)
+        add(coroutinesCore)
     }
 
     val appLibraries = arrayListOf<String>().apply {
