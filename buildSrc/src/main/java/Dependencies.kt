@@ -23,6 +23,12 @@ object Dependencies {
         add(coroutinesCore)
     }
 
+    val flowFormsAndroidLibraries = arrayListOf<String>().apply {
+        add(coreKtx)
+        add(appcompat)
+        add(material)
+    }
+
     val appLibraries = arrayListOf<String>().apply {
         add(kotlinStdLib)
         add(coreKtx)

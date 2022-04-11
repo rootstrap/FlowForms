@@ -4,25 +4,25 @@ plugins {
 }
 
 android {
-    compileSdkVersion(AppConfig.compileSdk)
-    buildToolsVersion(AppConfig.buildToolsVersion)
+    compileSdkVersion(ExampleAppAndroidConfig.compileSdk)
+    buildToolsVersion(ExampleAppAndroidConfig.buildToolsVersion)
 
     defaultConfig {
         applicationId = "com.rootstrap.flowforms.example"
-        minSdkVersion(AppConfig.minSdk)
-        targetSdkVersion(AppConfig.targetSdk)
-        versionCode = AppConfig.versionCode
-        versionName = AppConfig.versionName
+        minSdkVersion(ExampleAppAndroidConfig.minSdk)
+        targetSdkVersion(ExampleAppAndroidConfig.targetSdk)
+        versionCode = ExampleAppAndroidConfig.versionCode
+        versionName = ExampleAppAndroidConfig.versionName
 
-        testInstrumentationRunner = AppConfig.androidTestInstrumentation
+        testInstrumentationRunner = ExampleAppAndroidConfig.androidTestInstrumentation
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile(ExampleAppAndroidConfig.defaultProguardFile),
+                ExampleAppAndroidConfig.proguardRulesFile
             )
         }
     }
