@@ -27,6 +27,6 @@ For more information check the [official notion page](https://www.notion.so/root
 The library is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Credits
-**[lib_name]** is maintained by [Rootstrap](http://www.rootstrap.com) with the help of our [contributors](https://github.com/rootstrap/FlowForms/contributors).
+**FlowForms** is maintained by [Rootstrap](http://www.rootstrap.com) with the help of our [contributors](https://github.com/rootstrap/FlowForms/contributors).
 
 [<img src="https://s3-us-west-1.amazonaws.com/rootstrap.com/img/rs.png" width="100"/>](http://www.rootstrap.com)
