@@ -4,25 +4,25 @@ plugins {
 }
 
 android {
-    compileSdkVersion(FlowFormsAndroidConfig.compileSdk)
-    buildToolsVersion(FlowFormsAndroidConfig.buildToolsVersion)
+    compileSdkVersion(FlowFormsAndroidConfig.COMPILE_SDK)
+    buildToolsVersion(FlowFormsAndroidConfig.BUILD_TOOLS_VERSION)
 
     defaultConfig {
-        minSdkVersion(FlowFormsAndroidConfig.minSdk)
-        targetSdkVersion(FlowFormsAndroidConfig.targetSdk)
-        versionCode = FlowFormsAndroidConfig.versionCode
-        versionName = FlowFormsAndroidConfig.versionName
+        minSdkVersion(FlowFormsAndroidConfig.MIN_SDK)
+        targetSdkVersion(FlowFormsAndroidConfig.TARGET_SDK)
+        versionCode = 1
+        versionName = "0.0.1"
 
-        testInstrumentationRunner = FlowFormsAndroidConfig.androidTestInstrumentation
-        consumerProguardFile(FlowFormsAndroidConfig.proguardConsumerRules)
+        testInstrumentationRunner = FlowFormsAndroidConfig.ANDROID_TEST_INSTRUMENTATION_RUNNER
+        consumerProguardFile(FlowFormsAndroidConfig.PROGUARD_CONSUMER_RULES)
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile(FlowFormsAndroidConfig.defaultProguardFile),
-                FlowFormsAndroidConfig.proguardRulesFile
+                getDefaultProguardFile(FlowFormsAndroidConfig.DEFAULT_PROGUARD_FILE),
+                FlowFormsAndroidConfig.PROGUARD_RULES_FILE
             )
         }
     }

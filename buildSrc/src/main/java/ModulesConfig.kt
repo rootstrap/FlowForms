@@ -1,31 +1,27 @@
 
 //FlowForms Android config constants
 object FlowFormsAndroidConfig {
-    const val compileSdk = 31
-    const val minSdk = 23
-    const val targetSdk = 31
-    const val buildToolsVersion = "30.0.3"
-    const val versionCode = 1
-    const val versionName = "1.0.0"
+    const val COMPILE_SDK = 31
+    const val MIN_SDK = 23
+    const val TARGET_SDK = 31
+    const val BUILD_TOOLS_VERSION = "30.0.3"
 
-    const val androidTestInstrumentation = "androidx.test.runner.AndroidJUnitRunner"
-    const val proguardConsumerRules =  "consumer-rules.pro"
-    const val defaultProguardFile = "proguard-android-optimize.txt"
-    const val proguardRulesFile = "proguard-rules.pro"
+    const val ANDROID_TEST_INSTRUMENTATION_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+    const val PROGUARD_CONSUMER_RULES =  "consumer-rules.pro"
+    const val DEFAULT_PROGUARD_FILE = "proguard-android-optimize.txt"
+    const val PROGUARD_RULES_FILE = "proguard-rules.pro"
 }
 
 // Android ExampleApp config constants
 object ExampleAppAndroidConfig {
-    const val compileSdk = FlowFormsAndroidConfig.compileSdk
-    const val minSdk = FlowFormsAndroidConfig.minSdk
-    const val targetSdk = FlowFormsAndroidConfig.targetSdk
-    const val buildToolsVersion = FlowFormsAndroidConfig.buildToolsVersion
-    const val versionCode = 1
-    const val versionName = "1.0.0"
+    const val COMPILE_SDK = FlowFormsAndroidConfig.COMPILE_SDK
+    const val MIN_SDK = FlowFormsAndroidConfig.MIN_SDK
+    const val TARGET_SDK = FlowFormsAndroidConfig.TARGET_SDK
+    const val BUILD_TOOLS_VERSION = FlowFormsAndroidConfig.BUILD_TOOLS_VERSION
 
-    const val androidTestInstrumentation = FlowFormsAndroidConfig.androidTestInstrumentation
-    const val proguardConsumerRules =  FlowFormsAndroidConfig.proguardConsumerRules
-    const val defaultProguardFile = FlowFormsAndroidConfig.defaultProguardFile
-    const val proguardRulesFile = FlowFormsAndroidConfig.proguardRulesFile
+    const val ANDROID_TEST_INSTRUMENTATION_RUNNER = FlowFormsAndroidConfig.ANDROID_TEST_INSTRUMENTATION_RUNNER
+    const val PROGUARD_CONSUMER_RULES =  FlowFormsAndroidConfig.PROGUARD_CONSUMER_RULES
+    const val DEFAULT_PROGUARD_FILE = FlowFormsAndroidConfig.DEFAULT_PROGUARD_FILE
+    const val PROGUARD_RULES_FILE = FlowFormsAndroidConfig.PROGUARD_RULES_FILE
 }
 

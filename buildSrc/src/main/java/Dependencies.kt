@@ -2,21 +2,21 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 
 object Dependencies {
     // Kotlin
-    private const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
-    private const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesCore}"
+    private const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.KOTLIN}"
+    private const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES_CORE}"
 
     // Android ui
 
-    private const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
-    private const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
-    private const val material = "com.google.android.material:material:${Versions.material}"
-    private const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
+    private const val appcompat = "androidx.appcompat:appcompat:${Versions.APP_COMPAT}"
+    private const val coreKtx = "androidx.core:core-ktx:${Versions.CORE_KTX}"
+    private const val material = "com.google.android.material:material:${Versions.MATERIAL}"
+    private const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
 
     // Test libs
 
-    private const val junit = "junit:junit:${Versions.junit}"
-    private const val extJUnit = "androidx.test.ext:junit:${Versions.extJunit}"
-    private const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espresso}"
+    private const val junit = "junit:junit:${Versions.J_UNIT}"
+    private const val extJUnit = "androidx.test.ext:junit:${Versions.EXT_J_UNIT}"
+    private const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.ESPRESSO}"
 
     val kotlinLibraries = arrayListOf<String>().apply {
         add(kotlinStdLib)
