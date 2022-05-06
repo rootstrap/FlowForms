@@ -16,8 +16,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Dependencies.KOTLIN_STD_LIB)
-                implementation(Dependencies.COROUTINES_CORE)
+                implementations(Dependencies.kotlinLibraries)
             }
         }
         val commonTest by getting {
@@ -25,5 +24,15 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        val jvmMain by getting
+        val jvmTest by getting
+    }
+}
+
+// utility functions
+
+fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(list : List<String>) {
+    list.forEach {
+        implementation(it)
     }
 }

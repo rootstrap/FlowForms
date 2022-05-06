@@ -3,7 +3,7 @@
 object Versions {
 
     //app level
-    const val GRADLE = "4.2.2"
+    const val GRADLE = "7.1.3"
     const val KOTLIN = "1.6.0"
 
     //libs
