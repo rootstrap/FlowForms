@@ -4,14 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(FlowFormsAndroidConfig.COMPILE_SDK)
-    buildToolsVersion(FlowFormsAndroidConfig.BUILD_TOOLS_VERSION)
+    compileSdk = (FlowFormsAndroidConfig.COMPILE_SDK)
+    buildToolsVersion = (FlowFormsAndroidConfig.BUILD_TOOLS_VERSION)
 
     defaultConfig {
-        minSdkVersion(FlowFormsAndroidConfig.MIN_SDK)
-        targetSdkVersion(FlowFormsAndroidConfig.TARGET_SDK)
-        versionCode = 1
-        versionName = "0.0.1"
+        minSdk = (FlowFormsAndroidConfig.MIN_SDK)
+        targetSdk = (FlowFormsAndroidConfig.TARGET_SDK)
+        version = "0.0.1-SNAPSHOT"
 
         testInstrumentationRunner = FlowFormsAndroidConfig.ANDROID_TEST_INSTRUMENTATION_RUNNER
         consumerProguardFile(FlowFormsAndroidConfig.PROGUARD_CONSUMER_RULES)
