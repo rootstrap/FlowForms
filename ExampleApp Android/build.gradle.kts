@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(ExampleAppAndroidConfig.COMPILE_SDK)
-    buildToolsVersion(ExampleAppAndroidConfig.BUILD_TOOLS_VERSION)
+    compileSdk = (ExampleAppAndroidConfig.COMPILE_SDK)
+    buildToolsVersion = (ExampleAppAndroidConfig.BUILD_TOOLS_VERSION)
 
     defaultConfig {
         applicationId = "com.rootstrap.flowforms.example"
-        minSdkVersion(ExampleAppAndroidConfig.MIN_SDK)
-        targetSdkVersion(ExampleAppAndroidConfig.TARGET_SDK)
+        minSdk = (ExampleAppAndroidConfig.MIN_SDK)
+        targetSdk = (ExampleAppAndroidConfig.TARGET_SDK)
         versionCode = 1
         versionName = "0.0.1"
 
