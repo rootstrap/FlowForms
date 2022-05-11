@@ -1,6 +1,5 @@
 plugins {
     kotlin("multiplatform")
-    id("kotlin-kapt")
 }
 
 group = "com.rootstrap.flowforms.core"
