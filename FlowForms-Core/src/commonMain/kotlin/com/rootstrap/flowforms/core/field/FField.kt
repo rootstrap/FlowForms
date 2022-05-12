@@ -1,6 +1,7 @@
 package com.rootstrap.flowforms.core.field
 
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import kotlinx.coroutines.flow.Flow
@@ -16,24 +17,28 @@ class FField(
 
     fun triggerOnValueChangeValidations() : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
-        var res : ValidationResult?
-        var fieldValid = false
+        val failedValResults = mutableListOf<ValidationResult>()
 
-        onValueChange.forEach { validation ->
+        var res : ValidationResult?
+        for (validation in onValueChange) {
             res = validation.validate()
-            res?.let {
-                validationResults.add(it)
-                if (it.resultId != CORRECT) {
-                    fieldValid = false
-                    if (validation.failFast) {
-                        return@forEach
-                    }
+            validationResults.add(res)
+            if (res.resultId != CORRECT) {
+                failedValResults.add(res)
+                if (validation.failFast) {
+                    break
                 }
             }
         }
 
-        _status.value = FieldStatus(CORRECT)
-        return fieldValid
+        val fieldStatus = when {
+            failedValResults.isEmpty() -> FieldStatus(CORRECT)
+            failedValResults.size == 1 -> FieldStatus(failedValResults.first().resultId, validationResults)
+            else -> FieldStatus(INCORRECT, validationResults)
+        }
+
+        _status.value = fieldStatus
+        return fieldStatus.status == CORRECT
     }
 
 }

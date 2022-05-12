@@ -21,6 +21,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementations(Dependencies.commonTestLibraries)
             }
         }
         val jvmMain by getting
@@ -33,5 +34,11 @@ kotlin {
 fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(list : List<String>) {
     list.forEach {
         implementation(it)
+    }
+}
+
+tasks.withType<Test> {
+    testLogging {
+        showStandardStreams = true
     }
 }

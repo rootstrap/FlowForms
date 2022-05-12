@@ -47,6 +47,6 @@ dependencies {
     //app libs
     implementation(Dependencies.appLibraries)
     //test libs
-    testImplementation(Dependencies.testLibraries)
+    testImplementation(Dependencies.jvmTestLibraries)
     androidTestImplementation(Dependencies.androidTestLibraries)
 }
