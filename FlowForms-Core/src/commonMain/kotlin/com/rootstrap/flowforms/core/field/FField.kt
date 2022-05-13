@@ -6,13 +6,14 @@ import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
 
 class FField(
     val id : String,
     val onValueChange : List<Validation> = mutableListOf()
 ) {
     private val _status = MutableStateFlow(FieldStatus())
-    val status = _status.asStateFlow()
+    val status : Flow<FieldStatus> = _status.asStateFlow()
 
     fun triggerOnValueChangeValidations() : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
