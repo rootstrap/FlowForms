@@ -12,12 +12,12 @@ KMP library for form management
 ---
 
 #### :warning: Considerations :warning:
-- This project works on top of [KMP](https://kotlinlang.org/docs/multiplatform.html) (currently in alpha) and on top of the `ExperimentalCoroutinesApi`so use it with caution. The `ExperimentalCoroutinesApi`annotations mean that the internal coroutines API used in this library is subject to change, but we will ensure to make the minimum amout of changes in client interfaces and classes as possible and keep it as it is for as long as we can after reaching Version 1.0.0.
+- This project works on top of [KMP](https://kotlinlang.org/docs/multiplatform.html) (currently in alpha) and `ExperimentalCoroutinesApi`, so use it with caution.
 
 ---
 
 ## Prerequisites
-- At the moment the project in only able to run inside Android Studio due to Intellij's lack of support for the Android Gradle plugin (AGP) 7.+. An issue will be raised to reduce the AGP version to the latest supported by the IntelliJ IDEA IDE. As MPP projects are intended to be ran using Intellij IDEA.
+- At the moment, the project can only be ran inside Android Studio due to Intellij's lack of support for the Android Gradle Plugin (AGP) 7.+. A GIT issue will be created to reduce the AGP version to the latest supported by the IntelliJ IDEA IDE. As MPP projects are intended to be ran using Intellij IDEA.
 - WIP 🚧
 
 ---
