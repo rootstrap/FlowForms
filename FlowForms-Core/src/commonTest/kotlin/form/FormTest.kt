@@ -173,4 +173,32 @@ class FormTest {
         }
     }
 
+    @Test
+    fun `GIVEN a form with 3 fields WHEN from they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to INCORRECT`()
+            = runTest {
+        val form = FForm()
+
+        val field1 = mockk<FField>()
+        val field2 = mockk<FField>()
+        val field3 = mockk<FField>()
+
+        every { field1.id } returns "field1"
+        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+
+        every { field2.id } returns "field2"
+        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
+
+        every { field3.id } returns "field3"
+        every { field3.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
+
+        form.status.test {
+            form.withFields(field1, field2, field3)
+            assertEquals(awaitItem().code, UNMODIFIED)
+            assertEquals(awaitItem().code, INCOMPLETE)
+            assertEquals(awaitItem().code, INCOMPLETE)
+            assertEquals(awaitItem().code, CORRECT)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
 }
