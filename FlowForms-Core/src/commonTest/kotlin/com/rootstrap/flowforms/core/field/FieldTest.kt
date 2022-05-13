@@ -1,10 +1,9 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package field
+package com.rootstrap.flowforms.core.field
 
 import app.cash.turbine.test
 import com.rootstrap.flowforms.core.common.StatusCodes
-import com.rootstrap.flowforms.core.field.FField
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

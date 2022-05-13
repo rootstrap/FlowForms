@@ -1,9 +1,8 @@
-package field
+package com.rootstrap.flowforms.core.field
 
 import app.cash.turbine.test
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
-import com.rootstrap.flowforms.core.field.FField
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import io.mockk.every

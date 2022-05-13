@@ -1,8 +1,7 @@
-package validation
+package com.rootstrap.flowforms.core.validation
 
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
-import com.rootstrap.flowforms.core.validation.Required
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

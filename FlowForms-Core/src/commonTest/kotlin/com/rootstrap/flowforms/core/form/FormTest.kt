@@ -1,4 +1,4 @@
-package form
+package com.rootstrap.flowforms.core.form
 
 import app.cash.turbine.test
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
@@ -7,7 +7,6 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FField
 import com.rootstrap.flowforms.core.field.FieldStatus
-import com.rootstrap.flowforms.core.form.FForm
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
