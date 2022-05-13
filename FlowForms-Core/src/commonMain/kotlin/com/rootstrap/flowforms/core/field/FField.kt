@@ -4,16 +4,15 @@ import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class FField(
     val id : String,
     val onValueChange : List<Validation> = mutableListOf()
 ) {
     private val _status = MutableStateFlow(FieldStatus())
-    val status : Flow<FieldStatus>
-        get() = _status
+    val status = _status.asStateFlow()
 
     fun triggerOnValueChangeValidations() : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
@@ -38,7 +37,7 @@ class FField(
         }
 
         _status.value = fieldStatus
-        return fieldStatus.status == CORRECT
+        return fieldStatus.code == CORRECT
     }
 
 }

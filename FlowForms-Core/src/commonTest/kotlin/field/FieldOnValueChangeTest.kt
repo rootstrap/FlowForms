@@ -29,7 +29,7 @@ class FieldOnValueChangeTest {
         field.status.test {
             awaitItem() // UNMODIFIED status
             field.triggerOnValueChangeValidations()
-            assertEquals(awaitItem().status, CORRECT)
+            assertEquals(awaitItem().code, CORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -47,7 +47,7 @@ class FieldOnValueChangeTest {
         field.status.test {
             awaitItem() // UNMODIFIED status
             field.triggerOnValueChangeValidations()
-            assertEquals(awaitItem().status, INCORRECT)
+            assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -68,7 +68,7 @@ class FieldOnValueChangeTest {
         field.status.test {
             awaitItem() // UNMODIFIED status
             field.triggerOnValueChangeValidations()
-            assertEquals(awaitItem().status, INCORRECT)
+            assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -89,7 +89,7 @@ class FieldOnValueChangeTest {
         field.status.test {
             awaitItem() // UNMODIFIED status
             field.triggerOnValueChangeValidations()
-            assertEquals(awaitItem().status, INCORRECT)
+            assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }

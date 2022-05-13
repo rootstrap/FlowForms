@@ -16,7 +16,7 @@ class FieldTest {
     fun `GIVEN a new required field THEN assert its status is UNMODIFIED`() = runTest {
         val field = FField("email")
         field.status.test {
-            assertEquals(awaitItem().status, StatusCodes.UNMODIFIED)
+            assertEquals(awaitItem().code, StatusCodes.UNMODIFIED)
             cancelAndIgnoreRemainingEvents()
         }
     }
