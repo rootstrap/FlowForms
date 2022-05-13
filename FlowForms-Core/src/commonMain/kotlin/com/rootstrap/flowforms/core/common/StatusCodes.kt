@@ -1,5 +1,8 @@
 package com.rootstrap.flowforms.core.common
 
+/**
+ * Out of the box form, field, and validation status codes for common use cases.
+ */
 object StatusCodes {
 
     /**

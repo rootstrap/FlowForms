@@ -15,10 +15,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class FieldOnValueChangeTest {
+class TriggerValidationsTest {
 
     @Test
-    fun `GIVEN a correct onValueChange validation THEN assert the field status is CORRECT`()
+    fun `GIVEN a correct validation THEN assert the field status is CORRECT`()
     = runTest {
         val correctValidation = mockk<Validation>()
 
@@ -28,14 +28,14 @@ class FieldOnValueChangeTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerOnValueChangeValidations()
+            field.triggerValidations()
             assertEquals(awaitItem().code, CORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `GIVEN a failing onValueChange validation THEN assert the field status is INCORRECT`()
+    fun `GIVEN a failing validation THEN assert the field status is INCORRECT`()
     = runTest {
         val failingValidation = mockk<Validation>()
 
@@ -46,14 +46,14 @@ class FieldOnValueChangeTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerOnValueChangeValidations()
+            field.triggerValidations()
             assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `GIVEN a correct and a failing onValueChange validations THEN assert the field status is INCORRECT`()
+    fun `GIVEN a correct and a failing validations THEN assert the field status is INCORRECT`()
     = runTest {
         val correctValidation = mockk<Validation>()
         val failingValidation = mockk<Validation>()
@@ -67,14 +67,14 @@ class FieldOnValueChangeTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerOnValueChangeValidations()
+            field.triggerValidations()
             assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `GIVEN a failing and a correct onValueChange validations THEN assert the field status is INCORRECT`()
+    fun `GIVEN a failing and a correct validations THEN assert the field status is INCORRECT`()
     = runTest {
         val correctValidation = mockk<Validation>()
         val failingValidation = mockk<Validation>()
@@ -88,14 +88,14 @@ class FieldOnValueChangeTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerOnValueChangeValidations()
+            field.triggerValidations()
             assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `GIVEN a failing failFast and a correct onValueChange validations THEN assert the correct validation is not executed`()
+    fun `GIVEN a failing failFast and a correct validations THEN assert the correct validation is not executed`()
     = runTest {
         val correctValidation = mockk<Validation>()
         val failingValidation = mockk<Validation>()
@@ -108,7 +108,7 @@ class FieldOnValueChangeTest {
         val field = FField("email", listOf( failingValidation, correctValidation ) )
 
         field.status.test {
-            field.triggerOnValueChangeValidations()
+            field.triggerValidations()
             cancelAndIgnoreRemainingEvents()
         }
 

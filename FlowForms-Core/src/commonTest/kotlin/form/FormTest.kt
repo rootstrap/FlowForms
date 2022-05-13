@@ -27,7 +27,7 @@ class FormTest {
         form.fields.test {
             form.withFields(
                 FField("testField1", emptyList()),
-                FField("testField2", onValueChange = emptyList())
+                FField("testField2", validations = emptyList())
             )
             awaitItem()
             assertEquals(2, awaitItem().size)
