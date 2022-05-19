@@ -3,8 +3,8 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 object Dependencies {
 
     // Kotlin
-    private const val KOTLIN_STD_LIB = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.KOTLIN}"
-    private const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES_CORE}"
+    const val KOTLIN_STD_LIB = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.KOTLIN}"
+    const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINES_CORE}"
 
     // Android
     private const val APP_COMPAT = "androidx.appcompat:appcompat:${Versions.APP_COMPAT}"
