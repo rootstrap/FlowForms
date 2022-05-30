@@ -14,6 +14,9 @@ object Versions {
     const val COROUTINES_CORE = "1.6.0"
 
     //test
+    const val COROUTINES_TEST = "1.6.1"
+    const val TURBINE = "0.8.0"
+    const val MOCKK = "1.12.4"
     const val J_UNIT = "4.12"
     const val EXT_J_UNIT = "1.1.3"
     const val ESPRESSO = "3.4.0"

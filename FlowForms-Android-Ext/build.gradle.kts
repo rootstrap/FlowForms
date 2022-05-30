@@ -48,6 +48,6 @@ dependencies {
     //android libs
     implementation(Dependencies.flowFormsAndroidLibraries)
     //test libs
-    testImplementation(Dependencies.testLibraries)
+    testImplementation(Dependencies.jvmTestLibraries)
 
 }
