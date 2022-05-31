@@ -56,7 +56,7 @@ open class FForm {
             when {
                 unmodifiedFieldStatuses == fieldStatuses.size -> FormStatus.Unmodified
                 correctFieldStatuses == fieldStatuses.size -> FormStatus.Correct
-                failedFieldStatus > 0 -> FormStatus.Incorrect
+                failedFieldStatus > 0 -> FormStatus.Correct
                 else -> FormStatus.Incomplete
             }
         }
