@@ -19,25 +19,34 @@ KMP library for form management
 
 ## Installation (using gradle)
 - Add the JitPack repository to your root build.gradle file, at the end of repositories :
-```
+```kotlin
 allprojects {
   repositories {
-    ...
+    ..
     maven { url 'https://jitpack.io' }
   }
 }
 ```
 
 - Add FlowForms dependency :
-```
+```kotlin
 dependencies {
-  ...
-  implementation("com.github.rootstrap:FlowForms:0.0.1")
-  ...
+  ..
+  var flowFormsVersion = "v0.0.1"
+
+  // Use this to get FlowForms Core module only for jvm targets
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
+
+  // Use this to get the whole FlowForms Core module (for all available targets)
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
+  
+  // Use this to get every FlowForms modules together (currently we only have FlowForms Core so it's the same as above) 
+  implementation("com.github.rootstrap:FlowForms:$flowFormsVersion")
+  ..
 }
 ```
 
-- Only FlowForms Core is available at the moment. It's a kotlin only library so you can use it whenever you use Kotlin.
+- Only FlowForms Core is available at the moment. It's a kotlin only library so you can use FlowForms-Core dependency whenever you use Kotlin.
 
 ---
 
