@@ -32,7 +32,7 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation("com.github.rootstrap:FlowForms:feature~core-publishing-SNAPSHOT")
+  implementation("com.github.rootstrap:FlowForms:0.0.1")
   ...
 }
 ```
