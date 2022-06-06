@@ -28,7 +28,7 @@ allprojects {
 }
 ```
 
-- Add FlowForms dependency :
+- Add FlowForms dependency in you module's build.gradle file :
 ```kotlin
 dependencies {
   ..
