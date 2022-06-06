@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.github.rootstrap"
+group = "com.rootstrap"
 version = "0.0.1-SNAPSHOT"
 
 kotlin {
