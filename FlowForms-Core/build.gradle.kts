@@ -1,9 +1,10 @@
 plugins {
     kotlin("multiplatform")
+    `maven-publish`
 }
 
-group = "com.rootstrap.flowforms.core"
-version = "0.0.1-SNAPSHOT"
+group = "com.rootstrap"
+version = "0.0.1"
 
 kotlin {
     jvm {

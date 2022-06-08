@@ -31,7 +31,7 @@ open class FForm {
      * its fields begin to change their inner status. It becomes [CORRECT] when
      * all the fields status are [CORRECT].
      *
-     * If only one field is [INCORRECT] then the form status becomes [FormStatus.Incorrect] event if
+     * If only one field is [INCORRECT] then the form status becomes [FormStatus.Incorrect] even if
      * the other fields are [UNMODIFIED]
      */
     @OptIn(ExperimentalCoroutinesApi::class)

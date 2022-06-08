@@ -1,6 +1,7 @@
 # FlowForms
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 WIP badges :
 - ![Build Status](https://github.com/rootstrap/FlowForms/workflows/CI/badge.svg)
@@ -16,14 +17,36 @@ KMP library for form management
 
 ---
 
-## Prerequisites
-- At the moment, the project can only be ran inside Android Studio due to Intellij's lack of support for the Android Gradle Plugin (AGP) 7.+. A GIT issue will be created to reduce the AGP version to the latest supported by the IntelliJ IDEA IDE. As MPP projects are intended to be ran using Intellij IDEA.
-- WIP 🚧
+## Installation (using gradle)
+- Add the JitPack repository to your root build.gradle file, at the end of repositories :
+```kotlin
+allprojects {
+  repositories {
+    ..
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
 
----
+- Add FlowForms dependency in you module's build.gradle file :
+```kotlin
+dependencies {
+  ..
+  var flowFormsVersion = "v0.0.1"
 
-## Installation
-- WIP 🚧
+  // Use this to get FlowForms Core module only for jvm targets
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
+
+  // Use this to get the whole FlowForms Core module (for all available targets)
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
+  
+  // Use this to get every FlowForms modules together (currently we only have FlowForms Core so it's the same as above) 
+  implementation("com.github.rootstrap:FlowForms:$flowFormsVersion")
+  ..
+}
+```
+
+- Only FlowForms Core is available at the moment. It's a kotlin only library so you can use FlowForms-Core dependency whenever you use Kotlin.
 
 ---
 
@@ -36,6 +59,9 @@ KMP library for form management
 Bug reports (please use Issues) and pull requests are welcome on GitHub at https://github.com/rootstrap/FlowForms. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 For more information check the [official notion page](https://www.notion.so/rootstrap/FlowForms-KMP-library-for-form-management-starting-with-Android-43ee69a08a17450a89cf8db695ec1bd9), where you can see the project's goals, architecture and desired usability.
+
+### Prerequisites
+- At the moment, the project can only be ran inside Android Studio due to Intellij's lack of support for the Android Gradle Plugin (AGP) 7.+. A GIT issue will be created to reduce the AGP version to the latest supported by the IntelliJ IDEA IDE. As MPP projects are intended to be ran using Intellij IDEA.
 
 ### Unit testing
 

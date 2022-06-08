@@ -173,7 +173,7 @@ class FormTest {
     }
 
     @Test
-    fun `GIVEN a form with 3 fields WHEN from they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to INCORRECT`()
+    fun `GIVEN a form with 3 fields WHEN from they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to CORRECT`()
             = runTest {
         val form = FForm()
 
