@@ -2,9 +2,12 @@ package com.rootstrap.flowforms.core.field
 
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
+import com.rootstrap.flowforms.util.whenNotEmpty
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * @property validations list of validations to trigger when needed, like when the field's value
  * changes in the form, or the user takes off the focus of the field.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 open class FField(
     val id : String,
     val validations : List<Validation> = mutableListOf()
@@ -35,20 +39,57 @@ open class FField(
 
     /**
      * Trigger the validations associated on this Field in the order they were added.
+     *
+     * Asynchronous validations are triggered at start in order to optimize time.
      */
     fun triggerValidations() : Boolean {
+        // TODO : trigger inside a coroutine scope triggerValidationsInternal()
+        return true
+    }
+
+    private suspend fun triggerValidationsInternal(validations: List<Validation>) : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
         val failedValResults = mutableListOf<ValidationResult>()
 
-        var res : ValidationResult?
-        for (validation in validations) {
-            res = validation.validate()
-            validationResults.add(res)
-            if (res.resultId != CORRECT) {
-                failedValResults.add(res)
-                if (validation.failFast) {
-                    break
+        val (asyncValidations, syncValidations) = validations.partition { it.async }
+
+        try {
+            syncValidations.forEach { validation ->
+                validate(
+                    validation,
+                    { validationResults.add(it) },
+                    { failedValResults.add(it) }
+                )
+            }
+        } catch (ex : ValidationShortCircuitException) {
+            // do nothing on sync validations.
+        }
+
+        asyncValidations.whenNotEmpty {
+            _status.emit(FieldStatus(IN_PROGRESS))
+            val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
+            try {
+                val res = coroutineScope {
+                    forEach {
+                        deferredCalls.add(async {
+                            val res = it.validate()
+                            if (res.resultId != CORRECT && it.failFast ) {
+                                throw ValidationShortCircuitException(res)
+                            }
+                            res
+                        })
+                    }
+                    deferredCalls.awaitAll()
                 }
+                validationResults.addAll(res)
+                failedValResults.addAll(res.filter { it.resultId != CORRECT })
+            } catch (ex : ValidationShortCircuitException) {
+                val results = deferredCalls.filter {
+                    it.isCompleted && !it.isCancelled
+                }.map { it.getCompleted() }
+                validationResults.addAll(results)
+                failedValResults.add(ex.validationResult) // fail-fast failed result
+                validationResults.add(ex.validationResult)
             }
         }
 
@@ -61,5 +102,24 @@ open class FField(
         _status.value = fieldStatus
         return fieldStatus.code == CORRECT
     }
+
+    @Throws(ValidationShortCircuitException::class)
+    private fun validate(
+        validation : Validation,
+        onCorrect : (ValidationResult) -> Unit,
+        onFailure : (ValidationResult) -> Unit,
+    ) {
+        val res = validation.validate()
+        if (res.resultId != CORRECT) {
+            onFailure(res)
+            if (validation.failFast) {
+                throw ValidationShortCircuitException(res)
+            }
+        } else {
+            onCorrect(res)
+        }
+    }
+
+    class ValidationShortCircuitException(val validationResult : ValidationResult) : Exception()
 
 }

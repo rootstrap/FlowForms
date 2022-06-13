@@ -16,6 +16,11 @@ object StatusCodes {
     const val CORRECT = "correct"
 
     /**
+     * Status for fields whose async validations didn't finished yet
+     */
+    const val IN_PROGRESS = "in_progress"
+
+    /**
      * Status for a form not validated at all. This can happen when some fields are Correct
      * and others are unmodified.
      *

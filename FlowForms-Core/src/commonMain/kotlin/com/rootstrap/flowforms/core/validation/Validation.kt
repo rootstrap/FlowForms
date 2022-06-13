@@ -6,10 +6,11 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 /**
  * Used by [FField] to update their status given the sum of the validationResults
  *
- * @property failFast : if true it short-circuits the validation process of the field with the
- * [ValidationResult] returned by the [validate] call as it's current status **if it's not [CORRECT]**
+ * **Properties :**
+ *  * failFast : Determines if this validation should short-circuit the validation process.
+ * * async : Determines if the validation should be triggered asynchronously.
  */
-abstract class Validation(val failFast : Boolean = true) {
+abstract class Validation(val failFast : Boolean = true, val async : Boolean = false) {
 
     /**
      * Represents a validation that must return a result when invoked.
