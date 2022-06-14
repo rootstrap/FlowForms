@@ -6,7 +6,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
-import com.rootstrap.flowforms.util.whenNotEmpty
+import com.rootstrap.flowforms.util.whenNotEmptyAnd
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,11 +40,12 @@ open class FField(
     /**
      * Trigger the validations associated on this Field in the order they were added.
      *
-     * Asynchronous validations are triggered at start in order to optimize time.
+     * Asynchronous validations are triggered after the regular validations in order to optimize resources.
+     *
+     * If there are a failing failFast regular validation then the async validations will not be triggered.
      */
-    fun triggerValidations() : Boolean {
-        // TODO : trigger inside a coroutine scope triggerValidationsInternal()
-        return true
+    suspend fun triggerValidations() : Boolean {
+        return triggerValidationsInternal(validations)
     }
 
     private suspend fun triggerValidationsInternal(validations: List<Validation>) : Boolean {
@@ -52,20 +53,24 @@ open class FField(
         val failedValResults = mutableListOf<ValidationResult>()
 
         val (asyncValidations, syncValidations) = validations.partition { it.async }
+        var validationsShortCircuited = false
 
         try {
             syncValidations.forEach { validation ->
                 validate(
                     validation,
                     { validationResults.add(it) },
-                    { failedValResults.add(it) }
+                    {
+                        validationResults.add(it)
+                        failedValResults.add(it)
+                    }
                 )
             }
         } catch (ex : ValidationShortCircuitException) {
-            // do nothing on sync validations.
+            validationsShortCircuited = true
         }
 
-        asyncValidations.whenNotEmpty {
+        asyncValidations.whenNotEmptyAnd({ !validationsShortCircuited }) {
             _status.emit(FieldStatus(IN_PROGRESS))
             val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
             try {
@@ -84,17 +89,19 @@ open class FField(
                 validationResults.addAll(res)
                 failedValResults.addAll(res.filter { it.resultId != CORRECT })
             } catch (ex : ValidationShortCircuitException) {
-                val results = deferredCalls.filter {
+
+                val completedResults = deferredCalls.filter {
                     it.isCompleted && !it.isCancelled
                 }.map { it.getCompleted() }
-                validationResults.addAll(results)
+
+                validationResults.addAll(completedResults)
                 failedValResults.add(ex.validationResult) // fail-fast failed result
                 validationResults.add(ex.validationResult)
             }
         }
 
         val fieldStatus = when {
-            failedValResults.isEmpty() -> FieldStatus(CORRECT)
+            failedValResults.isEmpty() -> FieldStatus(CORRECT, validationResults)
             failedValResults.size == 1 -> FieldStatus(failedValResults.first().resultId, validationResults)
             else -> FieldStatus(INCORRECT, validationResults)
         }

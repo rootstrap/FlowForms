@@ -8,7 +8,9 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
  *
  * **Properties :**
  *  * failFast : Determines if this validation should short-circuit the validation process.
+ * Defaults to true.
  * * async : Determines if the validation should be triggered asynchronously.
+ * Defaults to false.
  */
 abstract class Validation(val failFast : Boolean = true, val async : Boolean = false) {
 

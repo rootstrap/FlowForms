@@ -22,6 +22,7 @@ class TriggerValidationsTest {
         val correctValidation = mockk<Validation>()
 
         every { correctValidation.validate() } returns ValidationResult.Correct
+        every { correctValidation.async } returns false
 
         val field = FField("email", listOf( correctValidation ) )
 
@@ -40,6 +41,7 @@ class TriggerValidationsTest {
 
         every { failingValidation.validate() } returns ValidationResult(INCORRECT)
         every { failingValidation.failFast } returns false
+        every { failingValidation.async } returns false
 
         val field = FField("email", listOf( failingValidation ) )
 
@@ -59,8 +61,10 @@ class TriggerValidationsTest {
 
         every { correctValidation.validate() } returns ValidationResult.Correct
         every { correctValidation.failFast } returns false
+        every { correctValidation.async } returns false
         every { failingValidation.validate() } returns ValidationResult(INCORRECT)
         every { failingValidation.failFast } returns false
+        every { failingValidation.async } returns false
 
         val field = FField("email", listOf( correctValidation, failingValidation ) )
 
@@ -80,8 +84,10 @@ class TriggerValidationsTest {
 
         every { failingValidation.validate() } returns ValidationResult(INCORRECT)
         every { failingValidation.failFast } returns false
+        every { failingValidation.async } returns false
         every { correctValidation.validate() } returns ValidationResult.Correct
         every { correctValidation.failFast } returns false
+        every { correctValidation.async } returns false
 
         val field = FField("email", listOf( failingValidation, correctValidation ) )
 
@@ -101,8 +107,10 @@ class TriggerValidationsTest {
 
         every { failingValidation.validate() } returns ValidationResult(INCORRECT)
         every { failingValidation.failFast } returns true
+        every { failingValidation.async } returns false
         every { correctValidation.validate() } returns ValidationResult(CORRECT)
         every { correctValidation.failFast } returns true
+        every { correctValidation.async } returns false
 
         val field = FField("email", listOf( failingValidation, correctValidation ) )
 
