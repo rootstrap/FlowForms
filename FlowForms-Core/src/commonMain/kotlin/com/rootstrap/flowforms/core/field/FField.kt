@@ -64,14 +64,14 @@ open class FField(
 
         try {
             syncValidations.forEach { validation ->
-                validate(
-                    validation,
-                    { validationResults.add(it) },
-                    {
-                        validationResults.add(it)
-                        failedValResults.add(it)
+                val res = validation.validate()
+                validationResults.add(res)
+                if (res.resultId != CORRECT) {
+                    failedValResults.add(res)
+                    if (validation.failFast) {
+                        throw ValidationShortCircuitException(res)
                     }
-                )
+                }
             }
         } catch (ex : ValidationShortCircuitException) {
             validationsShortCircuited = true
@@ -93,11 +93,9 @@ open class FField(
                     }
                     deferredCalls.awaitAll()
                 }
-                println("FFIELD > finished correctly")
                 validationResults.addAll(res)
                 failedValResults.addAll(res.filter { it.resultId != CORRECT })
             } catch (ex : ValidationShortCircuitException) {
-                println("FFIELD > finished with exception")
                 val completedResults = deferredCalls.filter {
                     it.isCompleted && !it.isCancelled
                 }.map { it.getCompleted() }
@@ -116,23 +114,6 @@ open class FField(
 
         _status.value = fieldStatus
         return fieldStatus.code == CORRECT
-    }
-
-    @Throws(ValidationShortCircuitException::class)
-    private suspend fun validate(
-        validation : Validation,
-        onCorrect : (ValidationResult) -> Unit,
-        onFailure : (ValidationResult) -> Unit,
-    ) {
-        val res = validation.validate()
-        if (res.resultId != CORRECT) {
-            onFailure(res)
-            if (validation.failFast) {
-                throw ValidationShortCircuitException(res)
-            }
-        } else {
-            onCorrect(res)
-        }
     }
 
     class ValidationShortCircuitException(val validationResult : ValidationResult) : Exception()

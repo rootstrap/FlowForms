@@ -68,10 +68,11 @@ For more information check the [official notion page](https://www.notion.so/root
 We expect to have at least 90% of the code unit tested (with the ideal goal of 100%) in all modules except the Example apps. So please ensure to make unit tests on new code and keep all of them working.
 
 #### FlowForms Core
-As the current implementation is only a jvm one, to run the tests on the module **FlowForms Core** we need to write the following command in a Terminal at the project's root folder (or directly in the IDE's Terminal)
-- `./gradlew FlowForms-Core:jvmTest`
+To run the tests on the module **FlowForms Core** we need to write the following command in a Terminal at the project's root folder (or directly in the IDE's Terminal)
+- `./gradlew FlowForms-Core:check`
+The above command executes all the configured tests in the FlowForms-Core module while also generating coverage reports.
 
-**FlowForms Core** uses [Coroutines-test](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-test/README.md), [Mockk](https://github.com/mockk/mockk), and [Turbine](https://github.com/cashapp/turbine) for testing the common kotlin module.
+**FlowForms Core** uses [Kover](https://github.com/Kotlin/kotlinx-kover) for code coverage and [Coroutines-test](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-test/README.md), [Mockk](https://github.com/mockk/mockk), and [Turbine](https://github.com/cashapp/turbine) for testing the common kotlin module.
 
 #### FlowForms Android Ext
 WIP 🚧
