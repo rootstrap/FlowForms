@@ -42,18 +42,25 @@ open class FField(
      *
      * Asynchronous validations are triggered after the regular validations in order to optimize resources.
      *
-     * If there are a failing failFast regular validation then the async validations will not be triggered.
+     * If there is a failing failFast regular validation then the async validations will not be triggered.
      */
-    suspend fun triggerValidations() : Boolean {
-        return triggerValidationsInternal(validations)
+    suspend fun triggerValidations(asyncCoroutineDispatcher: CoroutineDispatcher ? = null) : Boolean {
+        return triggerValidationsInternal(validations, asyncCoroutineDispatcher)
     }
 
-    private suspend fun triggerValidationsInternal(validations: List<Validation>) : Boolean {
+    private suspend fun triggerValidationsInternal(
+        validations: List<Validation>,
+        asyncCoroutineDispatcher: CoroutineDispatcher ? = null
+    ) : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
         val failedValResults = mutableListOf<ValidationResult>()
 
         val (asyncValidations, syncValidations) = validations.partition { it.async }
         var validationsShortCircuited = false
+
+        if (asyncValidations.isNotEmpty() && asyncCoroutineDispatcher == null) {
+            throw IllegalStateException("Async coroutine dispatcher could not be null in order to use async validations")
+        }
 
         try {
             syncValidations.forEach { validation ->
@@ -76,7 +83,7 @@ open class FField(
             try {
                 val res = coroutineScope {
                     forEach {
-                        deferredCalls.add(async {
+                        deferredCalls.add(async(asyncCoroutineDispatcher!!) {
                             val res = it.validate()
                             if (res.resultId != CORRECT && it.failFast ) {
                                 throw ValidationShortCircuitException(res)
@@ -86,10 +93,11 @@ open class FField(
                     }
                     deferredCalls.awaitAll()
                 }
+                println("FFIELD > finished correctly")
                 validationResults.addAll(res)
                 failedValResults.addAll(res.filter { it.resultId != CORRECT })
             } catch (ex : ValidationShortCircuitException) {
-
+                println("FFIELD > finished with exception")
                 val completedResults = deferredCalls.filter {
                     it.isCompleted && !it.isCancelled
                 }.map { it.getCompleted() }
@@ -111,7 +119,7 @@ open class FField(
     }
 
     @Throws(ValidationShortCircuitException::class)
-    private fun validate(
+    private suspend fun validate(
         validation : Validation,
         onCorrect : (ValidationResult) -> Unit,
         onFailure : (ValidationResult) -> Unit,

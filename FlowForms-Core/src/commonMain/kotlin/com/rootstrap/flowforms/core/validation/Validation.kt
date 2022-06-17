@@ -17,7 +17,7 @@ abstract class Validation(val failFast : Boolean = true, val async : Boolean = f
     /**
      * Represents a validation that must return a result when invoked.
      */
-    abstract fun validate() : ValidationResult
+    abstract suspend fun validate() : ValidationResult
 }
 
 /**
@@ -36,5 +36,10 @@ data class ValidationResult(
          * empty ValidationResult with [CORRECT] status code
          */
         val Correct = ValidationResult(CORRECT)
+
+        /**
+         * empty ValidationResult with [INCORRECT] status code
+         */
+        val Incorrect = ValidationResult(INCORRECT)
     }
 }
