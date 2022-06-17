@@ -17,6 +17,8 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TriggerValidationsTest {
@@ -98,6 +100,16 @@ class TriggerValidationsTest {
     // Async validations test
 
     @Test
+    fun `GIVEN a field with an async validation but without a coroutine dispatcher THEN assert it throws IllegalStateException`()
+    = runTest {
+        val asyncValidation = asyncValidation(0, ValidationResult.Correct)
+        val field = FField("email", listOf(asyncValidation))
+
+        val exception = assertFails { field.triggerValidations() }
+        assertIs<IllegalStateException>(exception)
+    }
+
+    @Test
     fun `GIVEN a correct async validation THEN assert the field status CHANGES from unmodified to in progress to correct`()
     = runTest {
         val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
@@ -154,7 +166,7 @@ class TriggerValidationsTest {
             = runTest {
         val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
         val fastestVal = asyncValidation(10, ValidationResult.Correct)
-        val middleIncorrectVal = asyncValidation(20, ValidationResult.Incorrect)
+        val middleIncorrectVal = asyncValidation(20, ValidationResult.Incorrect, true)
         val slowerVal = asyncValidation(30, ValidationResult.Correct)
         val field = FField("email", listOf(slowerVal, fastestVal, middleIncorrectVal))
 
@@ -182,7 +194,7 @@ class TriggerValidationsTest {
     private fun asyncValidation(delayInMillis : Long, result : ValidationResult, failFast : Boolean = false)
     = mockk<Validation> {
         every { async } returns true
-        every { failFast } returns failFast
+        every { this@mockk.failFast } returns failFast
         coEvery { validate() } coAnswers {
             delay(delayInMillis)
             result
