@@ -31,6 +31,12 @@ kotlin {
     }
 }
 
+val rootPkg = "com.rootstrap.flowforms"
+
+tasks.koverMergedHtmlReport {
+    excludes = listOf("${rootPkg}.core.common.StatusCodes","${rootPkg}.util.*")
+}
+
 // utility functions
 
 fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(list : List<String>) {
