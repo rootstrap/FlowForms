@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("org.jetbrains.kotlinx.kover") version "0.5.1"
     `maven-publish`
 }
 
@@ -28,6 +29,12 @@ kotlin {
         val jvmMain by getting
         val jvmTest by getting
     }
+}
+
+val rootPkg = "com.rootstrap.flowforms"
+
+tasks.koverMergedHtmlReport {
+    excludes = listOf("${rootPkg}.core.common.StatusCodes","${rootPkg}.util.*")
 }
 
 // utility functions
