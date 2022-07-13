@@ -32,7 +32,7 @@ class TriggerValidationsTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(CORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -47,7 +47,7 @@ class TriggerValidationsTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(customErrorCode, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -63,7 +63,7 @@ class TriggerValidationsTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(customErrorCode, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -78,7 +78,7 @@ class TriggerValidationsTest {
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(INCORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -92,7 +92,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(failingValidation, correctValidation))
 
         field.status.test {
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -108,7 +108,7 @@ class TriggerValidationsTest {
         val asyncValidation = asyncValidation(0, ValidationResult.Correct)
         val field = FField("email", listOf(asyncValidation))
 
-        val exception = assertFails { field.triggerValidations() }
+        val exception = assertFails { field.triggerOnValueChangeValidations() }
         assertIs<IllegalStateException>(exception)
     }
 
@@ -120,7 +120,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(correctAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, CORRECT)
             cancelAndIgnoreRemainingEvents()
         }
@@ -134,7 +134,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(incorrectAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
@@ -150,7 +150,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(correctAsyncValidation, incorrectAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, customErrorCode)
             cancelAndIgnoreRemainingEvents()
         }
@@ -166,7 +166,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(slowerVal, fastestVal, middleIncorrectVal))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
 
             val lastStatus = assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
             // checks that the slower validation was not added to the results (because it was cancelled before)
@@ -185,7 +185,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(regularValidation, asyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, CORRECT)
 
             coVerify(exactly = 1) { regularValidation.validate() }
@@ -204,7 +204,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(regularValidation, asyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, INCORRECT)
 
             coVerify(exactly = 1) { regularValidation.validate() }
@@ -225,7 +225,7 @@ class TriggerValidationsTest {
         val field = FField("email", listOf(asyncValidation, asyncValidation2))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             val lastStatusResults = assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
                 .validationResults
 
