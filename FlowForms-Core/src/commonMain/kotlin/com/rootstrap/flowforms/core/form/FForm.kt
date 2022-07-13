@@ -4,6 +4,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FField
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.*
 open class FForm {
 
     private val _fields = MutableStateFlow(mapOf<String, FField>())
+    private var coroutineDispatcher : CoroutineDispatcher? = null
 
     /**
      * Flow with the map of fields contained in this form.
@@ -70,6 +72,36 @@ open class FForm {
         val fieldsMap = fields.associateBy { it.id }
         this._fields.value = fieldsMap
         return this
+    }
+
+    /**
+     * Sets a coroutineDispatcher that will be used when triggering field validations,
+     * by default it will be used to run asynchronous validations in the
+     * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
+     */
+    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) {
+        this.coroutineDispatcher = coroutineDispatcher
+    }
+
+    /**
+     * Trigger onValueChange validations on the specified field (if it exists in this form)
+     */
+    suspend fun validateOnValueChange(fieldId : String) {
+        this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher)
+    }
+
+    /**
+     * Trigger onBlur validations on the specified field (if it exists in this form)
+     */
+    suspend fun validateOnBlur(fieldId : String) {
+        this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher)
+    }
+
+    /**
+     * Trigger onFocus validations on the specified field (if it exists in this form)
+     */
+    suspend fun validateOnFocus(fieldId : String) {
+        this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
     }
 
 }

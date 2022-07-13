@@ -19,9 +19,9 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      * Trigger the given validations in the order they were added to the list,
      * firing different statuses to the mutableFieldStatus flow given as 1st parameter during execution.
      *
-     * Asynchronous validations are triggered after the regular validations and if there is a
-     * failing failFast regular validation then the async validations will not be triggered at all
-     * to optimize resources.
+     * Asynchronous validations are triggered using the given asyncCoroutineDispatcher and only
+     * after the regular validations. Considering that if there is a failing failFast regular
+     * validation then the async validations will not be triggered at all for optimum performance.
      */
     override suspend fun triggerValidations(
         mutableFieldStatus: MutableStateFlow<FieldStatus>,
