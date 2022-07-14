@@ -27,6 +27,11 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -42,6 +47,10 @@ android {
 }
 
 dependencies {
+    var flowFormsVersion = "v0.0.1"
+
+    // Use this to get FlowForms Core module only for jvm targets
+    implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
     //std lib
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     //app libs
