@@ -79,8 +79,9 @@ open class FForm {
      * by default it will be used to run asynchronous validations in the
      * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
      */
-    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) {
+    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FForm {
         this.coroutineDispatcher = coroutineDispatcher
+        return this
     }
 
     /**

@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.kotlinx.kover") version "0.5.1"
+    id("com.android.library")
     `maven-publish`
 }
 
@@ -8,6 +9,7 @@ group = "com.rootstrap"
 version = "0.0.1"
 
 kotlin {
+    android()
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
@@ -28,6 +30,8 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
+        val androidMain by getting
+        val androidTest by getting
     }
 }
 
@@ -35,6 +39,15 @@ val rootPkg = "com.rootstrap.flowforms"
 
 tasks.koverMergedHtmlReport {
     excludes = listOf("${rootPkg}.core.common.StatusCodes","${rootPkg}.util.*")
+}
+
+android {
+    compileSdk = 32
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    defaultConfig {
+        minSdk = 23
+        targetSdk = 32
+    }
 }
 
 // utility functions
