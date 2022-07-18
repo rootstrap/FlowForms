@@ -3,7 +3,7 @@ package com.rootstrap.flowforms.core.form
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.field.FField
+import com.rootstrap.flowforms.core.field.FlowField
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.*
  *
  * Based on flows, its status is updated automatically when any of the field's inner status changes.
  */
-open class FForm {
+open class FlowForm {
 
-    private val _fields = MutableStateFlow(mapOf<String, FField>())
+    private val _fields = MutableStateFlow(mapOf<String, FlowField>())
     private var coroutineDispatcher : CoroutineDispatcher? = null
 
     /**
@@ -68,7 +68,7 @@ open class FForm {
      * Defines the map of fields contained in this form and returns itself to chain more methods
      * and allow to instance the Form in a declarative way.
      */
-    fun withFields(vararg fields : FField) : FForm {
+    fun withFields(vararg fields : FlowField) : FlowForm {
         val fieldsMap = fields.associateBy { it.id }
         this._fields.value = fieldsMap
         return this
@@ -79,7 +79,7 @@ open class FForm {
      * by default it will be used to run asynchronous validations in the
      * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
      */
-    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FForm {
+    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
         this.coroutineDispatcher = coroutineDispatcher
         return this
     }

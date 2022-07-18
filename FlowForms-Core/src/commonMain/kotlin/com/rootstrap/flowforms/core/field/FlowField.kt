@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * @property onFocusValidations list of validations to trigger when the field gains focus.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-open class FField(
+open class FlowField(
     val id : String,
     private val onValueChangeValidations : List<Validation> = mutableListOf(),
     private val onBlurValidations : List<Validation> = mutableListOf(),
