@@ -3,6 +3,7 @@ package com.rootstrap.flowforms.core.field
 import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
@@ -240,6 +241,55 @@ class DefaultFieldValidationBehaviorTest {
             }.size)
             assertEquals(customErrorCode1, lastStatusResults.find { it.resultId == customErrorCode1 }?.resultId)
             assertEquals(customErrorCode2, lastStatusResults.find { it.resultId == customErrorCode2 }?.resultId)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN the same validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert it was called 3 times`()
+            = runTest {
+        val validation = validation(ValidationResult.Correct)
+        val field = FlowField("email",
+            onValueChangeValidations = listOf(validation),
+            onBlurValidations = listOf(validation),
+            onFocusValidations = listOf(validation)
+        )
+
+        field.status.test {
+            field.triggerOnFocusValidations()
+            field.triggerOnValueChangeValidations()
+            field.triggerOnBlurValidations()
+
+            coVerify(exactly = 3) { validation.validate() }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN the same correct validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert the field status changes from UNMODIFIED to INCOMPLETE to CORRECT`()
+            = runTest {
+        val validation = validation(ValidationResult.Correct)
+        val field = FlowField("email",
+            onValueChangeValidations = listOf(validation),
+            onBlurValidations = listOf(validation),
+            onFocusValidations = listOf(validation)
+        )
+
+        field.status.test {
+            // UNMODIFIED status
+            awaitItem()
+
+            field.triggerOnFocusValidations()
+            // INCOMPLETE status, after OnFocus (field took focus)
+            assertEquals(INCOMPLETE, awaitItem().code)
+
+            field.triggerOnValueChangeValidations()
+            // still INCOMPLETE status after OnValue changed (field value changed). So no items are dispatched.
+
+            field.triggerOnBlurValidations()
+            // All validation lists on the field were executed. So we expect a CORRECT status after OnBlur (aka field lost focus)
+            assertEquals(CORRECT, awaitItem().code)
 
             cancelAndIgnoreRemainingEvents()
         }
