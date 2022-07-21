@@ -285,7 +285,8 @@ class DefaultFieldValidationBehaviorTest {
             assertEquals(INCOMPLETE, awaitItem().code)
 
             field.triggerOnValueChangeValidations()
-            // still INCOMPLETE status after OnValue changed (field value changed). So no items are dispatched.
+            // still INCOMPLETE status after OnValue changed (field value changed).
+            assertEquals(INCOMPLETE, awaitItem().code)
 
             field.triggerOnBlurValidations()
             // All validation lists on the field were executed. So we expect a CORRECT status after OnBlur (aka field lost focus)

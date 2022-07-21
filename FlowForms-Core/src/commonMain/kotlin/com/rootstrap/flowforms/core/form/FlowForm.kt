@@ -43,6 +43,7 @@ open class FlowForm {
             var correctFieldStatuses = 0
             var failedFieldStatus = 0
 
+            // TODO : Add INCOMPLETE checks
             for (fieldStatus in fieldStatuses) {
                 when (fieldStatus.code) {
                     UNMODIFIED -> unmodifiedFieldStatuses++
