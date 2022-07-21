@@ -1,43 +1,64 @@
 package com.rootstrap.flowforms.example
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
-import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
+import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModelH: SignUpViewModel? = null
+    lateinit var viewModel: SignUpViewModel
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
+        binding.formModel = viewModel.signUpFormModel
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModelH?.form?.fields?.value?.get("name")?.status?.collect { status ->
-                        when (status.code) {
-                            CORRECT -> {
-                                //ocultar error
-                            }
-                            else -> {
-                                // mostrar error
+                    viewModel.form.fields.collect {
+                        lifecycleScope.launch {
+                            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                launch {
+                                    it["name"]?.status?.collect { status ->
+                                        when (status.code) {
+                                            CORRECT -> binding.nameInputLayout.error = null
+                                            else -> binding.nameInputLayout.error = "This field is required"
+                                        }
+                                    }
+                                }
+                                launch {
+                                    it["email"]?.status?.collect { status ->
+                                        when (status.code) {
+                                            CORRECT -> binding.emailInputLayout.error = null
+                                            else -> binding.emailInputLayout.error = "This field is required"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-                // otro launch por cada field
+
                 launch {
-                    viewModelH?.form?.status?.collect { status ->
+                    viewModel.form.status.collect { status ->
                         when (status.code) {
                             CORRECT -> {
-                                // habilito boton
+                                binding.continueButton.isEnabled = true
                             }
-                            INCORRECT -> {
-                                // deshabilito boton
+                            else -> {
+                                binding.continueButton.isEnabled = false
                             }
                         }
                     }
@@ -45,7 +66,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //por cada edit text, on text changed,
-        viewModelH?.form?.fields?.value?.get("name")?.triggerValidations()
+        binding.nameInputEditText.doAfterTextChanged {
+            lifecycleScope.launch {
+                viewModel.form.validateOnValueChange("name")
+            }
+        }
+
+        binding.emailInputEditText.doAfterTextChanged {
+            lifecycleScope.launch {
+                viewModel.form.validateOnValueChange("email")
+            }
+        }
     }
 }

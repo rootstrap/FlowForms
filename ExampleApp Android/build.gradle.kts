@@ -55,4 +55,5 @@ dependencies {
     //test libs
     testImplementation(Dependencies.jvmTestLibraries)
     androidTestImplementation(Dependencies.androidTestLibraries)
+    implementation("com.google.guava:guava:31.1-jre")
 }
