@@ -11,7 +11,6 @@ object Dependencies {
     private const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     private const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     private const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
-    private const val FLOW_FORMS = "com.github.rootstrap.FlowForms:FlowForms-Core-jvm:${Versions.FLOW_FORMS}"
     private const val lifecycleCommon = "android.arch.lifecycle:common-java8:${Versions.lifecycleCommon}"
     private const val lifecycleKapt = "android.arch.lifecycle:compiler:${Versions.lifecycleCommon}"
     private const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
@@ -44,7 +43,6 @@ object Dependencies {
         add(APP_COMPAT)
         add(MATERIAL)
         add(CONSTRAINT_LAYOUT)
-        add(FLOW_FORMS)
         add(lifecycleCommon)
         add(lifecycleKapt)
         add(lifecycleRuntime)

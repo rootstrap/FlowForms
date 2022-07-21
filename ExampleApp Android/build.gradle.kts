@@ -47,10 +47,7 @@ android {
 }
 
 dependencies {
-    var flowFormsVersion = "v0.0.1"
-
-    // Use this to get FlowForms Core module only for jvm targets
-    implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
+    implementation(project(":FlowForms-Core"))
     //std lib
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     //app libs

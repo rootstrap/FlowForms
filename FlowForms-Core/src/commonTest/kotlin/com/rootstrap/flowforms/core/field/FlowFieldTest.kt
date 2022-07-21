@@ -9,11 +9,11 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class FieldTest {
+class FlowFieldTest {
 
     @Test
     fun `GIVEN a new required field THEN assert its status is UNMODIFIED`() = runTest {
-        val field = FField("email")
+        val field = FlowField("email")
         field.status.test {
             assertEquals(awaitItem().code, StatusCodes.UNMODIFIED)
             cancelAndIgnoreRemainingEvents()

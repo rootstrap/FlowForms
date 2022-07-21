@@ -12,7 +12,6 @@ object Versions {
     const val MATERIAL = "1.5.0"
     const val CONSTRAINT_LAYOUT = "2.1.3"
     const val COROUTINES_CORE = "1.6.0"
-    const val FLOW_FORMS = "v0.0.1"
     const val lifecycle = "2.4.0"
     const val lifecycleCommon = "1.1.1"
     const val lifecycleExtension = "2.2.0"
