@@ -43,7 +43,6 @@ open class FlowForm {
             var correctFieldStatuses = 0
             var failedFieldStatus = 0
 
-            // TODO : Add INCOMPLETE checks
             for (fieldStatus in fieldStatuses) {
                 when (fieldStatus.code) {
                     UNMODIFIED -> unmodifiedFieldStatuses++
@@ -104,6 +103,14 @@ open class FlowForm {
      */
     suspend fun validateOnFocus(fieldId : String) {
         this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
+    }
+
+    suspend fun validateAllFields() {
+        this._fields.value.forEach {
+            validateOnValueChange(it.key)
+            validateOnFocus(it.key)
+            validateOnBlur(it.key)
+        }
     }
 
 }
