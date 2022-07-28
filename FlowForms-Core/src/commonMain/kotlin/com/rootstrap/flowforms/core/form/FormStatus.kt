@@ -6,7 +6,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 
 /**
- * Represents the current status of a [FForm]
+ * Represents the current status of a [FlowForm]
  */
 class FormStatus(
     val code: String

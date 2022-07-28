@@ -5,8 +5,8 @@ import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.field.FField
 import com.rootstrap.flowforms.core.field.FieldStatus
+import com.rootstrap.flowforms.core.field.FlowField
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,17 +16,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class FormTest {
+class FlowFormTest {
 
     @Test
     fun `GIVEN a form WHEN created with 2 fields THEN assert it has 2 fields`()
     = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
         form.fields.test {
             form.withFields(
-                FField("testField1", emptyList()),
-                FField("testField2", validations = emptyList())
+                FlowField("testField1", emptyList()),
+                FlowField("testField2", onValueChangeValidations = emptyList())
             )
             awaitItem()
             assertEquals(2, awaitItem().size)
@@ -37,10 +37,10 @@ class FormTest {
     @Test
     fun `GIVEN a form WHEN created with 2 fields THEN assert the form status is UNMODIFIED`()
     = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -58,10 +58,10 @@ class FormTest {
     @Test
     fun `GIVEN a form with 2 fields WHEN one field become incorrect THEN assert the form status changes from UNMODIFIED to INCORRECT`()
     = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(INCORRECT))
@@ -79,10 +79,10 @@ class FormTest {
     @Test
     fun `GIVEN a form with 2 fields WHEN one field become correct THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
             = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -100,10 +100,10 @@ class FormTest {
     @Test
     fun `GIVEN a form with 2 fields WHEN both fields become correct at the same time THEN assert the form status changes from UNMODIFIED to CORRECT`()
             = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
@@ -121,11 +121,11 @@ class FormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN only two fields become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
             = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
-        val field3 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+        val field3 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
@@ -148,11 +148,11 @@ class FormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN one field become correct and one become incorrect THEN assert the form status changes from UNMODIFIED to INCOMPLETE TO INCORRECT`()
             = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
-        val field3 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+        val field3 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(INCORRECT))
@@ -175,11 +175,11 @@ class FormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN from they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to CORRECT`()
             = runTest {
-        val form = FForm()
+        val form = FlowForm()
 
-        val field1 = mockk<FField>()
-        val field2 = mockk<FField>()
-        val field3 = mockk<FField>()
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+        val field3 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))

@@ -27,6 +27,11 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -42,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":FlowForms-Core"))
     //std lib
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     //app libs
@@ -49,4 +55,5 @@ dependencies {
     //test libs
     testImplementation(Dependencies.jvmTestLibraries)
     androidTestImplementation(Dependencies.androidTestLibraries)
+    implementation("com.google.guava:guava:31.1-jre")
 }

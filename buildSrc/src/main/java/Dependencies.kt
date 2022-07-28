@@ -11,6 +11,12 @@ object Dependencies {
     private const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     private const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     private const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
+    private const val lifecycleCommon = "android.arch.lifecycle:common-java8:${Versions.lifecycleCommon}"
+    private const val lifecycleKapt = "android.arch.lifecycle:compiler:${Versions.lifecycleCommon}"
+    private const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
+    private const val lifecycleLivedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+    private const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtension}"
+    private const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
     // Test libs
     private const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES_TEST}"
@@ -37,6 +43,12 @@ object Dependencies {
         add(APP_COMPAT)
         add(MATERIAL)
         add(CONSTRAINT_LAYOUT)
+        add(lifecycleCommon)
+        add(lifecycleKapt)
+        add(lifecycleRuntime)
+        add(lifecycleLivedata)
+        add(lifecycleExtensions)
+        add(lifecycleViewModel)
     }
 
     val commonTestLibraries = arrayListOf<String>().apply {
