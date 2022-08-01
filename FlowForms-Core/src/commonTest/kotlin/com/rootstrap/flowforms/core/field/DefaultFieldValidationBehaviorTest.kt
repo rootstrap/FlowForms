@@ -2,7 +2,9 @@ package com.rootstrap.flowforms.core.field
 
 import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
+import com.rootstrap.flowforms.core.TEST_IO_DISPATCHER_NAME
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
@@ -15,24 +17,29 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertIs
 
+/**
+ * Test the DefaultFieldValidationBehavior using a FField.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
-class TriggerValidationsTest {
+class DefaultFieldValidationBehaviorTest {
 
     @Test
     fun `GIVEN a validation WHEN it is correct THEN assert the field status is CORRECT`()
     = runTest {
         val correctValidation = validation(ValidationResult.Correct)
-        val field = FField("email", listOf(correctValidation))
+        val field = FlowField("email", listOf(correctValidation))
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(CORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -43,11 +50,11 @@ class TriggerValidationsTest {
     = runTest {
         val customErrorCode = "custom-code"
         val failingValidation = validation(ValidationResult(customErrorCode))
-        val field = FField("email", listOf( failingValidation ) )
+        val field = FlowField("email", listOf( failingValidation ) )
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(customErrorCode, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -59,11 +66,11 @@ class TriggerValidationsTest {
         val customErrorCode = "Custom-code"
         val correctValidation = validation(ValidationResult.Correct)
         val failingValidation = validation(ValidationResult(customErrorCode))
-        val field = FField("email", listOf(correctValidation, failingValidation))
+        val field = FlowField("email", listOf(correctValidation, failingValidation))
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(customErrorCode, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -74,11 +81,11 @@ class TriggerValidationsTest {
     = runTest {
         val correctValidation = validation(ValidationResult.Correct)
         val failingValidation = validation(ValidationResult.Incorrect)
-        val field = FField("email", listOf(failingValidation, correctValidation))
+        val field = FlowField("email", listOf(failingValidation, correctValidation))
 
         field.status.test {
             awaitItem() // UNMODIFIED status
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             assertEquals(INCORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -89,10 +96,10 @@ class TriggerValidationsTest {
     = runTest {
         val failingValidation = validation(ValidationResult.Incorrect, true)
         val correctValidation = validation(ValidationResult.Correct)
-        val field = FField("email", listOf(failingValidation, correctValidation))
+        val field = FlowField("email", listOf(failingValidation, correctValidation))
 
         field.status.test {
-            field.triggerValidations()
+            field.triggerOnValueChangeValidations()
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -106,21 +113,21 @@ class TriggerValidationsTest {
     fun `GIVEN a field with an async validation but without a coroutine dispatcher THEN assert it throws IllegalStateException`()
     = runTest {
         val asyncValidation = asyncValidation(0, ValidationResult.Correct)
-        val field = FField("email", listOf(asyncValidation))
+        val field = FlowField("email", listOf(asyncValidation))
 
-        val exception = assertFails { field.triggerValidations() }
+        val exception = assertFails { field.triggerOnValueChangeValidations() }
         assertIs<IllegalStateException>(exception)
     }
 
     @Test
     fun `GIVEN a correct async validation THEN assert the field status CHANGES from unmodified to in progress to correct`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val correctAsyncValidation = asyncValidation(0, ValidationResult.Correct)
-        val field = FField("email", listOf(correctAsyncValidation))
+        val field = FlowField("email", listOf(correctAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, CORRECT)
             cancelAndIgnoreRemainingEvents()
         }
@@ -129,12 +136,12 @@ class TriggerValidationsTest {
     @Test
     fun `GIVEN a incorrect async validation THEN assert the field status CHANGES from unmodified to in progress to Incorrect`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val incorrectAsyncValidation = asyncValidation(0, ValidationResult.Incorrect)
-        val field = FField("email", listOf(incorrectAsyncValidation))
+        val field = FlowField("email", listOf(incorrectAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
             cancelAndIgnoreRemainingEvents()
         }
@@ -144,13 +151,13 @@ class TriggerValidationsTest {
     fun `GIVEN two async validations WHEN the first is correct but the second is incorrect with a custom error code THEN assert the field status CHANGES from unmodified to in progress to that custom error code`()
     = runTest {
         val customErrorCode = "custom-code"
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val correctAsyncValidation = asyncValidation(0, ValidationResult.Correct)
         val incorrectAsyncValidation = asyncValidation(0, ValidationResult(customErrorCode))
-        val field = FField("email", listOf(correctAsyncValidation, incorrectAsyncValidation))
+        val field = FlowField("email", listOf(correctAsyncValidation, incorrectAsyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, customErrorCode)
             cancelAndIgnoreRemainingEvents()
         }
@@ -159,14 +166,14 @@ class TriggerValidationsTest {
     @Test
     fun `GIVEN 3 async validations with different duration WHEN the middle one is failFast and fails THEN assert the last one was cancelled`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val fastestVal = asyncValidation(10, ValidationResult.Correct)
         val middleIncorrectVal = asyncValidation(20, ValidationResult.Incorrect, true)
         val slowerVal = asyncValidation(30, ValidationResult.Correct)
-        val field = FField("email", listOf(slowerVal, fastestVal, middleIncorrectVal))
+        val field = FlowField("email", listOf(slowerVal, fastestVal, middleIncorrectVal))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
 
             val lastStatus = assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
             // checks that the slower validation was not added to the results (because it was cancelled before)
@@ -179,13 +186,13 @@ class TriggerValidationsTest {
     @Test
     fun `GIVEN 1 sync and 1 async validation WHEN both are correct THEN assert both was executed and the field status changes from UNMODIFIED to INPROGRESS to CORRECT`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val regularValidation = validation(ValidationResult.Correct)
         val asyncValidation = asyncValidation(10, ValidationResult.Correct)
-        val field = FField("email", listOf(regularValidation, asyncValidation))
+        val field = FlowField("email", listOf(regularValidation, asyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, CORRECT)
 
             coVerify(exactly = 1) { regularValidation.validate() }
@@ -198,13 +205,13 @@ class TriggerValidationsTest {
     @Test
     fun `GIVEN 1 failFast sync and 1 async validation WHEN the sync validation fails THEN assert the async validation was not executed and the field status changes from UNMODIFIED to INCORRECT`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val regularValidation = validation(ValidationResult.Incorrect, true)
         val asyncValidation = asyncValidation(10, ValidationResult.Correct)
-        val field = FField("email", listOf(regularValidation, asyncValidation))
+        val field = FlowField("email", listOf(regularValidation, asyncValidation))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             assertFieldStatusSequence(this, UNMODIFIED, INCORRECT)
 
             coVerify(exactly = 1) { regularValidation.validate() }
@@ -219,13 +226,13 @@ class TriggerValidationsTest {
     = runTest {
         val customErrorCode1 = "custom-error-code-1"
         val customErrorCode2 = "custom-error-code-2"
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val asyncValidation = asyncValidation(5, ValidationResult(customErrorCode1))
         val asyncValidation2 = asyncValidation(5, ValidationResult(customErrorCode2))
-        val field = FField("email", listOf(asyncValidation, asyncValidation2))
+        val field = FlowField("email", listOf(asyncValidation, asyncValidation2))
 
         field.status.test {
-            field.triggerValidations(testAsyncCoroutineDispatcher)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             val lastStatusResults = assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS, INCORRECT)
                 .validationResults
 
@@ -242,7 +249,61 @@ class TriggerValidationsTest {
         }
     }
 
+    @Test
+    fun `GIVEN the same validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert it was called 3 times`()
+            = runTest {
+        val validation = validation(ValidationResult.Correct)
+        val field = FlowField("email",
+            onValueChangeValidations = listOf(validation),
+            onBlurValidations = listOf(validation),
+            onFocusValidations = listOf(validation)
+        )
+
+        field.status.test {
+            field.triggerOnFocusValidations()
+            field.triggerOnValueChangeValidations()
+            field.triggerOnBlurValidations()
+
+            coVerify(exactly = 3) { validation.validate() }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN the same correct validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert the field status changes from UNMODIFIED to INCOMPLETE to CORRECT`()
+            = runTest {
+        val validation = validation(ValidationResult.Correct)
+        val field = FlowField("email",
+            onValueChangeValidations = listOf(validation),
+            onBlurValidations = listOf(validation),
+            onFocusValidations = listOf(validation)
+        )
+
+        field.status.test {
+            // UNMODIFIED status
+            awaitItem()
+
+            field.triggerOnFocusValidations()
+            // INCOMPLETE status, after OnFocus (field took focus)
+            assertEquals(INCOMPLETE, awaitItem().code)
+
+            field.triggerOnValueChangeValidations()
+            // still INCOMPLETE status after OnValue changed (field value changed).
+            assertEquals(INCOMPLETE, awaitItem().code)
+
+            field.triggerOnBlurValidations()
+            // All validation lists on the field were executed. So we expect a CORRECT status after OnBlur (aka field lost focus)
+            assertEquals(CORRECT, awaitItem().code)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     // Helper functions
+
+    private fun getTestDispatcher(testScheduler: TestCoroutineScheduler): TestDispatcher {
+        return StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
+    }
 
     private fun validation(result : ValidationResult, failFast : Boolean = false)
             = mockk<Validation> {

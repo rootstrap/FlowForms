@@ -1,56 +1,32 @@
 package com.rootstrap.flowforms.core.field
 
-import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
-import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
-import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
-import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
+import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
 import com.rootstrap.flowforms.util.whenNotEmptyAnd
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * FlowField : a reactive field of a form, identified by it's ID.
- *
- * @property id field's ID.
- * @property validations list of validations to trigger when needed, like when the field's value
- * changes in the form, or the user takes off the focus of the field.
+ * Default field validation behavior used in fields.
+ * To know how the validations behave by default see [triggerValidations]
  */
-@OptIn(ExperimentalCoroutinesApi::class)
-open class FField(
-    val id : String,
-    val validations : List<Validation> = mutableListOf()
-) {
-
-    private val _status = MutableStateFlow(FieldStatus())
+@ExperimentalCoroutinesApi
+class DefaultFieldValidationBehavior : FieldValidationBehavior {
 
     /**
-     * Flow with the field status. Initially it will be in an [UNMODIFIED] state.
-     * As long as the validations are triggered, this flow will be updated based on the validations
-     * results and parameters.
+     * Trigger the given validations in the order they were added to the list,
+     * firing different statuses to the mutableFieldStatus flow given as 1st parameter during execution.
      *
-     * For more information about the possible statuses check [FieldStatus]
-     *
+     * Asynchronous validations are triggered using the given asyncCoroutineDispatcher and only
+     * after the regular validations. Considering that if there is a failing failFast regular
+     * validation then the async validations will not be triggered at all for optimum performance.
      */
-    val status : Flow<FieldStatus> = _status.asStateFlow()
-
-    /**
-     * Trigger the validations associated on this Field in the order they were added.
-     *
-     * Asynchronous validations are triggered after the regular validations in order to optimize resources.
-     *
-     * If there is a failing failFast regular validation then the async validations will not be triggered.
-     */
-    suspend fun triggerValidations(asyncCoroutineDispatcher: CoroutineDispatcher ? = null) : Boolean {
-        return triggerValidationsInternal(validations, asyncCoroutineDispatcher)
-    }
-
-    private suspend fun triggerValidationsInternal(
+    override suspend fun triggerValidations(
+        mutableFieldStatus: MutableStateFlow<FieldStatus>,
         validations: List<Validation>,
-        asyncCoroutineDispatcher: CoroutineDispatcher ? = null
+        asyncCoroutineDispatcher: CoroutineDispatcher?
     ) : Boolean {
         val validationResults = mutableListOf<ValidationResult>()
         val failedValResults = mutableListOf<ValidationResult>()
@@ -66,7 +42,7 @@ open class FField(
             syncValidations.forEach { validation ->
                 val res = validation.validate()
                 validationResults.add(res)
-                if (res.resultId != CORRECT) {
+                if (res.resultId != StatusCodes.CORRECT) {
                     failedValResults.add(res)
                     if (validation.failFast) {
                         throw ValidationShortCircuitException(res)
@@ -78,14 +54,14 @@ open class FField(
         }
 
         asyncValidations.whenNotEmptyAnd({ !validationsShortCircuited }) {
-            _status.emit(FieldStatus(IN_PROGRESS))
+            mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
             val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
             try {
                 val res = coroutineScope {
                     forEach {
                         deferredCalls.add(async(asyncCoroutineDispatcher!!) {
                             val res = it.validate()
-                            if (res.resultId != CORRECT && it.failFast ) {
+                            if (res.resultId != StatusCodes.CORRECT && it.failFast ) {
                                 throw ValidationShortCircuitException(res)
                             }
                             res
@@ -94,7 +70,7 @@ open class FField(
                     deferredCalls.awaitAll()
                 }
                 validationResults.addAll(res)
-                failedValResults.addAll(res.filter { it.resultId != CORRECT })
+                failedValResults.addAll(res.filter { it.resultId != StatusCodes.CORRECT })
             } catch (ex : ValidationShortCircuitException) {
                 val completedResults = deferredCalls.filter {
                     it.isCompleted && !it.isCancelled
@@ -107,15 +83,13 @@ open class FField(
         }
 
         val fieldStatus = when {
-            failedValResults.isEmpty() -> FieldStatus(CORRECT, validationResults)
+            failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, validationResults)
             failedValResults.size == 1 -> FieldStatus(failedValResults.first().resultId, validationResults)
-            else -> FieldStatus(INCORRECT, validationResults)
+            else -> FieldStatus(StatusCodes.INCORRECT, validationResults)
         }
 
-        _status.value = fieldStatus
-        return fieldStatus.code == CORRECT
+        mutableFieldStatus.value = fieldStatus
+        return fieldStatus.code == StatusCodes.CORRECT
     }
-
-    class ValidationShortCircuitException(val validationResult : ValidationResult) : Exception()
 
 }
