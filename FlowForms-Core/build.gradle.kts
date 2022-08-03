@@ -30,7 +30,11 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementations(Dependencies.flowFormsAndroidLibraries)
+            }
+        }
         val androidTest by getting
     }
 }

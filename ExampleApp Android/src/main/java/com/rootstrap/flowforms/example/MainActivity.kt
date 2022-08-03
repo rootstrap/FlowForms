@@ -2,15 +2,14 @@ package com.rootstrap.flowforms.example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.field.FieldStatus
+import com.rootstrap.flowforms.core.form.FormStatus
 import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
-import kotlinx.coroutines.launch
-
+import com.rootstrap.flowforms.util.bind
+import com.rootstrap.flowforms.util.collectOnLifeCycle
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,58 +23,44 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
         binding.formModel = viewModel.signUpFormModel
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.form.fields.collect {
-                        lifecycleScope.launch {
-                            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                                launch {
-                                    it["name"]?.status?.collect { status ->
-                                        when (status.code) {
-                                            CORRECT -> binding.nameInputLayout.error = null
-                                            else -> binding.nameInputLayout.error = "This field is required"
-                                        }
-                                    }
-                                }
-                                launch {
-                                    it["email"]?.status?.collect { status ->
-                                        when (status.code) {
-                                            CORRECT -> binding.emailInputLayout.error = null
-                                            else -> binding.emailInputLayout.error = "This field is required"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        collectOnLifeCycle(
+            { viewModel.form.fields.collect {
+                collectOnLifeCycle(
+                    { it["name"]?.status?.collect(::onNameStatusChange) },
+                    { it["email"]?.status?.collect(::onEmailStatusChange) }
+                )
+            } },
+            { viewModel.form.status.collect(::onFormStatusChange) }
+        )
 
-                launch {
-                    viewModel.form.status.collect { status ->
-                        when (status.code) {
-                            CORRECT -> {
-                                binding.continueButton.isEnabled = true
-                            }
-                            else -> {
-                                binding.continueButton.isEnabled = false
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        binding.nameInputEditText.doAfterTextChanged {
-            lifecycleScope.launch {
-                viewModel.form.validateOnValueChange("name")
-            }
-        }
-
-        binding.emailInputEditText.doAfterTextChanged {
-            lifecycleScope.launch {
-                viewModel.form.validateOnValueChange("email")
-            }
+        binding.apply {
+            viewModel.form.bind(
+                lifecycleScope,
+                nameInputEditText to "name",
+                emailInputEditText to "email"
+            )
         }
     }
+
+    private fun onNameStatusChange(status : FieldStatus) {
+        when (status.code) {
+            CORRECT -> binding.nameInputLayout.error = null
+            else -> binding.nameInputLayout.error = "This field is required"
+        }
+    }
+
+    private fun onEmailStatusChange(status : FieldStatus) {
+        when (status.code) {
+            CORRECT -> binding.emailInputLayout.error = null
+            else -> binding.emailInputLayout.error = "This field is required"
+        }
+    }
+
+    private fun onFormStatusChange(status : FormStatus) {
+        when (status.code) {
+            CORRECT -> binding.continueButton.isEnabled = true
+            else -> binding.continueButton.isEnabled = false
+        }
+    }
+
 }
