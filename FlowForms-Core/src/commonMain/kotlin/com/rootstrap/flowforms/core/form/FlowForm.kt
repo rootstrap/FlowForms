@@ -21,7 +21,7 @@ open class FlowForm {
 
     /**
      * Flow with the map of fields contained in this form.
-     * Initially it is an empty map until [withFields] is called with some fields in it.
+     * Initially it is an empty map until [setFields] is called with some fields in it.
      */
     val fields = _fields.asStateFlow()
 
@@ -65,21 +65,24 @@ open class FlowForm {
     }
 
     /**
-     * Defines the map of fields contained in this form and returns itself to chain more methods
-     * and allow to instance the Form in a declarative way.
+     * Defines the map of fields contained in this form, associating them by their ids.
+     *
+     * @return this form to allow method chaining and declarative construction.
      */
-    fun withFields(vararg fields : FlowField) : FlowForm {
+    fun setFields(vararg fields : FlowField) : FlowForm {
         val fieldsMap = fields.associateBy { it.id }
         this._fields.value = fieldsMap
         return this
     }
 
     /**
-     * Sets a coroutineDispatcher that will be used when triggering field validations,
-     * by default it will be used to run asynchronous validations in the
+     * Sets a coroutineDispatcher that will be used when triggering the [FlowField] validations,
+     * by default it is used to run asynchronous validations in the
      * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
+     *
+     * @return this form to allow method chaining and declarative construction.
      */
-    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
+    fun setDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
         this.coroutineDispatcher = coroutineDispatcher
         return this
     }

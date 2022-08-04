@@ -9,7 +9,7 @@ class SignUpViewModel : ViewModel() {
 
     val signUpFormModel = SignUpFormModel()
 
-    val form = FlowForm().withFields(
+    val form = FlowForm().setFields(
         FlowField("name", listOf(Required { signUpFormModel.name })),
         FlowField("email", listOf(Required { signUpFormModel.email }))
     )

@@ -24,7 +24,7 @@ class FlowFormTest {
         val form = FlowForm()
 
         form.fields.test {
-            form.withFields(
+            form.setFields(
                 FlowField("testField1", emptyList()),
                 FlowField("testField2", onValueChangeValidations = emptyList())
             )
@@ -48,7 +48,7 @@ class FlowFormTest {
         every { field2.status } returns flowOf(FieldStatus())
 
         form.status.test {
-            form.withFields(field1, field2)
+            form.setFields(field1, field2)
             assertEquals(awaitItem().code, UNMODIFIED)
             cancelAndIgnoreRemainingEvents()
         }
@@ -69,7 +69,7 @@ class FlowFormTest {
         every { field2.status } returns flowOf(FieldStatus())
 
         form.status.test {
-            form.withFields(field1, field2)
+            form.setFields(field1, field2)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCORRECT)
             cancelAndIgnoreRemainingEvents()
@@ -90,7 +90,7 @@ class FlowFormTest {
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
         form.status.test {
-            form.withFields(field1, field2)
+            form.setFields(field1, field2)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             cancelAndIgnoreRemainingEvents()
@@ -111,7 +111,7 @@ class FlowFormTest {
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
         form.status.test {
-            form.withFields(field1, field2)
+            form.setFields(field1, field2)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, CORRECT)
             cancelAndIgnoreRemainingEvents()
@@ -137,7 +137,7 @@ class FlowFormTest {
         every { field3.status } returns flowOf(FieldStatus())
 
         form.status.test {
-            form.withFields(field1, field2, field3)
+            form.setFields(field1, field2, field3)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCOMPLETE)
@@ -164,7 +164,7 @@ class FlowFormTest {
         every { field3.status } returns flowOf(FieldStatus())
 
         form.status.test {
-            form.withFields(field1, field2, field3)
+            form.setFields(field1, field2, field3)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCORRECT)
@@ -191,7 +191,7 @@ class FlowFormTest {
         every { field3.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
 
         form.status.test {
-            form.withFields(field1, field2, field3)
+            form.setFields(field1, field2, field3)
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCOMPLETE)
