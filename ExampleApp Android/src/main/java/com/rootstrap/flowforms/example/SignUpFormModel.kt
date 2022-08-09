@@ -15,6 +15,6 @@ data class SignUpFormModel(
         const val CONFIRMATION = "confirmation"
         const val NEW_PASSWORD = "new_password"
         const val CONFIRM_PASSWORD = "confirm_password"
-        const val MIN_LENGTH = 6
+        const val MIN_PASSWORD_LENGTH = 6
     }
 }

@@ -12,7 +12,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRMATION
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWORD
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
-import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_LENGTH
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
 import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                                     it[NEW_PASSWORD]?.status?.collect { status ->
                                         when (status.code) {
                                             CORRECT, UNMODIFIED -> binding.passwordInputLayout.error = null
-                                            MIN_LENGTH_UNSATISFIED -> binding.passwordInputLayout.error = getString(R.string.min_length, MIN_LENGTH)
+                                            MIN_LENGTH_UNSATISFIED -> binding.passwordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
                                             else -> binding.passwordInputLayout.error = getString(R.string.required_field)
                                         }
                                     }
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                                     it[CONFIRM_PASSWORD]?.status?.collect { status ->
                                         when (status.code) {
                                             CORRECT, UNMODIFIED -> binding.confirmPasswordInputLayout.error = null
-                                            MIN_LENGTH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.min_length, MIN_LENGTH)
+                                            MIN_LENGTH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
                                             PASSWORD_MATCH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.password_match)
                                             else -> binding.confirmPasswordInputLayout.error = getString(R.string.required_field)
                                         }
