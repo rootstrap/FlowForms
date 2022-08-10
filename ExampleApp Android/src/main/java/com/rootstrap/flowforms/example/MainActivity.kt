@@ -5,22 +5,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
-import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
-import com.rootstrap.flowforms.util.bind
-import com.rootstrap.flowforms.util.collectOnLifeCycle
-import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRMATION
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWORD
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
+import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.INVALID_EMAIL
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.PASSWORD_MATCH_UNSATISFIED
-import kotlinx.coroutines.launch
+import com.rootstrap.flowforms.util.bind
+import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun listenStatusChanges() {
         viewModel.form.fields.value.let {
-            collectOnLifeCycle(
+            repeatOnLifeCycleScope(
                 { it[NAME]?.status?.collect(::onNameStatusChange) },
                 { it[EMAIL]?.status?.collect(::onEmailStatusChange) },
                 { it[NEW_PASSWORD]?.status?.collect(::onPasswordStatusChange) },
@@ -59,12 +58,9 @@ class MainActivity : AppCompatActivity() {
                 passwordInputEditText to NEW_PASSWORD,
                 confirmPasswordInputEditText to CONFIRM_PASSWORD
             )
-
-            viewModel.formModel.confirm.observe(this@MainActivity) {
-                lifecycleScope.launch {
-                    viewModel.form.validateOnValueChange(CONFIRMATION)
-                }
-            }
+            viewModel.form.bind(this@MainActivity, lifecycleScope,
+                viewModel.formModel.confirm to CONFIRMATION
+            )
         }
     }
 
