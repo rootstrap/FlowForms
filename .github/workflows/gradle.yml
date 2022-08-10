@@ -1,6 +1,6 @@
 # This workflow will build a Kotlin project with Gradle and cache/restore any dependencies to improve the workflow execution time
 
-name: Test FlowForms core - jvm
+name: Build & Test FlowForms Core
 
 # Runs on every push to main and every pull request to main
 on:
@@ -26,6 +26,6 @@ jobs:
         distribution: 'temurin'
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
-    - name: Build and test FF Core - jvm with Gradle
-      run: ./gradlew FlowForms-Core:jvmTest
+    - name: Gradle check task - Build and Test FlowForms-Core
+      run: ./gradlew FlowForms-Core:check
         
