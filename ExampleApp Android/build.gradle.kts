@@ -27,6 +27,11 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -50,4 +55,5 @@ dependencies {
     //test libs
     testImplementation(Dependencies.jvmTestLibraries)
     androidTestImplementation(Dependencies.androidTestLibraries)
+    implementation("com.google.guava:guava:31.1-jre")
 }

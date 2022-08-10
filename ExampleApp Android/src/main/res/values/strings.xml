@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">FlowForms</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="confirmation">Confirm data</string>
+    <string name="continue_btn">Continue</string>
+    <string name="required_field">This field is required</string>
+    <string name="invalid_email">This email is invalid</string>
+    <string name="min_length">This field should have %1$d characters</string>
+    <string name="password_match">The passwords don\'t match</string>
 </resources>
