@@ -51,7 +51,7 @@ fun FlowForm.bind(coroutineScope : CoroutineScope, vararg bindPairs : Pair<View,
     bindPairs.forEach {
         when (it.first) {
             is EditText -> bind(coroutineScope, it.first as EditText, it.second)
-            else -> throw IllegalArgumentException("View ${it.first.javaClass::getName} is not supported on FlowForms")
+            else -> throw IllegalArgumentException("View for fieldID ${it.second} is not supported on FlowForms")
         }
     }
 }
@@ -68,7 +68,11 @@ fun FlowForm.bind(coroutineScope : CoroutineScope, editText : EditText, fieldId:
             validateOnValueChange(fieldId)
         }
     }
-    // TODO : Add onFocus and onBlur validations
+    editText.onFocusChangeListener = OnFieldFocusChangeListener(editText.onFocusChangeListener) { _, hasFocus ->
+        coroutineScope.launch {
+            if (hasFocus) validateOnFocus(fieldId) else validateOnBlur(fieldId)
+        }
+    }
 }
 
 /**
