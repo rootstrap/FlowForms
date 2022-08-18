@@ -11,12 +11,13 @@ object Dependencies {
     private const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     private const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     private const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
-    private const val LIFECYCLE_COMMON = "android.arch.lifecycle:common-java8:${Versions.lifecycleCommon}"
-    private const val LIFECYCLE_KAPT = "android.arch.lifecycle:compiler:${Versions.lifecycleCommon}"
-    private const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
-    private const val LIFECYCLE_LIVE_DATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
-    private const val LIFECYCLE_EXTENSIONS = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtension}"
-    private const val LIFECYCLE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+    private const val LIFECYCLE_COMMON = "android.arch.lifecycle:common-java8:${Versions.LIFECYCLE_COMMON}"
+    private const val LIFECYCLE_KAPT = "android.arch.lifecycle:compiler:${Versions.LIFECYCLE_COMMON}"
+    private const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE}"
+    private const val LIFECYCLE_LIVEDATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
+    private const val LIFECYCLE_EXTENSIONS = "androidx.lifecycle:lifecycle-extensions:${Versions.LIFECYCLE_EXTENSIONS}"
+    private const val LIFECYCLE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
+    private const val GUAVA = "com.google.guava:guava:${Versions.GUAVA}"
 
     // Test libs
     private const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES_TEST}"
@@ -48,9 +49,10 @@ object Dependencies {
         add(LIFECYCLE_COMMON)
         add(LIFECYCLE_KAPT)
         add(LIFECYCLE_RUNTIME)
-        add(LIFECYCLE_LIVE_DATA)
+        add(LIFECYCLE_LIVEDATA)
         add(LIFECYCLE_EXTENSIONS)
         add(LIFECYCLE_VIEW_MODEL)
+        add(GUAVA)
     }
 
     val commonTestLibraries = arrayListOf<String>().apply {

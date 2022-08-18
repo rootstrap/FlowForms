@@ -42,7 +42,11 @@ kotlin {
 val rootPkg = "com.rootstrap.flowforms"
 
 tasks.koverMergedHtmlReport {
-    excludes = listOf("${rootPkg}.core.common.StatusCodes","${rootPkg}.util.*")
+    excludes = listOf(
+        "${rootPkg}.core.common.StatusCodes",
+        "${rootPkg}.util.*",
+        "${rootPkg}.core.BuildConfig"
+    )
 }
 
 android {

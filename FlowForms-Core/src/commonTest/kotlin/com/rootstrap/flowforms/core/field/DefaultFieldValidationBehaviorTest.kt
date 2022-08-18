@@ -2,6 +2,7 @@ package com.rootstrap.flowforms.core.field
 
 import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
+import com.rootstrap.flowforms.core.TEST_IO_DISPATCHER_NAME
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
@@ -16,6 +17,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -119,7 +122,7 @@ class DefaultFieldValidationBehaviorTest {
     @Test
     fun `GIVEN a correct async validation THEN assert the field status CHANGES from unmodified to in progress to correct`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val correctAsyncValidation = asyncValidation(0, ValidationResult.Correct)
         val field = FlowField("email", listOf(correctAsyncValidation))
 
@@ -133,7 +136,7 @@ class DefaultFieldValidationBehaviorTest {
     @Test
     fun `GIVEN a incorrect async validation THEN assert the field status CHANGES from unmodified to in progress to Incorrect`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val incorrectAsyncValidation = asyncValidation(0, ValidationResult.Incorrect)
         val field = FlowField("email", listOf(incorrectAsyncValidation))
 
@@ -148,7 +151,7 @@ class DefaultFieldValidationBehaviorTest {
     fun `GIVEN two async validations WHEN the first is correct but the second is incorrect with a custom error code THEN assert the field status CHANGES from unmodified to in progress to that custom error code`()
     = runTest {
         val customErrorCode = "custom-code"
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val correctAsyncValidation = asyncValidation(0, ValidationResult.Correct)
         val incorrectAsyncValidation = asyncValidation(0, ValidationResult(customErrorCode))
         val field = FlowField("email", listOf(correctAsyncValidation, incorrectAsyncValidation))
@@ -163,7 +166,7 @@ class DefaultFieldValidationBehaviorTest {
     @Test
     fun `GIVEN 3 async validations with different duration WHEN the middle one is failFast and fails THEN assert the last one was cancelled`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val fastestVal = asyncValidation(10, ValidationResult.Correct)
         val middleIncorrectVal = asyncValidation(20, ValidationResult.Incorrect, true)
         val slowerVal = asyncValidation(30, ValidationResult.Correct)
@@ -183,7 +186,7 @@ class DefaultFieldValidationBehaviorTest {
     @Test
     fun `GIVEN 1 sync and 1 async validation WHEN both are correct THEN assert both was executed and the field status changes from UNMODIFIED to INPROGRESS to CORRECT`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val regularValidation = validation(ValidationResult.Correct)
         val asyncValidation = asyncValidation(10, ValidationResult.Correct)
         val field = FlowField("email", listOf(regularValidation, asyncValidation))
@@ -202,7 +205,7 @@ class DefaultFieldValidationBehaviorTest {
     @Test
     fun `GIVEN 1 failFast sync and 1 async validation WHEN the sync validation fails THEN assert the async validation was not executed and the field status changes from UNMODIFIED to INCORRECT`()
     = runTest {
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val regularValidation = validation(ValidationResult.Incorrect, true)
         val asyncValidation = asyncValidation(10, ValidationResult.Correct)
         val field = FlowField("email", listOf(regularValidation, asyncValidation))
@@ -223,7 +226,7 @@ class DefaultFieldValidationBehaviorTest {
     = runTest {
         val customErrorCode1 = "custom-error-code-1"
         val customErrorCode2 = "custom-error-code-2"
-        val testAsyncCoroutineDispatcher = StandardTestDispatcher(testScheduler, name = "IO dispatcher")
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
         val asyncValidation = asyncValidation(5, ValidationResult(customErrorCode1))
         val asyncValidation2 = asyncValidation(5, ValidationResult(customErrorCode2))
         val field = FlowField("email", listOf(asyncValidation, asyncValidation2))
@@ -297,6 +300,10 @@ class DefaultFieldValidationBehaviorTest {
     }
 
     // Helper functions
+
+    private fun getTestDispatcher(testScheduler: TestCoroutineScheduler): TestDispatcher {
+        return StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
+    }
 
     private fun validation(result : ValidationResult, failFast : Boolean = false)
             = mockk<Validation> {

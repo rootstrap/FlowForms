@@ -108,4 +108,12 @@ open class FlowForm {
         this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
     }
 
+    suspend fun validateAllFields() {
+        this._fields.value.forEach {
+            validateOnValueChange(it.key)
+            validateOnFocus(it.key)
+            validateOnBlur(it.key)
+        }
+    }
+
 }
