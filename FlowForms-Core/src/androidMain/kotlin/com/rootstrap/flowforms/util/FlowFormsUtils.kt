@@ -68,7 +68,7 @@ fun FlowForm.bind(coroutineScope : CoroutineScope, editText : EditText, fieldId:
             validateOnValueChange(fieldId)
         }
     }
-    editText.onFocusChangeListener = OnFieldFocusChangeListener(editText.onFocusChangeListener) { _, hasFocus ->
+    editText.onFocusChangeListener = OnFocusChangeListenerDecorator(editText.onFocusChangeListener) { _, hasFocus ->
         coroutineScope.launch {
             if (hasFocus) validateOnFocus(fieldId) else validateOnBlur(fieldId)
         }
