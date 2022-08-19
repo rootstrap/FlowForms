@@ -210,7 +210,7 @@ class FlowFormTest {
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
-        val form = FlowForm().withDispatcher(coroutineDispatcher)
+        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
@@ -228,7 +228,7 @@ class FlowFormTest {
         coEvery { field3.triggerOnFocusValidations(coroutineDispatcher) } returns true
 
         form.status.test {
-            form.withFields(field1, field2, field3)
+            form.setFields(field1, field2, field3)
             form.validateOnValueChange("field1")
             form.validateOnBlur("field2")
             form.validateOnFocus("field3")
@@ -264,10 +264,9 @@ class FlowFormTest {
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
-        val form = FlowForm().withDispatcher(coroutineDispatcher)
+        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
-        val field3 = mockk<FlowField>()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -282,7 +281,7 @@ class FlowFormTest {
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
 
         form.status.test {
-            form.withFields(field1, field2)
+            form.setFields(field1, field2)
 
             form.validateAllFields()
 
