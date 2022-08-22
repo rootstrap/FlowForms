@@ -23,7 +23,7 @@ A clear and concise description of what you expected to happen.
 **Screnshots / Videos**
 If applicable, add screenshots or videos to help explain your problem.
 
-**Where do the issue happen? (please complete the following information)**
+**Where does the issue happen? (please complete the following information)**
  - Device: [e.g. Pixel XL]
  - OS: [e.g. Android 12]
  - Browser: [e.g. stock browser, safari]
