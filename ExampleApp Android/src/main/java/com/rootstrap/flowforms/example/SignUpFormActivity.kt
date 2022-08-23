@@ -9,7 +9,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATI
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
-import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRMATION
@@ -70,33 +70,33 @@ class SignUpFormActivity : AppCompatActivity() {
 
     private fun onNameStatusChange(status: FieldStatus) {
         when (status.code) {
-            CORRECT, UNMODIFIED -> binding.nameInputLayout.error = null
-            else -> binding.nameInputLayout.error = getString(R.string.required_field)
+            REQUIRED_UNSATISFIED -> binding.nameInputLayout.error = getString(R.string.required_field)
+            else -> binding.nameInputLayout.error = null
         }
     }
 
     private fun onEmailStatusChange(status: FieldStatus) {
         when (status.code) {
-            CORRECT, UNMODIFIED -> binding.emailInputLayout.error = null
+            REQUIRED_UNSATISFIED -> binding.emailInputLayout.error = getString(R.string.required_field)
             BASIC_EMAIL_FORMAT_UNSATISFIED -> binding.emailInputLayout.error = getString(R.string.invalid_email)
-            else -> binding.emailInputLayout.error = getString(R.string.required_field)
+            else -> binding.emailInputLayout.error = null
         }
     }
 
     private fun onPasswordStatusChange(status: FieldStatus) {
         when (status.code) {
-            CORRECT, UNMODIFIED -> binding.passwordInputLayout.error = null
+            REQUIRED_UNSATISFIED -> binding.passwordInputLayout.error = getString(R.string.required_field)
             MIN_LENGTH_UNSATISFIED -> binding.passwordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
-            else -> binding.passwordInputLayout.error = getString(R.string.required_field)
+            else -> binding.passwordInputLayout.error = null
         }
     }
 
     private fun onConfirmPasswordChange(status: FieldStatus) {
         when (status.code) {
-            CORRECT, UNMODIFIED -> binding.confirmPasswordInputLayout.error = null
+            REQUIRED_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.required_field)
             MIN_LENGTH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
             MATCH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.password_match)
-            else -> binding.confirmPasswordInputLayout.error = getString(R.string.required_field)
+            else -> binding.confirmPasswordInputLayout.error = null
         }
     }
 
