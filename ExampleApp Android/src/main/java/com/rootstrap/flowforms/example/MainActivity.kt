@@ -64,14 +64,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onNameStatusChange(status : FieldStatus) {
+    private fun onNameStatusChange(status: FieldStatus) {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.nameInputLayout.error = null
             else -> binding.nameInputLayout.error = getString(R.string.required_field)
         }
     }
 
-    private fun onEmailStatusChange(status : FieldStatus) {
+    private fun onEmailStatusChange(status: FieldStatus) {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.emailInputLayout.error = null
             INVALID_EMAIL -> binding.emailInputLayout.error = getString(R.string.invalid_email)
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onPasswordStatusChange(status : FieldStatus) {
+    private fun onPasswordStatusChange(status: FieldStatus) {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.passwordInputLayout.error = null
             MIN_LENGTH_UNSATISFIED -> binding.passwordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onConfirmPasswordChange(status : FieldStatus) {
+    private fun onConfirmPasswordChange(status: FieldStatus) {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.confirmPasswordInputLayout.error = null
             MIN_LENGTH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFormStatusChange(status : FormStatus) {
+    private fun onFormStatusChange(status: FormStatus) {
         when (status.code) {
             CORRECT -> binding.continueButton.isEnabled = true
             else -> binding.continueButton.isEnabled = false
