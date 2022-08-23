@@ -1,6 +1,7 @@
 package com.rootstrap.flowforms.example
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,25 +15,28 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
-import com.rootstrap.flowforms.example.databinding.ActivityMainBinding
+import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.INVALID_EMAIL
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.PASSWORD_MATCH_UNSATISFIED
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
 
-class MainActivity : AppCompatActivity() {
+class SignUpFormActivity : AppCompatActivity() {
 
     private lateinit var viewModel: SignUpViewModel
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: LayoutSimpleSignUpFormBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = LayoutSimpleSignUpFormBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
         binding.lifecycleOwner = this
         binding.formModel = viewModel.formModel
+        binding.continueButton.setOnClickListener {
+            Toast.makeText(this, R.string.account_registered, Toast.LENGTH_SHORT).show()
+        }
 
         listenStatusChanges()
         bindFields()
@@ -58,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 passwordInputEditText to NEW_PASSWORD,
                 confirmPasswordInputEditText to CONFIRM_PASSWORD
             )
-            viewModel.form.bind(this@MainActivity, lifecycleScope,
+            viewModel.form.bind(this@SignUpFormActivity, lifecycleScope,
                 viewModel.formModel.confirm to CONFIRMATION
             )
         }

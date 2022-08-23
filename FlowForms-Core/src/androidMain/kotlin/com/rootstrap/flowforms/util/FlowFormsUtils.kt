@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
@@ -21,6 +22,25 @@ import kotlinx.coroutines.launch
  * @param lifecycleState lifecycle phase used by the [repeatOnLifecycle] call. By default it is [Lifecycle.State.STARTED]
  */
 fun AppCompatActivity.repeatOnLifeCycleScope(
+    vararg blocks : suspend () -> Unit,
+    lifecycleState : Lifecycle.State = Lifecycle.State.STARTED
+) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(lifecycleState) {
+            blocks.forEach {
+                launch {
+                    it()
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Exactly the same as [AppCompatActivity.repeatOnLifeCycleScope] but for fragments!
+ *
+ */
+fun Fragment.repeatOnLifeCycleScope(
     vararg blocks : suspend () -> Unit,
     lifecycleState : Lifecycle.State = Lifecycle.State.STARTED
 ) {
