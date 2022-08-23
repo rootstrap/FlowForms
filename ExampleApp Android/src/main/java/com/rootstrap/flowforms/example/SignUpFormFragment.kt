@@ -8,15 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.INVALID_EMAIL
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.MIN_LENGTH_UNSATISFIED
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.PASSWORD_MATCH_UNSATISFIED
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
 
@@ -91,7 +91,7 @@ class SignUpFormFragment : Fragment() {
         binding?.apply {
             when (status.code) {
                 CORRECT, UNMODIFIED -> emailInputLayout.error = null
-                INVALID_EMAIL -> emailInputLayout.error = getString(R.string.invalid_email)
+                BASIC_EMAIL_FORMAT_UNSATISFIED -> emailInputLayout.error = getString(R.string.invalid_email)
                 else -> emailInputLayout.error = getString(R.string.required_field)
             }
         }
@@ -116,7 +116,7 @@ class SignUpFormFragment : Fragment() {
                 MIN_LENGTH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.min_length,
                     MIN_PASSWORD_LENGTH
                 )
-                PASSWORD_MATCH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.password_match)
+                MATCH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.password_match)
                 else -> confirmPasswordInputLayout.error = getString(R.string.required_field)
             }
         }

@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
@@ -16,9 +19,6 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LE
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.INVALID_EMAIL
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.MIN_LENGTH_UNSATISFIED
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.PASSWORD_MATCH_UNSATISFIED
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
 
@@ -78,7 +78,7 @@ class SignUpFormActivity : AppCompatActivity() {
     private fun onEmailStatusChange(status: FieldStatus) {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.emailInputLayout.error = null
-            INVALID_EMAIL -> binding.emailInputLayout.error = getString(R.string.invalid_email)
+            BASIC_EMAIL_FORMAT_UNSATISFIED -> binding.emailInputLayout.error = getString(R.string.invalid_email)
             else -> binding.emailInputLayout.error = getString(R.string.required_field)
         }
     }
@@ -95,7 +95,7 @@ class SignUpFormActivity : AppCompatActivity() {
         when (status.code) {
             CORRECT, UNMODIFIED -> binding.confirmPasswordInputLayout.error = null
             MIN_LENGTH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.min_length, MIN_PASSWORD_LENGTH)
-            PASSWORD_MATCH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.password_match)
+            MATCH_UNSATISFIED -> binding.confirmPasswordInputLayout.error = getString(R.string.password_match)
             else -> binding.confirmPasswordInputLayout.error = getString(R.string.required_field)
         }
     }

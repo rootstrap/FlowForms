@@ -2,8 +2,7 @@ package com.rootstrap.flowforms.core.common
 
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
-import com.rootstrap.flowforms.core.validation.Required
-import com.rootstrap.flowforms.core.validation.Validation
+import com.rootstrap.flowforms.core.validation.*
 
 /**
  * Out of the box [FlowForm], [FlowField], and [Validation] status codes for common use cases.
@@ -61,4 +60,39 @@ object StatusCodes {
      * Represents a [Required] validation failure.
      */
     const val REQUIRED_UNSATISFIED = "required_unsatisfied"
+
+    /**
+     * Represents a [RequiredTrue] validation failure.
+     */
+    const val REQUIRED_TRUE_UNSATISFIED = "required_true_unsatisfied"
+
+    /**
+     * Represents a [RequiredFalse] validation failure.
+     */
+    const val REQUIRED_FALSE_UNSATISFIED = "required_false_unsatisfied"
+
+    /**
+     * Represents a [MinLength] validation failure.
+     */
+    const val MIN_LENGTH_UNSATISFIED = "min_length_unsatisfied"
+
+    /**
+     * Represents a [MaxLength] validation failure.
+     */
+    const val MAX_LENGTH_UNSATISFIED = "max_length_unsatisfied"
+
+    /**
+     * Represents a [Match] validation failure.
+     */
+    const val MATCH_UNSATISFIED = "match_unsatisfied"
+
+    /**
+     * Represents a [MatchRegex] validation failure.
+     */
+    const val MATCH_REGEX_UNSATISFIED = "match_regex_unsatisfied"
+
+    /**
+     * Represents a [BasicEmailFormat] validation failure.
+     */
+    const val BASIC_EMAIL_FORMAT_UNSATISFIED = "basic_email_unsatisfied"
 }
