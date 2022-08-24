@@ -9,7 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 /**
- * FlowForm : Reactive declarative form intended to reduce the boilerplate code required to manage form
+ * FlowForm: Reactive declarative form intended to reduce the boilerplate code required to manage form
  * and field status changes.
  *
  * Based on flows, its status is updated automatically when any of the field's inner status changes.
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.*
 open class FlowForm {
 
     private val _fields = MutableStateFlow(mapOf<String, FlowField>())
-    private var coroutineDispatcher : CoroutineDispatcher? = null
+    private var coroutineDispatcher: CoroutineDispatcher? = null
 
     /**
      * Flow with the map of fields contained in this form.
@@ -37,7 +37,7 @@ open class FlowForm {
      * the other fields are [UNMODIFIED]
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val status : Flow<FormStatus> = _fields.flatMapLatest { fieldsMap ->
+    val status: Flow<FormStatus> = _fields.flatMapLatest { fieldsMap ->
         combine(fieldsMap.values.map { it.status }) { fieldStatuses ->
             var unmodifiedFieldStatuses = 0
             var correctFieldStatuses = 0
@@ -69,7 +69,7 @@ open class FlowForm {
      *
      * @return this form to allow method chaining and declarative construction.
      */
-    fun setFields(vararg fields : FlowField) : FlowForm {
+    fun setFields(vararg fields: FlowField) : FlowForm {
         val fieldsMap = fields.associateBy { it.id }
         this._fields.value = fieldsMap
         return this
@@ -90,21 +90,21 @@ open class FlowForm {
     /**
      * Trigger onValueChange validations on the specified field (if it exists in this form)
      */
-    suspend fun validateOnValueChange(fieldId : String) {
+    suspend fun validateOnValueChange(fieldId: String) {
         this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher)
     }
 
     /**
      * Trigger onBlur validations on the specified field (if it exists in this form)
      */
-    suspend fun validateOnBlur(fieldId : String) {
+    suspend fun validateOnBlur(fieldId: String) {
         this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher)
     }
 
     /**
      * Trigger onFocus validations on the specified field (if it exists in this form)
      */
-    suspend fun validateOnFocus(fieldId : String) {
+    suspend fun validateOnFocus(fieldId: String) {
         this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
     }
 

@@ -21,8 +21,8 @@ import kotlinx.coroutines.launch
  * @param lifecycleState lifecycle phase used by the [repeatOnLifecycle] call. By default it is [Lifecycle.State.STARTED]
  */
 fun AppCompatActivity.repeatOnLifeCycleScope(
-    vararg blocks : suspend () -> Unit,
-    lifecycleState : Lifecycle.State = Lifecycle.State.STARTED
+    vararg blocks: suspend () -> Unit,
+    lifecycleState: Lifecycle.State = Lifecycle.State.STARTED
 ) {
     lifecycleScope.launch {
         repeatOnLifecycle(lifecycleState) {
@@ -47,7 +47,7 @@ fun AppCompatActivity.repeatOnLifeCycleScope(
  * by the paired ID.
  * @throws [IllegalArgumentException] where there are non-supported views in the pairs.
  */
-fun FlowForm.bind(coroutineScope : CoroutineScope, vararg bindPairs : Pair<View, String>) {
+fun FlowForm.bind(coroutineScope: CoroutineScope, vararg bindPairs: Pair<View, String>) {
     bindPairs.forEach {
         when (it.first) {
             is EditText -> bind(coroutineScope, it.first as EditText, it.second)
@@ -62,7 +62,7 @@ fun FlowForm.bind(coroutineScope : CoroutineScope, vararg bindPairs : Pair<View,
  *
  * @param coroutineScope used to trigger the [FlowField]'s [Validation]s
  */
-fun FlowForm.bind(coroutineScope : CoroutineScope, editText : EditText, fieldId: String) {
+fun FlowForm.bind(coroutineScope: CoroutineScope, editText: EditText, fieldId: String) {
     editText.doAfterTextChanged {
         coroutineScope.launch {
             validateOnValueChange(fieldId)
@@ -88,7 +88,7 @@ fun FlowForm.bind(coroutineScope : CoroutineScope, editText : EditText, fieldId:
  * @param bindPairs [Pair]s of [LiveData] to [String], each LiveData belonging to each field in the
  * form by the paired ID
  */
-fun FlowForm.bind(lifeCycleOwner : LifecycleOwner, coroutineScope : CoroutineScope, vararg bindPairs : Pair<LiveData<*>, String>) {
+fun FlowForm.bind(lifeCycleOwner: LifecycleOwner, coroutineScope: CoroutineScope, vararg bindPairs: Pair<LiveData<*>, String>) {
     bindPairs.forEach {
         it.first.observe(lifeCycleOwner) { _ ->
             coroutineScope.launch {
