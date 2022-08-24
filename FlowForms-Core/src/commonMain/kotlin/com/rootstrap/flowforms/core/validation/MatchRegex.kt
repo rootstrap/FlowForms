@@ -27,4 +27,5 @@ open class MatchRegex(
                 MATCH_REGEX_UNSATISFIED
         )
     }
+
 }

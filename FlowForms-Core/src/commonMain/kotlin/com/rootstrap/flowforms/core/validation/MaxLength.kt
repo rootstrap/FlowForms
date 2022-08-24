@@ -25,10 +25,14 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MAX_LENGTH_UNSATISFIED
  */
 class MaxLength(private val maxLength: Int, val valueProvider : () -> String?) : Validation() {
 
-    override suspend fun validate() = ValidationResult(
-        if ((valueProvider()?.length ?: 0) <= maxLength)
-            CORRECT
-        else
-            MAX_LENGTH_UNSATISFIED
-    )
+    override suspend fun validate() : ValidationResult {
+        val value = valueProvider() ?: return ValidationResult(MAX_LENGTH_UNSATISFIED)
+        return ValidationResult(
+            if (value.length <= maxLength)
+                CORRECT
+            else
+                MAX_LENGTH_UNSATISFIED
+        )
+    }
+
 }

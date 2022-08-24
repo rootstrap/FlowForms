@@ -24,10 +24,14 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
  */
 class MinLength(private val minLength: Int, val valueProvider : () -> String?) : Validation() {
 
-    override suspend fun validate() = ValidationResult(
-        if ((valueProvider()?.length ?: 0) >= minLength)
-            CORRECT
-        else
-            MIN_LENGTH_UNSATISFIED
-    )
+    override suspend fun validate() : ValidationResult {
+        val value = valueProvider() ?: return ValidationResult(MIN_LENGTH_UNSATISFIED)
+        return ValidationResult(
+            if (value.length >= minLength)
+                CORRECT
+            else
+                MIN_LENGTH_UNSATISFIED
+        )
+    }
+
 }
