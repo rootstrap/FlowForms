@@ -22,7 +22,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
  * @param minLength Indicates the minimum length the provided string can have, inclusive.
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class MinLength(private val minLength: Int, val valueProvider : () -> String?) : Validation() {
+class MinLength(private val minLength: Int, val valueProvider: () -> String?) : Validation() {
 
     override suspend fun validate() : ValidationResult {
         val value = valueProvider() ?: return ValidationResult(MIN_LENGTH_UNSATISFIED)

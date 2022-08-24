@@ -23,7 +23,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
  *
  * @param valueProvider function that returns the values used by the [validate] implementation.
  */
-class Match(val valueProvider : () -> Pair<Any?, Any?>) : Validation() {
+class Match(val valueProvider: () -> Pair<Any?, Any?>) : Validation() {
 
     override suspend fun validate() : ValidationResult {
         val value = valueProvider()

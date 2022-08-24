@@ -18,7 +18,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_TRUE_UNSATISFIED
  *
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class RequiredTrue(val valueProvider : () -> Boolean?) : Validation() {
+class RequiredTrue(val valueProvider: () -> Boolean?) : Validation() {
 
     override suspend fun validate() = ValidationResult(
         if (valueProvider() == true)

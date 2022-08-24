@@ -15,7 +15,7 @@ import com.rootstrap.flowforms.core.validation.BasicEmailFormat.Companion.BASIC_
  * @param valueProvider function that returns the values used by the [validate] implementation.
  */
 class BasicEmailFormat(
-    private val valueProvider : () -> String?
+    private val valueProvider: () -> String?
 ) : MatchRegex(BASIC_EMAIL_REGEX, valueProvider) {
 
     companion object {

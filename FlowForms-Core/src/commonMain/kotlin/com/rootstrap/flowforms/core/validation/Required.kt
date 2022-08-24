@@ -12,7 +12,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
  *
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class Required(val valueProvider : () -> String?) : Validation() {
+class Required(val valueProvider: () -> String?) : Validation() {
 
     override suspend fun validate() = ValidationResult(
         if (valueProvider().isNullOrEmpty())

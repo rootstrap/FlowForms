@@ -15,7 +15,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_REGEX_UNSATISFIED
  */
 open class MatchRegex(
     private val regex: Regex,
-    private val valueProvider : () -> String?
+    private val valueProvider: () -> String?
 ) : Validation() {
 
     override suspend fun validate() : ValidationResult {
