@@ -1,2 +1,2 @@
-include(":FlowForms-Core", ":FlowForms-Android-Ext", ":ExampleApp Android")
+include(":FlowForms-Core", ":ExampleApp Android")
 rootProject.name = "FlowForms"

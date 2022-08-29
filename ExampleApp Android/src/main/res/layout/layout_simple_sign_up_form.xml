@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="formModel"
             type="com.rootstrap.flowforms.example.SignUpFormModel" />
@@ -14,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".SignUpFormActivity">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_input_layout"

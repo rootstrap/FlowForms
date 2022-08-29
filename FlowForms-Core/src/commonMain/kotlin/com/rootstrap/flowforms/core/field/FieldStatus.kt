@@ -11,8 +11,8 @@ import com.rootstrap.flowforms.core.validation.ValidationResult
  *
  * By default every fieldStatus starts at [UNMODIFIED]
  *
- * @property code The status of the field. Being it [UNMODIFIED], [CORRECT], [INCORRECT], [IN_PROGRESS] or a custom error code
- * @property validationResults : the list of validations with their results, triggered to reach this status.
+ * @param code The status of the field. Being it [UNMODIFIED], [CORRECT], [INCORRECT], [IN_PROGRESS] or a custom error code
+ * @param validationResults The list of validations with their results, triggered to reach this status.
  */
 data class FieldStatus(
     val code : String = UNMODIFIED,

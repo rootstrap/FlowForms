@@ -2,14 +2,14 @@ package com.rootstrap.flowforms.core.validation
 
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
+import com.rootstrap.flowforms.core.field.FlowField
 
 /**
- * Used by [FField] to update their status given the sum of the validationResults
+ * Used by [FlowField] to update their status given the sum of the validationResults
  *
- * **Properties :**
- *  * failFast : Determines if this validation should short-circuit the validation process.
+ * @param failFast Determines if this validation should short-circuit the validation process.
  * Defaults to true.
- * * async : Determines if the validation should be triggered asynchronously.
+ * @param async Determines if the validation should be triggered asynchronously.
  * Defaults to false.
  */
 abstract class Validation(val failFast : Boolean = true, val async : Boolean = false) {
@@ -27,8 +27,8 @@ abstract class Validation(val failFast : Boolean = true, val async : Boolean = f
  * @property extras extras allows to send additional information about the executed validation and it's result.
  */
 data class ValidationResult(
-    val resultId : String,
-    val extras : Map<String, Any> = mutableMapOf()
+    val resultId: String,
+    val extras: Map<String, Any> = mutableMapOf()
 ) {
     companion object {
 

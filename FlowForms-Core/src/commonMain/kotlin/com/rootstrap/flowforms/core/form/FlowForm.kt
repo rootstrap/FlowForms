@@ -21,7 +21,7 @@ open class FlowForm {
 
     /**
      * Flow with the map of fields contained in this form.
-     * Initially it is an empty map until [withFields] is called with some fields in it.
+     * Initially it is an empty map until [setFields] is called with some fields in it.
      */
     val fields = _fields.asStateFlow()
 
@@ -65,51 +65,63 @@ open class FlowForm {
     }
 
     /**
-     * Defines the map of fields contained in this form and returns itself to chain more methods
-     * and allow to instance the Form in a declarative way.
+     * Defines the map of fields contained in this form, associating them by their ids.
+     *
+     * @return this form to allow method chaining and declarative construction.
      */
-    fun withFields(vararg fields : FlowField) : FlowForm {
+    fun setFields(vararg fields : FlowField) : FlowForm {
         val fieldsMap = fields.associateBy { it.id }
         this._fields.value = fieldsMap
         return this
     }
 
     /**
-     * Sets a coroutineDispatcher that will be used when triggering field validations,
-     * by default it will be used to run asynchronous validations in the
+     * Sets a coroutineDispatcher that will be used when triggering the [FlowField] validations,
+     * by default it is used to run asynchronous validations in the
      * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
+     *
+     * @return this form to allow method chaining and declarative construction.
      */
-    fun withDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
+    fun setDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
         this.coroutineDispatcher = coroutineDispatcher
         return this
     }
 
     /**
-     * Trigger onValueChange validations on the specified field (if it exists in this form)
+     * Trigger onValueChange validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnValueChange(fieldId : String) {
-        this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher)
+    suspend fun validateOnValueChange(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
     }
 
     /**
-     * Trigger onBlur validations on the specified field (if it exists in this form)
+     * Trigger onBlur validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnBlur(fieldId : String) {
-        this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher)
+    suspend fun validateOnBlur(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher) ?: false
     }
 
     /**
-     * Trigger onFocus validations on the specified field (if it exists in this form)
+     * Trigger onFocus validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnFocus(fieldId : String) {
-        this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
+    suspend fun validateOnFocus(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher) ?: false
     }
 
+    /**
+     * Trigger all the validations on all the fields in this form.
+     *
+     * First it will trigger onValueChange validations. If the field is correct, it will continue
+     * with the onFocus validations and if it is stll correct then it will trigger onBlur validations.
+     */
     suspend fun validateAllFields() {
         this._fields.value.forEach {
-            validateOnValueChange(it.key)
-            validateOnFocus(it.key)
-            validateOnBlur(it.key)
+            var fieldIsValid = validateOnValueChange(it.key)
+            fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
+            if (fieldIsValid) validateOnBlur(it.key)
         }
     }
 

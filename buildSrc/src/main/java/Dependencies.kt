@@ -36,6 +36,8 @@ object Dependencies {
         add(CORE_KTX)
         add(APP_COMPAT)
         add(MATERIAL)
+        add(LIFECYCLE_COMMON)
+        add(LIFECYCLE_RUNTIME)
     }
 
     val appLibraries = arrayListOf<String>().apply {
