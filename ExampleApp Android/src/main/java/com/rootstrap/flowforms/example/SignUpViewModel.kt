@@ -10,15 +10,19 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
+import kotlinx.coroutines.Dispatchers
 
 class SignUpViewModel : ViewModel() {
 
     val formModel = SignUpFormModel()
 
-    // TODO : Add async validation example
     val form = FlowForm().setFields(
         FlowField(NAME, listOf(Required { formModel.name })),
-        FlowField(EMAIL, listOf(Required { formModel.email }, BasicEmailFormat { formModel.email })),
+        FlowField(EMAIL, listOf(
+            Required { formModel.email },
+            BasicEmailFormat { formModel.email },
+            EmailDoesNotExistInRemoteStorage(async = true) { formModel.email }
+        )),
         FlowField(NEW_PASSWORD, listOf(
             Required { formModel.newPassword },
             MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
@@ -29,5 +33,5 @@ class SignUpViewModel : ViewModel() {
             Match { formModel.newPassword to formModel.confirmPassword }
         )),
         FlowField(CONFIRMATION, listOf(RequiredTrue { formModel.confirm.value }))
-    )
+    ).setDispatcher(Dispatchers.IO)
 }

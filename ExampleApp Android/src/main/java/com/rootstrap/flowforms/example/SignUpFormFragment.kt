@@ -10,11 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
+import com.rootstrap.flowforms.example.EmailDoesNotExistInRemoteStorage.ResultCode.EMAIL_ALREADY_EXIST
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
 import com.rootstrap.flowforms.util.bind
@@ -89,10 +91,15 @@ class SignUpFormFragment : Fragment() {
 
     private fun onEmailStatusChange(status: FieldStatus) {
         binding?.apply {
+            emailLoadingProgressBar.visibility = View.GONE
+            emailAvailableText.visibility = View.GONE
+            emailInputLayout.error = null
             when (status.code) {
                 REQUIRED_UNSATISFIED -> emailInputLayout.error = getString(R.string.required_field)
                 BASIC_EMAIL_FORMAT_UNSATISFIED -> emailInputLayout.error = getString(R.string.invalid_email)
-                else -> emailInputLayout.error = null
+                EMAIL_ALREADY_EXIST -> emailInputLayout.error = getString(R.string.email_already_exist)
+                IN_PROGRESS -> emailLoadingProgressBar.visibility = View.VISIBLE
+                CORRECT -> emailAvailableText.visibility = View.VISIBLE
             }
         }
     }
