@@ -88,31 +88,40 @@ open class FlowForm {
     }
 
     /**
-     * Trigger onValueChange validations on the specified field (if it exists in this form)
+     * Trigger onValueChange validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnValueChange(fieldId: String) {
-        this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher)
+    suspend fun validateOnValueChange(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
     }
 
     /**
-     * Trigger onBlur validations on the specified field (if it exists in this form)
+     * Trigger onBlur validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnBlur(fieldId: String) {
-        this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher)
+    suspend fun validateOnBlur(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher) ?: false
     }
 
     /**
-     * Trigger onFocus validations on the specified field (if it exists in this form)
+     * Trigger onFocus validations on the specified field (if it exists in this form).
+     * Returns the result of the validations or false if the field does not exist.
      */
-    suspend fun validateOnFocus(fieldId: String) {
-        this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher)
+    suspend fun validateOnFocus(fieldId : String) : Boolean {
+        return this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher) ?: false
     }
 
+    /**
+     * Trigger all the validations on all the fields in this form.
+     *
+     * First it will trigger onValueChange validations. If the field is correct, it will continue
+     * with the onFocus validations and if it is stll correct then it will trigger onBlur validations.
+     */
     suspend fun validateAllFields() {
         this._fields.value.forEach {
-            validateOnValueChange(it.key)
-            validateOnFocus(it.key)
-            validateOnBlur(it.key)
+            var fieldIsValid = validateOnValueChange(it.key)
+            fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
+            if (fieldIsValid) validateOnBlur(it.key)
         }
     }
 

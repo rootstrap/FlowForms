@@ -18,6 +18,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.fail
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -260,7 +261,21 @@ class FlowFormTest {
     }
 
     @Test
-    fun `GIVEN a form with a field with each kind of validation WHEN calling the form's validateAll method THEN assert all the fields validations are triggered`()
+    fun `GIVEN a form without fields WHEN calling the form's validate functions THEN assert the results are all false `()
+            = runTest {
+        val form = FlowForm()
+        val nonExistentFieldId = ""
+
+        form.status.test {
+            assertFalse { form.validateOnValueChange(nonExistentFieldId) }
+            assertFalse { form.validateOnFocus(nonExistentFieldId) }
+            assertFalse { form.validateOnBlur(nonExistentFieldId) }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and the validations are correct THEN assert all the fields validations are triggered`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
@@ -271,14 +286,14 @@ class FlowFormTest {
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
-        coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
         coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns true
+        coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
         every { field2.id } returns "field2"
         every { field2.status } returns flowOf(FieldStatus())
         coEvery { field2.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
-        coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
+        coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
         form.status.test {
             form.setFields(field1, field2)
@@ -286,12 +301,88 @@ class FlowFormTest {
             form.validateAllFields()
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
-            coVerify(exactly = 1) { field1.triggerOnBlurValidations(coroutineDispatcher) }
             coVerify(exactly = 1) { field1.triggerOnFocusValidations(coroutineDispatcher) }
+            coVerify(exactly = 1) { field1.triggerOnBlurValidations(coroutineDispatcher) }
 
             coVerify(exactly = 1) { field2.triggerOnValueChangeValidations(coroutineDispatcher) }
-            coVerify(exactly = 1) { field2.triggerOnBlurValidations(coroutineDispatcher) }
             coVerify(exactly = 1) { field2.triggerOnFocusValidations(coroutineDispatcher) }
+            coVerify(exactly = 1) { field2.triggerOnBlurValidations(coroutineDispatcher) }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and at onValueChange it is not correct THEN assert only onValueChangeValidations were triggered`()
+            = runTest {
+        val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
+
+        val form = FlowForm().setDispatcher(coroutineDispatcher)
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+
+        every { field1.id } returns "field1"
+        every { field1.status } returns flowOf(FieldStatus())
+        coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
+        coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns true
+        coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
+
+        every { field2.id } returns "field2"
+        every { field2.status } returns flowOf(FieldStatus())
+        coEvery { field2.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
+        coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
+        coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
+
+        form.status.test {
+            form.setFields(field1, field2)
+
+            form.validateAllFields()
+
+            coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field1.triggerOnBlurValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field1.triggerOnFocusValidations(coroutineDispatcher) }
+
+            coVerify(exactly = 1) { field2.triggerOnValueChangeValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field2.triggerOnBlurValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field2.triggerOnFocusValidations(coroutineDispatcher) }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and at onFocus it is not correct THEN assert that onBlur validations were not triggered`()
+            = runTest {
+        val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
+
+        val form = FlowForm().setDispatcher(coroutineDispatcher)
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+
+        every { field1.id } returns "field1"
+        every { field1.status } returns flowOf(FieldStatus())
+        coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
+        coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns false
+        coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
+
+        every { field2.id } returns "field2"
+        every { field2.status } returns flowOf(FieldStatus())
+        coEvery { field2.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
+        coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns false
+        coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
+
+        form.status.test {
+            form.setFields(field1, field2)
+
+            form.validateAllFields()
+
+            coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
+            coVerify(exactly = 1) { field1.triggerOnFocusValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field1.triggerOnBlurValidations(coroutineDispatcher) }
+
+            coVerify(exactly = 1) { field2.triggerOnValueChangeValidations(coroutineDispatcher) }
+            coVerify(exactly = 1) { field2.triggerOnFocusValidations(coroutineDispatcher) }
+            coVerify(exactly = 0) { field2.triggerOnBlurValidations(coroutineDispatcher) }
 
             cancelAndIgnoreRemainingEvents()
         }

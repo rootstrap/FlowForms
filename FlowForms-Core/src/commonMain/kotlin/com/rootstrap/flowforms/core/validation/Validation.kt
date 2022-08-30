@@ -27,8 +27,8 @@ abstract class Validation(val failFast : Boolean = true, val async : Boolean = f
  * @property extras extras allows to send additional information about the executed validation and it's result.
  */
 data class ValidationResult(
-    val resultId : String,
-    val extras : Map<String, Any> = mutableMapOf()
+    val resultId: String,
+    val extras: Map<String, Any> = mutableMapOf()
 ) {
     companion object {
 

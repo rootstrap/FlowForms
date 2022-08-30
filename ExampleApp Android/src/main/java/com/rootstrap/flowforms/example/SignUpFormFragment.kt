@@ -8,15 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
-import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
+import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.INVALID_EMAIL
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.MIN_LENGTH_UNSATISFIED
-import com.rootstrap.flowforms.example.validations.ValidEmail.Companion.PASSWORD_MATCH_UNSATISFIED
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
 
@@ -81,8 +81,8 @@ class SignUpFormFragment : Fragment() {
     private fun onNameStatusChange(status: FieldStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT, UNMODIFIED -> nameInputLayout.error = null
-                else -> nameInputLayout.error = getString(R.string.required_field)
+                REQUIRED_UNSATISFIED -> nameInputLayout.error = getString(R.string.required_field)
+                else -> nameInputLayout.error = null
             }
         }
     }
@@ -90,9 +90,9 @@ class SignUpFormFragment : Fragment() {
     private fun onEmailStatusChange(status: FieldStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT, UNMODIFIED -> emailInputLayout.error = null
-                INVALID_EMAIL -> emailInputLayout.error = getString(R.string.invalid_email)
-                else -> emailInputLayout.error = getString(R.string.required_field)
+                REQUIRED_UNSATISFIED -> emailInputLayout.error = getString(R.string.required_field)
+                BASIC_EMAIL_FORMAT_UNSATISFIED -> emailInputLayout.error = getString(R.string.invalid_email)
+                else -> emailInputLayout.error = null
             }
         }
     }
@@ -100,11 +100,11 @@ class SignUpFormFragment : Fragment() {
     private fun onPasswordStatusChange(status: FieldStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT, UNMODIFIED -> passwordInputLayout.error = null
+                REQUIRED_UNSATISFIED -> passwordInputLayout.error = getString(R.string.required_field)
                 MIN_LENGTH_UNSATISFIED -> passwordInputLayout.error = getString(R.string.min_length,
                     MIN_PASSWORD_LENGTH
                 )
-                else -> passwordInputLayout.error = getString(R.string.required_field)
+                else -> passwordInputLayout.error = null
             }
         }
     }
@@ -112,12 +112,12 @@ class SignUpFormFragment : Fragment() {
     private fun onConfirmPasswordChange(status: FieldStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT, UNMODIFIED -> confirmPasswordInputLayout.error = null
+                REQUIRED_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.required_field)
                 MIN_LENGTH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.min_length,
                     MIN_PASSWORD_LENGTH
                 )
-                PASSWORD_MATCH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.password_match)
-                else -> confirmPasswordInputLayout.error = getString(R.string.required_field)
+                MATCH_UNSATISFIED -> confirmPasswordInputLayout.error = getString(R.string.password_match)
+                else -> confirmPasswordInputLayout.error = null
             }
         }
     }
