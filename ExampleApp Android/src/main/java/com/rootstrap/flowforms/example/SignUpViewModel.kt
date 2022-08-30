@@ -10,8 +10,8 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
-import com.rootstrap.flowforms.example.validations.MinLength
 import com.rootstrap.flowforms.example.validations.Match
+import com.rootstrap.flowforms.example.validations.MinLength
 import com.rootstrap.flowforms.example.validations.RequiredTrue
 import com.rootstrap.flowforms.example.validations.ValidEmail
 
@@ -19,7 +19,8 @@ class SignUpViewModel : ViewModel() {
 
     val formModel = SignUpFormModel()
 
-    val form = FlowForm().withFields(
+    // TODO : Add async validation example
+    val form = FlowForm().setFields(
         FlowField(NAME, listOf(Required { formModel.name })),
         FlowField(EMAIL, listOf(Required { formModel.email }, ValidEmail { formModel.email })),
         FlowField(NEW_PASSWORD, listOf(
