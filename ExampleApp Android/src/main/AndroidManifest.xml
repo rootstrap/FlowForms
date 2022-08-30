@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowForms">
         <activity
-            android:name=".MainActivity"
+            android:name=".SignUpFormFragmentContainerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
