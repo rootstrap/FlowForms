@@ -10,6 +10,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
+import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -269,8 +270,8 @@ class DefaultFieldValidationBehaviorTest {
             launch {
                 try {
                     field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
-                } catch (ex : DefaultFieldValidationBehavior.ValidationsCancelledException) {
-                    println("Exception triggered on first method invocation ${ex.message}")
+                } catch (ex : ValidationsCancelledException) {
+                    println("First async validation was cancelled : ${ex.message}")
                 }
             }
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)

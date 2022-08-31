@@ -4,7 +4,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
-import kotlinx.coroutines.CancellationException
+import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,12 +52,17 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
             validationsShortCircuited = false
         )
 
-        runSyncValidations(validationProcessData)
-        return if (asyncValidations.isNotEmpty()) {
-            cancelAsyncValidationsInProgress()
-            startAsyncValidationProcessWithResult(validationProcessData)
-        } else {
-            updateFieldStatusWithFinalResult(validationProcessData)
+        cancelValidationsInProgress()
+        asyncCoroutinesJob = Job()
+        return coroutineScope {
+            withContext(asyncCoroutinesJob!!) {
+                runSyncValidations(validationProcessData)
+                if (asyncValidations.isNotEmpty() && !validationProcessData.validationsShortCircuited) {
+                    startAsyncValidationProcessWithResult(validationProcessData)
+                } else {
+                    updateFieldStatusWithFinalResult(validationProcessData)
+                }
+            }
         }
     }
 
@@ -80,27 +85,20 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
     }
 
-    private suspend fun cancelAsyncValidationsInProgress() {
+    private suspend fun cancelValidationsInProgress() {
         asyncCoroutinesJob?.let {
-            it.cancel(ValidationsCancelledException())
+            it.cancel(ValidationsCancelledException(
+                "Validations cancelled due to validations being triggered again"
+            ))
             it.join()
         }
     }
 
     private suspend fun startAsyncValidationProcessWithResult(data: ValidationProcessData): Boolean {
-        return if (!data.validationsShortCircuited) {
-            asyncCoroutinesJob = Job()
-            coroutineScope {
-                withContext(asyncCoroutinesJob!!) {
-                    data.mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
-                    runAsyncValidations(data)
-                    yield()
-                    updateFieldStatusWithFinalResult(data)
-                }
-            }
-        } else {
-            updateFieldStatusWithFinalResult(data)
-        }
+        data.mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
+        runAsyncValidations(data)
+        yield()
+        return updateFieldStatusWithFinalResult(data)
     }
 
     private suspend fun runAsyncValidations(
@@ -113,7 +111,6 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
                 val completedResults = deferredAsyncValidations.filter {
                     it.isCompleted && !it.isCancelled
                 }.map { it.getCompleted() }
-                yield()
                 validationResults.addAll(completedResults)
                 failedValResults.add(ex.validationResult) // fail-fast failed result
                 validationResults.add(ex.validationResult)
@@ -135,7 +132,6 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
             }
             data.deferredAsyncValidations.awaitAll()
         }
-        yield()
         data.validationResults.addAll(res)
         data.failedValResults.addAll(res.filter { it.resultId != StatusCodes.CORRECT })
     }
@@ -160,10 +156,6 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         val failedValResults: MutableList<ValidationResult>,
         var validationsShortCircuited : Boolean,
         var deferredAsyncValidations: MutableList<Deferred<ValidationResult>> = mutableListOf()
-    )
-
-    class ValidationsCancelledException : CancellationException(
-        "Async validations cancelled due to validations being triggered again"
     )
 
 }
