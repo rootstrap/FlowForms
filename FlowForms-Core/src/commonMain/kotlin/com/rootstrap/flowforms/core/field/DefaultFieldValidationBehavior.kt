@@ -5,7 +5,12 @@ import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
 import com.rootstrap.flowforms.util.whenNotEmptyAnd
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -28,37 +33,64 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?
     ) : Boolean {
-        val validationResults = mutableListOf<ValidationResult>()
-        val failedValResults = mutableListOf<ValidationResult>()
-
         val (asyncValidations, syncValidations) = validations.partition { it.async }
-        var validationsShortCircuited = false
-
         if (asyncValidations.isNotEmpty() && asyncCoroutineDispatcher == null) {
             throw IllegalStateException("Async coroutine dispatcher could not be null in order to use async validations")
         }
 
-        try {
-            syncValidations.forEach { validation ->
-                val res = validation.validate()
-                validationResults.add(res)
-                if (res.resultId != StatusCodes.CORRECT) {
-                    failedValResults.add(res)
-                    if (validation.failFast) {
-                        throw ValidationShortCircuitException(res)
-                    }
-                }
-            }
-        } catch (ex : ValidationShortCircuitException) {
-            validationsShortCircuited = true
+        val validationProcessData = ValidationProcessData(
+            asyncValidations = asyncValidations,
+            syncValidations = syncValidations,
+            asyncCoroutineDispatcher = asyncCoroutineDispatcher,
+            validationResults = mutableListOf(),
+            failedValResults = mutableListOf(),
+            validationsShortCircuited = false
+        )
+
+        runSyncValidations(validationProcessData)
+
+        asyncValidations.whenNotEmptyAnd({ !validationProcessData.validationsShortCircuited }) {
+            mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
+            runAsyncValidations(validationProcessData)
         }
 
-        asyncValidations.whenNotEmptyAnd({ !validationsShortCircuited }) {
-            mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
-            val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
+        val fieldStatus = when {
+            validationProcessData.failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, validationProcessData.validationResults)
+            validationProcessData.failedValResults.size == 1 -> FieldStatus(validationProcessData.failedValResults.first().resultId, validationProcessData.validationResults)
+            else -> FieldStatus(StatusCodes.INCORRECT, validationProcessData.validationResults)
+        }
+
+        mutableFieldStatus.value = fieldStatus
+        return fieldStatus.code == StatusCodes.CORRECT
+    }
+
+    private suspend fun runSyncValidations(validationProcessData: ValidationProcessData) {
+        validationProcessData.run {
+            try {
+                syncValidations.forEach { validation ->
+                    val res = validation.validate()
+                    validationResults.add(res)
+                    if (res.resultId != StatusCodes.CORRECT) {
+                        failedValResults.add(res)
+                        if (validation.failFast) {
+                            throw ValidationShortCircuitException(res)
+                        }
+                    }
+                }
+            } catch (ex : ValidationShortCircuitException) {
+                validationsShortCircuited = true
+            }
+        }
+    }
+
+    private suspend fun runAsyncValidations(
+        validationProcessData: ValidationProcessData
+    ) {
+        val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
+        validationProcessData.run {
             try {
                 val res = coroutineScope {
-                    forEach {
+                    asyncValidations.forEach {
                         deferredCalls.add(async(asyncCoroutineDispatcher!!) {
                             val res = it.validate()
                             if (res.resultId != StatusCodes.CORRECT && it.failFast ) {
@@ -79,17 +111,18 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
                 validationResults.addAll(completedResults)
                 failedValResults.add(ex.validationResult) // fail-fast failed result
                 validationResults.add(ex.validationResult)
+                validationsShortCircuited = true
             }
         }
-
-        val fieldStatus = when {
-            failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, validationResults)
-            failedValResults.size == 1 -> FieldStatus(failedValResults.first().resultId, validationResults)
-            else -> FieldStatus(StatusCodes.INCORRECT, validationResults)
-        }
-
-        mutableFieldStatus.value = fieldStatus
-        return fieldStatus.code == StatusCodes.CORRECT
     }
+
+    private class ValidationProcessData(
+        val syncValidations : List<Validation>,
+        val asyncValidations : List<Validation>,
+        val asyncCoroutineDispatcher: CoroutineDispatcher?,
+        val validationResults: MutableList<ValidationResult>,
+        val failedValResults: MutableList<ValidationResult>,
+        var validationsShortCircuited : Boolean
+    )
 
 }

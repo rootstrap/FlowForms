@@ -250,6 +250,35 @@ class DefaultFieldValidationBehaviorTest {
     }
 
     @Test
+    fun `GIVEN 1 sync and 1 async validation WHEN the sync val is correct and then incorrect while the async val was in progress THEN assert the field last status is INCORRECT`()
+            = runTest {
+        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
+
+        val asyncValidation = asyncValidation(30, ValidationResult.Correct)
+        val regularValidation = mockk<Validation> {
+            every { async } returns false
+            every { this@mockk.failFast } returns true
+
+            coEvery { validate() } coAnswers { ValidationResult.Correct } andThen ValidationResult.Incorrect
+        }
+
+        val field = FlowField("email", listOf(regularValidation, asyncValidation))
+
+        field.status.test {
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+            assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)
+            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+            delay(50)
+
+            assertFieldStatusSequence(this, INCORRECT)
+            coVerify(exactly = 2) { regularValidation.validate() }
+            coVerify(exactly = 1) { asyncValidation.validate() }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `GIVEN the same validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert it was called 3 times`()
             = runTest {
         val validation = validation(ValidationResult.Correct)
