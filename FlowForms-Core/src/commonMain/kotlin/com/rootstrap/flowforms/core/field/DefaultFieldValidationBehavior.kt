@@ -4,14 +4,17 @@ import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
-import com.rootstrap.flowforms.util.whenNotEmptyAnd
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * Default field validation behavior used in fields.
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 @ExperimentalCoroutinesApi
 class DefaultFieldValidationBehavior : FieldValidationBehavior {
+    private var asyncCoroutinesJob : Job? = null
 
     /**
      * Trigger the given validations in the order they were added to the list,
@@ -39,6 +43,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
 
         val validationProcessData = ValidationProcessData(
+            mutableFieldStatus = mutableFieldStatus,
             asyncValidations = asyncValidations,
             syncValidations = syncValidations,
             asyncCoroutineDispatcher = asyncCoroutineDispatcher,
@@ -48,20 +53,12 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         )
 
         runSyncValidations(validationProcessData)
-
-        asyncValidations.whenNotEmptyAnd({ !validationProcessData.validationsShortCircuited }) {
-            mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
-            runAsyncValidations(validationProcessData)
+        return if (asyncValidations.isNotEmpty()) {
+            cancelAsyncValidationsInProgress()
+            startAsyncValidationProcessWithResult(validationProcessData)
+        } else {
+            updateFieldStatusWithFinalResult(validationProcessData)
         }
-
-        val fieldStatus = when {
-            validationProcessData.failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, validationProcessData.validationResults)
-            validationProcessData.failedValResults.size == 1 -> FieldStatus(validationProcessData.failedValResults.first().resultId, validationProcessData.validationResults)
-            else -> FieldStatus(StatusCodes.INCORRECT, validationProcessData.validationResults)
-        }
-
-        mutableFieldStatus.value = fieldStatus
-        return fieldStatus.code == StatusCodes.CORRECT
     }
 
     private suspend fun runSyncValidations(validationProcessData: ValidationProcessData) {
@@ -83,31 +80,40 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
     }
 
-    private suspend fun runAsyncValidations(
-        validationProcessData: ValidationProcessData
-    ) {
-        val deferredCalls = mutableListOf<Deferred<ValidationResult>>()
-        validationProcessData.run {
-            try {
-                val res = coroutineScope {
-                    asyncValidations.forEach {
-                        deferredCalls.add(async(asyncCoroutineDispatcher!!) {
-                            val res = it.validate()
-                            if (res.resultId != StatusCodes.CORRECT && it.failFast ) {
-                                throw ValidationShortCircuitException(res)
-                            }
-                            res
-                        })
-                    }
-                    deferredCalls.awaitAll()
+    private suspend fun cancelAsyncValidationsInProgress() {
+        asyncCoroutinesJob?.let {
+            it.cancel(ValidationsCancelledException())
+            it.join()
+        }
+    }
+
+    private suspend fun startAsyncValidationProcessWithResult(data: ValidationProcessData): Boolean {
+        return if (!data.validationsShortCircuited) {
+            asyncCoroutinesJob = Job()
+            coroutineScope {
+                withContext(asyncCoroutinesJob!!) {
+                    data.mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
+                    runAsyncValidations(data)
+                    yield()
+                    updateFieldStatusWithFinalResult(data)
                 }
-                validationResults.addAll(res)
-                failedValResults.addAll(res.filter { it.resultId != StatusCodes.CORRECT })
+            }
+        } else {
+            updateFieldStatusWithFinalResult(data)
+        }
+    }
+
+    private suspend fun runAsyncValidations(
+        data: ValidationProcessData
+    ) {
+        data.run {
+            try {
+                executeValidationsAsDeferred(this)
             } catch (ex : ValidationShortCircuitException) {
-                val completedResults = deferredCalls.filter {
+                val completedResults = deferredAsyncValidations.filter {
                     it.isCompleted && !it.isCancelled
                 }.map { it.getCompleted() }
-
+                yield()
                 validationResults.addAll(completedResults)
                 failedValResults.add(ex.validationResult) // fail-fast failed result
                 validationResults.add(ex.validationResult)
@@ -116,13 +122,48 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
     }
 
+    private suspend fun executeValidationsAsDeferred(data: ValidationProcessData) {
+        val res = coroutineScope {
+            data.asyncValidations.forEach {
+                data.deferredAsyncValidations.add(async(data.asyncCoroutineDispatcher!!) {
+                    val res = it.validate()
+                    if (res.resultId != StatusCodes.CORRECT && it.failFast ) {
+                        throw ValidationShortCircuitException(res)
+                    }
+                    res
+                })
+            }
+            data.deferredAsyncValidations.awaitAll()
+        }
+        yield()
+        data.validationResults.addAll(res)
+        data.failedValResults.addAll(res.filter { it.resultId != StatusCodes.CORRECT })
+    }
+
+    private fun updateFieldStatusWithFinalResult(data: ValidationProcessData) : Boolean {
+        val fieldStatus = when {
+            data.failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, data.validationResults)
+            data.failedValResults.size == 1 -> FieldStatus(data.failedValResults.first().resultId, data.validationResults)
+            else -> FieldStatus(StatusCodes.INCORRECT, data.validationResults)
+        }
+
+        data.mutableFieldStatus.value = fieldStatus
+        return fieldStatus.code == StatusCodes.CORRECT
+    }
+
     private class ValidationProcessData(
+        val mutableFieldStatus: MutableStateFlow<FieldStatus>,
         val syncValidations : List<Validation>,
         val asyncValidations : List<Validation>,
         val asyncCoroutineDispatcher: CoroutineDispatcher?,
         val validationResults: MutableList<ValidationResult>,
         val failedValResults: MutableList<ValidationResult>,
-        var validationsShortCircuited : Boolean
+        var validationsShortCircuited : Boolean,
+        var deferredAsyncValidations: MutableList<Deferred<ValidationResult>> = mutableListOf()
+    )
+
+    class ValidationsCancelledException : CancellationException(
+        "Async validations cancelled due to validations being triggered again"
     )
 
 }

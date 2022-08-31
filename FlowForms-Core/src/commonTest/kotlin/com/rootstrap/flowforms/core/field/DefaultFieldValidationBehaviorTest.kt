@@ -16,6 +16,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestDispatcher
@@ -265,9 +266,17 @@ class DefaultFieldValidationBehaviorTest {
         val field = FlowField("email", listOf(regularValidation, asyncValidation))
 
         field.status.test {
-            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+            launch {
+                try {
+                    field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+                } catch (ex : DefaultFieldValidationBehavior.ValidationsCancelledException) {
+                    println("Exception triggered on first method invocation ${ex.message}")
+                }
+            }
             assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)
-            field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+            launch {
+                field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
+            }
             delay(50)
 
             assertFieldStatusSequence(this, INCORRECT)
