@@ -47,8 +47,7 @@ class FlowFieldTest {
 
         val field = FlowField(
             "email",
-            listOf(regularValidation, asyncValidation),
-            validationBehavior = DefaultFieldValidationBehavior()
+            listOf(regularValidation, asyncValidation)
         )
 
         field.status.test {
