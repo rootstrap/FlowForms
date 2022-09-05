@@ -4,16 +4,13 @@ import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
-import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 
 /**
@@ -22,7 +19,6 @@ import kotlinx.coroutines.yield
  */
 @ExperimentalCoroutinesApi
 class DefaultFieldValidationBehavior : FieldValidationBehavior {
-    private var asyncCoroutinesJob : Job? = null
 
     /**
      * Trigger the given validations in the order they were added to the list,
@@ -30,7 +26,10 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      *
      * Asynchronous validations are triggered using the given asyncCoroutineDispatcher and only
      * after the regular validations. Considering that if there is a failing failFast regular
-     * validation then the async validations will not be triggered at all for optimum performance.
+     * validation then the async validations will not be triggered at all for optimum performance,
+     * additionally, if there are various async validations in progress and one fails, then all the
+     * other validations will be cancelled.
+     *
      */
     override suspend fun triggerValidations(
         mutableFieldStatus: MutableStateFlow<FieldStatus>,
@@ -52,17 +51,11 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
             validationsShortCircuited = false
         )
 
-        cancelValidationsInProgress()
-        asyncCoroutinesJob = Job()
-        return coroutineScope {
-            withContext(asyncCoroutinesJob!!) {
-                runSyncValidations(validationProcessData)
-                if (asyncValidations.isNotEmpty() && !validationProcessData.validationsShortCircuited) {
-                    startAsyncValidationProcessWithResult(validationProcessData)
-                } else {
-                    updateFieldStatusWithFinalResult(validationProcessData)
-                }
-            }
+        runSyncValidations(validationProcessData)
+        return if (asyncValidations.isNotEmpty() && !validationProcessData.validationsShortCircuited) {
+            startAsyncValidationProcessWithResult(validationProcessData)
+        } else {
+            updateFieldStatusWithFinalResult(validationProcessData)
         }
     }
 
@@ -82,15 +75,6 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
             } catch (ex : ValidationShortCircuitException) {
                 validationsShortCircuited = true
             }
-        }
-    }
-
-    private suspend fun cancelValidationsInProgress() {
-        asyncCoroutinesJob?.let {
-            it.cancel(ValidationsCancelledException(
-                "Validations cancelled due to validations being triggered again"
-            ))
-            it.join()
         }
     }
 

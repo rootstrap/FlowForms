@@ -93,11 +93,14 @@ open class FlowForm {
     }
 
     /**
-     * Trigger onValueChange validations on the specified field (if it exists in this form).
+     * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
      * Returns the result of the validations or false if the field does not exist.
      *
      * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled.
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnValueChangeValidations]._
      */
     suspend fun validateOnValueChange(fieldId : String) : Boolean {
         return try {
@@ -112,7 +115,10 @@ open class FlowForm {
      * Returns the result of the validations or false if the field does not exist.
      *
      * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled.
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnBlurValidations]._
      */
     suspend fun validateOnBlur(fieldId : String) : Boolean {
         return try {
@@ -127,7 +133,10 @@ open class FlowForm {
      * Returns the result of the validations or false if the field does not exist.
      *
      * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled.
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnFocusValidations]._
      */
     suspend fun validateOnFocus(fieldId : String) : Boolean {
         return try {
@@ -140,8 +149,10 @@ open class FlowForm {
     /**
      * Trigger all the validations on all the fields in this form.
      *
-     * First it will trigger onValueChange validations. If the field is correct, it will continue
+     * For every field, it will first trigger onValueChange validations. If the field is correct after
+     * all those validations were completed (including async validations), it will continue
      * with the onFocus validations and if it is still correct then it will trigger onBlur validations.
+     *
      */
     suspend fun validateAllFields() {
         try {

@@ -1,26 +1,18 @@
 package com.rootstrap.flowforms.core.field
 
-import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
-import com.rootstrap.flowforms.core.TEST_IO_DISPATCHER_NAME
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.validation.Validation
+import com.rootstrap.flowforms.core.util.assertFieldStatusSequence
+import com.rootstrap.flowforms.core.util.asyncValidation
+import com.rootstrap.flowforms.core.util.getTestDispatcher
+import com.rootstrap.flowforms.core.util.validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
-import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
-import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -252,43 +244,6 @@ class DefaultFieldValidationBehaviorTest {
     }
 
     @Test
-    fun `GIVEN 1 sync and 1 async validation WHEN the sync val is correct and then incorrect while the async val was in progress THEN assert the field last status is INCORRECT`()
-            = runTest {
-        val testAsyncCoroutineDispatcher = getTestDispatcher(testScheduler)
-
-        val asyncValidation = asyncValidation(30, ValidationResult.Correct)
-        val regularValidation = mockk<Validation> {
-            every { async } returns false
-            every { this@mockk.failFast } returns true
-
-            coEvery { validate() } coAnswers { ValidationResult.Correct } andThen ValidationResult.Incorrect
-        }
-
-        val field = FlowField("email", listOf(regularValidation, asyncValidation))
-
-        field.status.test {
-            launch {
-                try {
-                    field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
-                } catch (ex : ValidationsCancelledException) {
-                    println("First async validation was cancelled : ${ex.message}")
-                }
-            }
-            assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)
-            launch {
-                field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
-            }
-            delay(50)
-
-            assertFieldStatusSequence(this, INCORRECT)
-            coVerify(exactly = 2) { regularValidation.validate() }
-            coVerify(exactly = 1) { asyncValidation.validate() }
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
     fun `GIVEN the same validation in OnValueChange, OnBlur, and OnFocus Validations, THEN assert it was called 3 times`()
             = runTest {
         val validation = validation(ValidationResult.Correct)
@@ -336,38 +291,6 @@ class DefaultFieldValidationBehaviorTest {
 
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    // Helper functions
-
-    private fun getTestDispatcher(testScheduler: TestCoroutineScheduler): TestDispatcher {
-        return StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-    }
-
-    private fun validation(result : ValidationResult, failFast : Boolean = false)
-            = mockk<Validation> {
-        every { async } returns false
-        every { this@mockk.failFast } returns failFast
-        coEvery { validate() } coAnswers { result }
-    }
-
-    private fun asyncValidation(delayInMillis : Long, result : ValidationResult, failFast : Boolean = false)
-    = mockk<Validation> {
-        every { async } returns true
-        every { this@mockk.failFast } returns failFast
-        coEvery { validate() } coAnswers {
-            delay(delayInMillis)
-            result
-        }
-    }
-
-    private suspend fun assertFieldStatusSequence(flowTurbine: FlowTurbine<FieldStatus>, vararg statuses: String): FieldStatus {
-        var lastValue :FieldStatus? = null
-        statuses.forEach {
-            lastValue = flowTurbine.awaitItem()
-            assertEquals(it, lastValue?.code)
-        }
-        return lastValue!!
     }
 
 }
