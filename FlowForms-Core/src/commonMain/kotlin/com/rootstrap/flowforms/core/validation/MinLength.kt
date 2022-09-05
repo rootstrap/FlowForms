@@ -20,9 +20,16 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
  * If you don't want to include left and right whitespaces please call .trim() on the value provided.
  *
  * @param minLength Indicates the minimum length the provided string can have, inclusive.
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class MinLength(private val minLength: Int, val valueProvider: () -> String?) : Validation() {
+class MinLength(
+    private val minLength: Int,
+    failFast : Boolean = true,
+    async : Boolean = false,
+    val valueProvider: () -> String?
+) : Validation(failFast = failFast, async = async) {
 
     override suspend fun validate() : ValidationResult {
         val value = valueProvider() ?: return ValidationResult(MIN_LENGTH_UNSATISFIED)
