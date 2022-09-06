@@ -52,6 +52,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         )
 
         runSyncValidations(validationProcessData)
+        yield()
         return if (asyncValidations.isNotEmpty() && !validationProcessData.validationsShortCircuited) {
             startAsyncValidationProcessWithResult(validationProcessData)
         } else {
@@ -120,13 +121,14 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         data.failedValResults.addAll(res.filter { it.resultId != StatusCodes.CORRECT })
     }
 
-    private fun updateFieldStatusWithFinalResult(data: ValidationProcessData) : Boolean {
+    private suspend fun updateFieldStatusWithFinalResult(data: ValidationProcessData) : Boolean {
         val fieldStatus = when {
             data.failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, data.validationResults)
             data.failedValResults.size == 1 -> FieldStatus(data.failedValResults.first().resultId, data.validationResults)
             else -> FieldStatus(StatusCodes.INCORRECT, data.validationResults)
         }
 
+        yield()
         data.mutableFieldStatus.value = fieldStatus
         return fieldStatus.code == StatusCodes.CORRECT
     }
