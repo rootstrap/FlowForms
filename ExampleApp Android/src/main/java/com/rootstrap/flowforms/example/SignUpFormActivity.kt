@@ -1,17 +1,20 @@
 package com.rootstrap.flowforms.example
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
+import com.rootstrap.flowforms.example.EmailDoesNotExistsInRemoteStorage.ResultCode.EMAIL_ALREADY_EXISTS
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRMATION
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWORD
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
@@ -76,10 +79,17 @@ class SignUpFormActivity : AppCompatActivity() {
     }
 
     private fun onEmailStatusChange(status: FieldStatus) {
-        when (status.code) {
-            REQUIRED_UNSATISFIED -> binding.emailInputLayout.error = getString(R.string.required_field)
-            BASIC_EMAIL_FORMAT_UNSATISFIED -> binding.emailInputLayout.error = getString(R.string.invalid_email)
-            else -> binding.emailInputLayout.error = null
+        binding.apply {
+            emailAvailableText.visibility = View.GONE
+            emailLoadingProgressBar.visibility = View.GONE
+            emailInputLayout.error = null
+            when (status.code) {
+                REQUIRED_UNSATISFIED -> emailInputLayout.error = getString(R.string.required_field)
+                BASIC_EMAIL_FORMAT_UNSATISFIED -> emailInputLayout.error = getString(R.string.invalid_email)
+                EMAIL_ALREADY_EXISTS -> emailInputLayout.error = getString(R.string.email_already_exist)
+                IN_PROGRESS -> emailLoadingProgressBar.visibility = View.VISIBLE
+                CORRECT ->  emailAvailableText.visibility = View.VISIBLE
+            }
         }
     }
 

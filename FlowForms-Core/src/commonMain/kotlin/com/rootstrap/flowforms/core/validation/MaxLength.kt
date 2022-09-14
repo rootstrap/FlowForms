@@ -21,9 +21,16 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MAX_LENGTH_UNSATISFIED
  * If you don't want to include left and right whitespaces please call .trim() on the value provided.
  *
  * @param maxLength Indicates the maximum length the provided string can have, inclusive.
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class MaxLength(private val maxLength: Int, val valueProvider: () -> String?) : Validation() {
+class MaxLength(
+    private val maxLength: Int,
+    failFast : Boolean = true,
+    async : Boolean = false,
+    val valueProvider: () -> String?
+) : Validation(failFast = failFast, async = async) {
 
     override suspend fun validate() : ValidationResult {
         val value = valueProvider() ?: return ValidationResult(MAX_LENGTH_UNSATISFIED)
