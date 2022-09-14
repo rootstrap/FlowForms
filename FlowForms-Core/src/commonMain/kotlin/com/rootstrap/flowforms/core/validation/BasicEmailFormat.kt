@@ -12,11 +12,15 @@ import com.rootstrap.flowforms.core.validation.BasicEmailFormat.Companion.BASIC_
  * The validation fun returns [CORRECT] when the provided value's format matches a [basic email
  * format][BASIC_EMAIL_REGEX]. Otherwise returns [BASIC_EMAIL_FORMAT_UNSATISFIED].
  *
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the values used by the [validate] implementation.
  */
 class BasicEmailFormat(
+    failFast : Boolean = true,
+    async : Boolean = false,
     private val valueProvider: () -> String?
-) : MatchRegex(BASIC_EMAIL_REGEX, valueProvider) {
+) : MatchRegex(BASIC_EMAIL_REGEX, failFast = failFast, async = async, valueProvider = valueProvider) {
 
     companion object {
 

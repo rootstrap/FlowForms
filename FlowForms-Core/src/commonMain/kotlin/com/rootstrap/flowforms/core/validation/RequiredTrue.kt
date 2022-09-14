@@ -16,9 +16,15 @@ import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_TRUE_UNSATISFIED
  *  - false = false
  *  - null = false
  *
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the value used by the [validate] implementation.
  */
-class RequiredTrue(val valueProvider: () -> Boolean?) : Validation() {
+class RequiredTrue(
+    failFast : Boolean = true,
+    async : Boolean = false,
+    val valueProvider: () -> Boolean?
+) : Validation(failFast = failFast, async = async) {
 
     override suspend fun validate() = ValidationResult(
         if (valueProvider() == true)

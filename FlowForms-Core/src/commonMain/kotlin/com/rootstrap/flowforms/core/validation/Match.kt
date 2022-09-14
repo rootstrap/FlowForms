@@ -21,9 +21,15 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
  * - "aBc" to "abc" = false
  * - object to object = depends on its equals implementation.
  *
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the values used by the [validate] implementation.
  */
-class Match(val valueProvider: () -> Pair<Any?, Any?>) : Validation() {
+class Match(
+    failFast : Boolean = true,
+    async : Boolean = false,
+    val valueProvider: () -> Pair<Any?, Any?>
+) : Validation(failFast = failFast, async = async) {
 
     override suspend fun validate() : ValidationResult {
         val value = valueProvider()

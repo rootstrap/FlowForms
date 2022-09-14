@@ -11,12 +11,16 @@ import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_REGEX_UNSATISFIED
  * expression. Otherwise returns [MATCH_REGEX_UNSATISFIED].
  *
  * @param regex Regular expression to match the string given by the valueProvider.
+ * @param failFast **Optional**, refer to failFast property on [Validation] class.
+ * @param async **Optional**, refer to async property on [Validation] class.
  * @param valueProvider function that returns the values used by the [validate] implementation.
  */
 open class MatchRegex(
     private val regex: Regex,
+    failFast : Boolean = true,
+    async : Boolean = false,
     private val valueProvider: () -> String?
-) : Validation() {
+) : Validation(failFast = failFast, async = async) {
 
     override suspend fun validate() : ValidationResult {
         val stringToMatch = valueProvider() ?: return ValidationResult(MATCH_REGEX_UNSATISFIED)
