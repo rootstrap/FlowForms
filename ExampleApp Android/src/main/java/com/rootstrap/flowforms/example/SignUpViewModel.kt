@@ -21,7 +21,7 @@ class SignUpViewModel : ViewModel() {
         FlowField(EMAIL, listOf(
             Required { formModel.email },
             BasicEmailFormat { formModel.email },
-            EmailDoesNotExistInRemoteStorage(async = true) { formModel.email }
+            EmailDoesNotExistsInRemoteStorage(async = true) { formModel.email }
         )),
         FlowField(NEW_PASSWORD, listOf(
             Required { formModel.newPassword },
