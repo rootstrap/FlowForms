@@ -32,15 +32,18 @@ allprojects {
 ```kotlin
 dependencies {
   ..
-  val flowFormsVersion = "0.0.2"
+  val flowFormsVersion = "0.0.3"
+    
+  // Use this to get FlowForms Core module on Android 
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // Use this to get FlowForms Core module only for jvm targets
+  // Use this to get FlowForms Core module on jvm targets
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
 
   // Use this to get the whole FlowForms Core module (for all available targets)
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
   
-  // Use this to get every FlowForms modules together (currently we only have FlowForms Core so it's the same as above) 
+  // Use this to get every FlowForms modules together (currently we only have FlowForms Core so it's the same as above but shorter) 
   implementation("com.github.rootstrap:FlowForms:$flowFormsVersion")
   ..
 }
