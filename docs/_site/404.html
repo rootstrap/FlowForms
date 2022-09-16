@@ -3,18 +3,37 @@
 <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/styles.css" rel="stylesheet" >
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-<nav>
-    
-    <a href="/" >Home</a>
-    
-    <a href="/about.html" >About</a>
-    
+    <div id="wrapper">
+        <nav>
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">FlowForms docs</li>
+            
+            <li> <a href="/" >Home</a> </li>
+            
+            <li> <a href="/pages/about.html" >About</a> </li>
+            
+        </ul>
+    </div>
 </nav>
 
-<style type="text/css" media="screen">
+
+        <div class="content-header">
+    <h1>
+        <a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
+        Simple Sidebar
+    </h1>
+</div>
+
+
+        <div id="page-content-wrapper">
+            <div class="page-content inset">
+                <style type="text/css" media="screen">
   .container {
     margin: 10px auto;
     max-width: 600px;
@@ -35,5 +54,13 @@
   <p>The requested page could not be found.</p>
 </div>
 
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/assets/js/jquery-1.10.2.js"></script>
+    <script src="/assets/js/bootstrap.js"></script>
+    <script src="/assets/js/main.js"></script>
 </body>
 </html>
