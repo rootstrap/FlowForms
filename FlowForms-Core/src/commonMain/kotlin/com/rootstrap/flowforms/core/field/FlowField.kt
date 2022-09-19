@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
  * @property onBlurValidations list of validations to trigger when the field loses the focus.
  * @property onFocusValidations list of validations to trigger when the field gains focus.
  */
-open class FlowField(
+class FlowField(
     val id : String,
     private val onValueChangeValidations : List<Validation> = mutableListOf(),
     private val onBlurValidations : List<Validation> = mutableListOf(),
@@ -45,14 +45,7 @@ open class FlowField(
     private var onFocusCoroutinesJob : Job? = null
     private var onBlurCoroutinesJob : Job? = null
 
-    /**
-     * Flow with the field's status. Initially it will be in an [UNMODIFIED] state.
-     * As long as the [Validation]s are triggered, this flow will be updated based on the [Validation]s
-     * results and the available validations.
-     *
-     * For more information about the possible statuses check [FieldStatus]
-     */
-    val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
+    override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
         when {
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
