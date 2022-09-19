@@ -29,7 +29,7 @@ class FlowFormBuilder {
     var dispatcher : CoroutineDispatcher? = null
 
     /**
-     * Builds the form using this builder's properties.
+     * Builds a [FlowForm] using this builder properties.
      */
     fun build() : FlowForm {
         return FlowForm(
