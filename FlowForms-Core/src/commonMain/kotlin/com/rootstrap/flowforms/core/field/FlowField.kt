@@ -8,7 +8,6 @@ import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,6 @@ import kotlinx.coroutines.withContext
  * @property onBlurValidations list of validations to trigger when the field loses the focus.
  * @property onFocusValidations list of validations to trigger when the field gains focus.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 open class FlowField(
     val id : String,
     private val onValueChangeValidations : List<Validation> = mutableListOf(),

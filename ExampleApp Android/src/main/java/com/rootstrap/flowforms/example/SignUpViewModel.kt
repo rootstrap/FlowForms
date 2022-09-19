@@ -1,7 +1,6 @@
 package com.rootstrap.flowforms.example
 
 import androidx.lifecycle.ViewModel
-import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.flowForm
 import com.rootstrap.flowforms.core.validation.BasicEmailFormat
 import com.rootstrap.flowforms.core.validation.Match
@@ -21,24 +20,22 @@ class SignUpViewModel : ViewModel() {
     val formModel = SignUpFormModel()
 
     val form = flowForm {
-        fields(
-            FlowField(NAME, listOf(Required { formModel.name })),
-            FlowField(EMAIL, listOf(
-                Required { formModel.email },
-                BasicEmailFormat { formModel.email },
-                EmailDoesNotExistsInRemoteStorage(async = true) { formModel.email }
-            )),
-            FlowField(NEW_PASSWORD, listOf(
-                Required { formModel.newPassword },
-                MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
-            )),
-            FlowField(CONFIRM_PASSWORD, listOf(
-                Required { formModel.confirmPassword },
-                MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword },
-                Match { formModel.newPassword to formModel.confirmPassword }
-            )),
-            FlowField(CONFIRMATION, listOf(RequiredTrue { formModel.confirm.value }))
+        field(NAME, Required { formModel.name })
+        field(EMAIL,
+            Required { formModel.email },
+            BasicEmailFormat { formModel.email },
+            EmailDoesNotExistsInRemoteStorage(async = true) { formModel.email }
         )
+        field(NEW_PASSWORD,
+            Required { formModel.newPassword },
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
+        )
+        field(CONFIRM_PASSWORD,
+            Required { formModel.confirmPassword },
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword },
+            Match { formModel.newPassword to formModel.confirmPassword }
+        )
+        field(CONFIRMATION, RequiredTrue { formModel.confirm.value })
         dispatcher = Dispatchers.IO
     }
 

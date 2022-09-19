@@ -6,7 +6,6 @@ import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -17,7 +16,6 @@ import kotlinx.coroutines.yield
  * Default field validation behavior used in fields.
  * To know how the validations behave by default see [triggerValidations]
  */
-@ExperimentalCoroutinesApi
 class DefaultFieldValidationBehavior : FieldValidationBehavior {
 
     /**

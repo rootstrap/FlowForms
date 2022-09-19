@@ -22,7 +22,7 @@ import kotlin.test.assertIs
 /**
  * Test the DefaultFieldValidationBehavior using a FField.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class DefaultFieldValidationBehaviorTest {
 
     @Test
