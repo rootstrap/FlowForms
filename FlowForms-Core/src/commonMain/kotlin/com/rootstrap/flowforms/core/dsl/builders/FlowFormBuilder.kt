@@ -1,6 +1,7 @@
-package com.rootstrap.flowforms.core.form
+package com.rootstrap.flowforms.core.dsl.builders
 
 import com.rootstrap.flowforms.core.field.FlowField
+import com.rootstrap.flowforms.core.form.FlowForm
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 

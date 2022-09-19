@@ -1,8 +1,8 @@
 package com.rootstrap.flowforms.example
 
 import androidx.lifecycle.ViewModel
+import com.rootstrap.flowforms.core.dsl.flowForm
 import com.rootstrap.flowforms.core.field.FlowField
-import com.rootstrap.flowforms.core.form.flowForm
 import com.rootstrap.flowforms.core.validation.BasicEmailFormat
 import com.rootstrap.flowforms.core.validation.Match
 import com.rootstrap.flowforms.core.validation.MinLength

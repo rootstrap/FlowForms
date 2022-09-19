@@ -142,9 +142,3 @@ class FlowForm internal constructor(
     }
 
 }
-
-fun flowForm(init : FlowFormBuilder.() -> Unit) : FlowForm {
-    val formBuilder = FlowFormBuilder()
-    formBuilder.init()
-    return formBuilder.build()
-}

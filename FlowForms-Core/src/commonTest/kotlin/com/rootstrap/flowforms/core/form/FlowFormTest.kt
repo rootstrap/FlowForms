@@ -6,6 +6,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.dsl.flowForm
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.field.FlowField
 import io.mockk.coEvery
