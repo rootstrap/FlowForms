@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.dsl.builders
 
+import com.rootstrap.flowforms.core.dsl.FlowFormsDslMarker
 import com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior
 import com.rootstrap.flowforms.core.field.FieldValidationBehavior
 import com.rootstrap.flowforms.core.field.FlowField
@@ -9,6 +10,7 @@ import com.rootstrap.flowforms.core.validation.Validation
  * Builder to create [FlowField]s, intended primarily for DSL. To learn how to use it with DSL
  * please refer to the [FlowFormBuilder] DSL public functions, for example : [FlowFormBuilder.field].
  */
+@FlowFormsDslMarker
 class FlowFieldBuilder {
 
     private var onValueChangeValidations = listOf<Validation>()

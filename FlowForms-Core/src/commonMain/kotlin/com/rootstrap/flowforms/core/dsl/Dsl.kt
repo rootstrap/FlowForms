@@ -3,6 +3,9 @@ package com.rootstrap.flowforms.core.dsl
 import com.rootstrap.flowforms.core.dsl.builders.FlowFormBuilder
 import com.rootstrap.flowforms.core.form.FlowForm
 
+@DslMarker
+annotation class FlowFormsDslMarker
+
 /**
  * Simply create a [FlowForm] using [FlowForm]'s DSL.
  *

@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.dsl.builders
 
+import com.rootstrap.flowforms.core.dsl.FlowFormsDslMarker
 import com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * Builder to create FlowForms, intended primarily for DSL. To learn how to use it with DSL
  * please refer to the [flowForm][com.rootstrap.flowforms.core.dsl.flowForm] DSL function.
  */
+@FlowFormsDslMarker
 class FlowFormBuilder {
 
     /**
