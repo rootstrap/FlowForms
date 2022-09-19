@@ -27,14 +27,14 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form WHEN created with 2 fields THEN assert it has 2 fields`()
     = runTest {
-        val form = FlowForm()
-
-        form.fields.test {
-            form.setFields(
+        val form = flowForm {
+            fields(
                 FlowField("testField1", emptyList()),
                 FlowField("testField2", onValueChangeValidations = emptyList())
             )
-            awaitItem()
+        }
+
+        form.fields.test {
             assertEquals(2, awaitItem().size)
             cancelAndIgnoreRemainingEvents()
         }
@@ -43,8 +43,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form WHEN created with 2 fields THEN assert the form status is UNMODIFIED`()
     = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -53,19 +51,17 @@ class FlowFormTest {
         every { field2.id } returns "field2"
         every { field2.status } returns flowOf(FieldStatus())
 
-        form.status.test {
-            form.setFields(field1, field2)
-            assertEquals(awaitItem().code, UNMODIFIED)
+        flowForm {
+            fields(field1, field2)
+        }.status.test {
+            assertEquals(UNMODIFIED, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
-
     }
 
     @Test
     fun `GIVEN a form with 2 fields WHEN one field become incorrect THEN assert the form status changes from UNMODIFIED to INCORRECT`()
     = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -74,10 +70,11 @@ class FlowFormTest {
         every { field2.id } returns "field2"
         every { field2.status } returns flowOf(FieldStatus())
 
-        form.status.test {
-            form.setFields(field1, field2)
-            assertEquals(awaitItem().code, UNMODIFIED)
-            assertEquals(awaitItem().code, INCORRECT)
+        flowForm {
+            fields(field1, field2)
+        }.status.test {
+            assertEquals(UNMODIFIED, awaitItem().code, )
+            assertEquals(INCORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -85,8 +82,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 2 fields WHEN one field become correct THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
             = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -95,10 +90,11 @@ class FlowFormTest {
         every { field2.id } returns "field2"
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
-        form.status.test {
-            form.setFields(field1, field2)
-            assertEquals(awaitItem().code, UNMODIFIED)
-            assertEquals(awaitItem().code, INCOMPLETE)
+        flowForm {
+            fields(field1, field2)
+        }.status.test {
+            assertEquals(UNMODIFIED, awaitItem().code, )
+            assertEquals(INCOMPLETE, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -106,8 +102,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 2 fields WHEN both fields become correct at the same time THEN assert the form status changes from UNMODIFIED to CORRECT`()
             = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -116,10 +110,11 @@ class FlowFormTest {
         every { field2.id } returns "field2"
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
-        form.status.test {
-            form.setFields(field1, field2)
-            assertEquals(awaitItem().code, UNMODIFIED)
-            assertEquals(awaitItem().code, CORRECT)
+        flowForm {
+            fields(field1, field2)
+        }.status.test {
+            assertEquals(UNMODIFIED, awaitItem().code)
+            assertEquals(CORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -127,8 +122,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN only two fields become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
             = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
@@ -142,8 +135,9 @@ class FlowFormTest {
         every { field3.id } returns "field3"
         every { field3.status } returns flowOf(FieldStatus())
 
-        form.status.test {
-            form.setFields(field1, field2, field3)
+        flowForm {
+            fields(field1, field2, field3)
+        }.status.test {
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCOMPLETE)
@@ -154,8 +148,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN one field become correct and one become incorrect THEN assert the form status changes from UNMODIFIED to INCOMPLETE TO INCORRECT`()
             = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
@@ -169,8 +161,9 @@ class FlowFormTest {
         every { field3.id } returns "field3"
         every { field3.status } returns flowOf(FieldStatus())
 
-        form.status.test {
-            form.setFields(field1, field2, field3)
+        flowForm {
+            fields(field1, field2, field3)
+        }.status.test {
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCORRECT)
@@ -181,8 +174,6 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 3 fields WHEN they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to CORRECT`()
             = runTest {
-        val form = FlowForm()
-
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
@@ -196,8 +187,9 @@ class FlowFormTest {
         every { field3.id } returns "field3"
         every { field3.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
 
-        form.status.test {
-            form.setFields(field1, field2, field3)
+        flowForm {
+            fields(field1, field2, field3)
+        }.status.test {
             assertEquals(awaitItem().code, UNMODIFIED)
             assertEquals(awaitItem().code, INCOMPLETE)
             assertEquals(awaitItem().code, INCOMPLETE)
@@ -210,8 +202,6 @@ class FlowFormTest {
     fun `GIVEN a form with a field for each validation option WHEN calling the form's validation methods THEN assert the fields corresponding validations are triggered exactly once`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-
-        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
@@ -228,8 +218,12 @@ class FlowFormTest {
         every { field3.status } returns flowOf(FieldStatus())
         coEvery { field3.triggerOnFocusValidations(coroutineDispatcher) } returns true
 
+        val form = flowForm {
+            fields(field1, field2, field3)
+            dispatcher = coroutineDispatcher
+        }
+
         form.status.test {
-            form.setFields(field1, field2, field3)
             form.validateOnValueChange("field1")
             form.validateOnBlur("field2")
             form.validateOnFocus("field3")
@@ -245,8 +239,7 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form without fields WHEN the validate methods are called THEN assert the app does not crashes`()
             = runTest {
-
-        val form = FlowForm()
+        val form = flowForm { }
         val nonExistentFieldId = "fieldNonExistent"
 
         try {
@@ -257,13 +250,12 @@ class FlowFormTest {
         } catch (t : Throwable) {
             fail("form's validate methods crashed after calling them : ${t.message}", t)
         }
-
     }
 
     @Test
     fun `GIVEN a form without fields WHEN calling the form's validate functions THEN assert the results are all false `()
             = runTest {
-        val form = FlowForm()
+        val form = flowForm { }
         val nonExistentFieldId = ""
 
         form.status.test {
@@ -278,8 +270,6 @@ class FlowFormTest {
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and the validations are correct THEN assert all the fields validations are triggered`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-
-        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -295,9 +285,12 @@ class FlowFormTest {
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
         coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
-        form.status.test {
-            form.setFields(field1, field2)
+        val form = flowForm {
+            fields(field1, field2)
+            dispatcher = coroutineDispatcher
+        }
 
+        form.status.test {
             form.validateAllFields()
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
@@ -316,8 +309,6 @@ class FlowFormTest {
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and at onValueChange it is not correct THEN assert only onValueChangeValidations were triggered`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-
-        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -333,9 +324,12 @@ class FlowFormTest {
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
         coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
-        form.status.test {
-            form.setFields(field1, field2)
+        val form = flowForm {
+            fields(field1, field2)
+            dispatcher = coroutineDispatcher
+        }
 
+        form.status.test {
             form.validateAllFields()
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
@@ -355,7 +349,6 @@ class FlowFormTest {
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
-        val form = FlowForm().setDispatcher(coroutineDispatcher)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
@@ -371,9 +364,12 @@ class FlowFormTest {
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns false
         coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
-        form.status.test {
-            form.setFields(field1, field2)
+        val form = flowForm {
+            fields(field1, field2)
+            dispatcher = coroutineDispatcher
+        }
 
+        form.status.test {
             form.validateAllFields()
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }

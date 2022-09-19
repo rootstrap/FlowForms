@@ -19,10 +19,10 @@ import kotlinx.coroutines.flow.flatMapLatest
  *
  * Based on flows, its status is updated automatically when any of the field's inner status changes.
  */
-open class FlowForm {
-
-    private val _fields = MutableStateFlow(mapOf<String, FlowField>())
+class FlowForm internal constructor(
+    private val _fields : MutableStateFlow<Map<String, FlowField>> = MutableStateFlow(emptyMap()),
     private var coroutineDispatcher: CoroutineDispatcher? = null
+) {
 
     /**
      * Flow with the map of fields contained in this form.
@@ -67,29 +67,6 @@ open class FlowForm {
                 else -> FormStatus.Incomplete
             }
         }
-    }
-
-    /**
-     * Defines the map of fields contained in this form, associating them by their ids.
-     *
-     * @return this form to allow method chaining and declarative construction.
-     */
-    fun setFields(vararg fields: FlowField) : FlowForm {
-        val fieldsMap = fields.associateBy { it.id }
-        this._fields.value = fieldsMap
-        return this
-    }
-
-    /**
-     * Sets a coroutineDispatcher that will be used when triggering the [FlowField] validations,
-     * by default it is used to run asynchronous validations in the
-     * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
-     *
-     * @return this form to allow method chaining and declarative construction.
-     */
-    fun setDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
-        this.coroutineDispatcher = coroutineDispatcher
-        return this
     }
 
     /**
@@ -164,4 +141,10 @@ open class FlowForm {
         } catch (ignored : ValidationsCancelledException) { }
     }
 
+}
+
+fun flowForm(init : FlowFormBuilder.() -> Unit) : FlowForm {
+    val formBuilder = FlowFormBuilder()
+    formBuilder.init()
+    return formBuilder.build()
 }
