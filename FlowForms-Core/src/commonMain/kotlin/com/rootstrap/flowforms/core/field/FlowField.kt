@@ -24,12 +24,12 @@ import kotlinx.coroutines.withContext
  * @property onFocusValidations list of validations to trigger when the field gains focus.
  */
 class FlowField(
-    val id : String,
+    override val id : String,
     private val onValueChangeValidations : List<Validation> = mutableListOf(),
     private val onBlurValidations : List<Validation> = mutableListOf(),
     private val onFocusValidations : List<Validation> = mutableListOf(),
     private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior()
-) : FieldActions {
+) : FieldDefinition {
 
     private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
         if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED

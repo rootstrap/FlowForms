@@ -7,9 +7,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Represent the available field actions and their definitions
+ * Represent the necessary field actions, variables, and their definitions
  */
-interface FieldActions {
+interface FieldDefinition {
+
+    /**
+     * field unique identifier
+     */
+    val id : String
 
     /**
      * Flow with the field's status. Initially it will be in an [UNMODIFIED] state.

@@ -3,7 +3,7 @@ package com.rootstrap.flowforms.core.form
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.field.FieldActions
+import com.rootstrap.flowforms.core.field.FieldDefinition
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.flatMapLatest
  * Based on flows, its status is updated automatically when any of the field's inner status changes.
  */
 class FlowForm internal constructor(
-    private val _fields : MutableStateFlow<Map<String, FieldActions>> = MutableStateFlow(emptyMap()),
+    private val _fields : MutableStateFlow<Map<String, FieldDefinition>> = MutableStateFlow(emptyMap()),
     private var coroutineDispatcher: CoroutineDispatcher? = null
 ) {
 

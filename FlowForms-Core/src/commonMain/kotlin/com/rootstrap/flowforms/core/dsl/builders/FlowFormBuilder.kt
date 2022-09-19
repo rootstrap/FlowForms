@@ -2,6 +2,7 @@ package com.rootstrap.flowforms.core.dsl.builders
 
 import com.rootstrap.flowforms.core.dsl.FlowFormsDslMarker
 import com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior
+import com.rootstrap.flowforms.core.field.FieldDefinition
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
 import com.rootstrap.flowforms.core.validation.Validation
@@ -18,7 +19,7 @@ class FlowFormBuilder {
     /**
      * fields mapped by their ID, used to create the final Form implementation.
      */
-    private val fieldsMap = HashMap<String, FlowField>()
+    private val fieldsMap = HashMap<String, FieldDefinition>()
 
     /**
      * CoroutineDispatcher that will be used when triggering the [FlowField] validations,
@@ -40,7 +41,7 @@ class FlowFormBuilder {
     /**
      * Add fields to the FlowForm being built.
      */
-    fun fields(vararg fields : FlowField) {
+    fun fields(vararg fields : FieldDefinition) {
         fieldsMap.putAll(fields.associateBy { it.id })
     }
 
