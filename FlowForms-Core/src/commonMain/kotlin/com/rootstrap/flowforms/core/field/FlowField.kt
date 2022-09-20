@@ -8,7 +8,6 @@ import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -24,14 +23,13 @@ import kotlinx.coroutines.withContext
  * @property onBlurValidations list of validations to trigger when the field loses the focus.
  * @property onFocusValidations list of validations to trigger when the field gains focus.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
-open class FlowField(
-    val id : String,
+class FlowField(
+    override val id : String,
     private val onValueChangeValidations : List<Validation> = mutableListOf(),
     private val onBlurValidations : List<Validation> = mutableListOf(),
     private val onFocusValidations : List<Validation> = mutableListOf(),
     private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior()
-) : FieldActions {
+) : FieldDefinition {
 
     private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
         if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
@@ -47,14 +45,7 @@ open class FlowField(
     private var onFocusCoroutinesJob : Job? = null
     private var onBlurCoroutinesJob : Job? = null
 
-    /**
-     * Flow with the field's status. Initially it will be in an [UNMODIFIED] state.
-     * As long as the [Validation]s are triggered, this flow will be updated based on the [Validation]s
-     * results and the available validations.
-     *
-     * For more information about the possible statuses check [FieldStatus]
-     */
-    val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
+    override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
         when {
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
