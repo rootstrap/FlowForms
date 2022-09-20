@@ -2,7 +2,15 @@ package com.rootstrap.flowforms.core.common
 
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
-import com.rootstrap.flowforms.core.validation.*
+import com.rootstrap.flowforms.core.validation.BasicEmailFormat
+import com.rootstrap.flowforms.core.validation.Match
+import com.rootstrap.flowforms.core.validation.MatchRegex
+import com.rootstrap.flowforms.core.validation.MaxLength
+import com.rootstrap.flowforms.core.validation.MinLength
+import com.rootstrap.flowforms.core.validation.Required
+import com.rootstrap.flowforms.core.validation.RequiredFalse
+import com.rootstrap.flowforms.core.validation.RequiredTrue
+import com.rootstrap.flowforms.core.validation.Validation
 
 /**
  * Out of the box [FlowForm], [FlowField], and [Validation] status codes for common use cases.
@@ -25,7 +33,7 @@ object StatusCodes {
     const val IN_PROGRESS = "in_progress"
 
     /**
-     * Status for [FlowField]s or [FlowForm]s not validated at all.
+     * Status for [FlowField]s or [FlowForm]s not completely validated.
      *
      * In [FlowField]s this happens when all the field's [Validation]s were not executed but all the executed
      * validations were [CORRECT].

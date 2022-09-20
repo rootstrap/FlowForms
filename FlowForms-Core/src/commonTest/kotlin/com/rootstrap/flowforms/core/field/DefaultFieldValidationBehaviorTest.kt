@@ -1,24 +1,18 @@
 package com.rootstrap.flowforms.core.field
 
-import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
-import com.rootstrap.flowforms.core.TEST_IO_DISPATCHER_NAME
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.validation.Validation
+import com.rootstrap.flowforms.core.util.assertFieldStatusSequence
+import com.rootstrap.flowforms.core.util.asyncValidation
+import com.rootstrap.flowforms.core.util.getTestDispatcher
+import com.rootstrap.flowforms.core.util.validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
-import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,7 +22,7 @@ import kotlin.test.assertIs
 /**
  * Test the DefaultFieldValidationBehavior using a FField.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class DefaultFieldValidationBehaviorTest {
 
     @Test
@@ -297,38 +291,6 @@ class DefaultFieldValidationBehaviorTest {
 
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    // Helper functions
-
-    private fun getTestDispatcher(testScheduler: TestCoroutineScheduler): TestDispatcher {
-        return StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-    }
-
-    private fun validation(result : ValidationResult, failFast : Boolean = false)
-            = mockk<Validation> {
-        every { async } returns false
-        every { this@mockk.failFast } returns failFast
-        coEvery { validate() } coAnswers { result }
-    }
-
-    private fun asyncValidation(delayInMillis : Long, result : ValidationResult, failFast : Boolean = false)
-    = mockk<Validation> {
-        every { async } returns true
-        every { this@mockk.failFast } returns failFast
-        coEvery { validate() } coAnswers {
-            delay(delayInMillis)
-            result
-        }
-    }
-
-    private suspend fun assertFieldStatusSequence(flowTurbine: FlowTurbine<FieldStatus>, vararg statuses: String): FieldStatus {
-        var lastValue :FieldStatus? = null
-        statuses.forEach {
-            lastValue = flowTurbine.awaitItem()
-            assertEquals(it, lastValue?.code)
-        }
-        return lastValue!!
     }
 
 }

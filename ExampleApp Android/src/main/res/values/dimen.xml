@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin_start">20dp</dimen>
+    <dimen name="margin_m">20dp</dimen>
+    <dimen name="margin_m_negative">-20dp</dimen>
+    <dimen name="margin_l_negative">-24dp</dimen>
     <dimen name="margin_top">10dp</dimen>
+    <dimen name="email_progress_bar_height">12dp</dimen>
 </resources>

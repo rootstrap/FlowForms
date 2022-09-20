@@ -3,10 +3,16 @@ package com.rootstrap.flowforms.core.form
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.field.FieldDefinition
 import com.rootstrap.flowforms.core.field.FlowField
+import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 
 /**
  * FlowForm: Reactive declarative form intended to reduce the boilerplate code required to manage form
@@ -14,10 +20,10 @@ import kotlinx.coroutines.flow.*
  *
  * Based on flows, its status is updated automatically when any of the field's inner status changes.
  */
-open class FlowForm {
-
-    private val _fields = MutableStateFlow(mapOf<String, FlowField>())
+class FlowForm internal constructor(
+    private val _fields : MutableStateFlow<Map<String, FieldDefinition>> = MutableStateFlow(emptyMap()),
     private var coroutineDispatcher: CoroutineDispatcher? = null
+) {
 
     /**
      * Flow with the map of fields contained in this form.
@@ -65,64 +71,75 @@ open class FlowForm {
     }
 
     /**
-     * Defines the map of fields contained in this form, associating them by their ids.
-     *
-     * @return this form to allow method chaining and declarative construction.
-     */
-    fun setFields(vararg fields: FlowField) : FlowForm {
-        val fieldsMap = fields.associateBy { it.id }
-        this._fields.value = fieldsMap
-        return this
-    }
-
-    /**
-     * Sets a coroutineDispatcher that will be used when triggering the [FlowField] validations,
-     * by default it is used to run asynchronous validations in the
-     * [DefaultFieldValidationBehavior][com.rootstrap.flowforms.core.field.DefaultFieldValidationBehavior].
-     *
-     * @return this form to allow method chaining and declarative construction.
-     */
-    fun setDispatcher(coroutineDispatcher: CoroutineDispatcher?) : FlowForm {
-        this.coroutineDispatcher = coroutineDispatcher
-        return this
-    }
-
-    /**
-     * Trigger onValueChange validations on the specified field (if it exists in this form).
+     * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
      * Returns the result of the validations or false if the field does not exist.
+     *
+     * If this method is called again while still being processing the validations it will return false
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnValueChangeValidations]._
      */
     suspend fun validateOnValueChange(fieldId : String) : Boolean {
-        return this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
+        return try {
+            this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
+        } catch (ex : ValidationsCancelledException) {
+            false
+        }
     }
 
     /**
      * Trigger onBlur validations on the specified field (if it exists in this form).
      * Returns the result of the validations or false if the field does not exist.
+     *
+     * If this method is called again while still being processing the validations it will return false
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnBlurValidations]._
      */
     suspend fun validateOnBlur(fieldId : String) : Boolean {
-        return this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher) ?: false
+        return try {
+            this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher) ?: false
+        } catch (ex : ValidationsCancelledException) {
+            false
+        }
     }
 
     /**
      * Trigger onFocus validations on the specified field (if it exists in this form).
      * Returns the result of the validations or false if the field does not exist.
+     *
+     * If this method is called again while still being processing the validations it will return false
+     * in the first call, as the validations for such call were cancelled, however, this does not
+     * affect the returned result of the newest call.
+     *
+     * _for more information on this behavior please refer to [FlowField.triggerOnFocusValidations]._
      */
     suspend fun validateOnFocus(fieldId : String) : Boolean {
-        return this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher) ?: false
+        return try {
+            this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher) ?: false
+        } catch (ex : ValidationsCancelledException) {
+            false
+        }
     }
 
     /**
      * Trigger all the validations on all the fields in this form.
      *
-     * First it will trigger onValueChange validations. If the field is correct, it will continue
-     * with the onFocus validations and if it is stll correct then it will trigger onBlur validations.
+     * For every field, it will first trigger onValueChange validations. If the field is correct after
+     * all those validations were completed (including async validations), it will continue
+     * with the onFocus validations and if it is still correct then it will trigger onBlur validations.
+     *
      */
     suspend fun validateAllFields() {
-        this._fields.value.forEach {
-            var fieldIsValid = validateOnValueChange(it.key)
-            fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
-            if (fieldIsValid) validateOnBlur(it.key)
-        }
+        try {
+            this._fields.value.forEach {
+                var fieldIsValid = validateOnValueChange(it.key)
+                fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
+                if (fieldIsValid) validateOnBlur(it.key)
+            }
+        } catch (ignored : ValidationsCancelledException) { }
     }
 
 }

@@ -32,7 +32,7 @@ allprojects {
 ```kotlin
 dependencies {
   ..
-  var flowFormsVersion = "v0.0.1"
+  val flowFormsVersion = "0.0.2"
 
   // Use this to get FlowForms Core module only for jvm targets
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")

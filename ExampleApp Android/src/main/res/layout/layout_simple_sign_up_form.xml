@@ -10,6 +10,10 @@
             type="com.rootstrap.flowforms.example.SignUpFormModel" />
     </data>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,10 +23,11 @@
             android:id="@+id/name_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginTop="@dimen/margin_start"
-            android:layout_marginEnd="@dimen/margin_start"
+            android:layout_marginStart="@dimen/margin_m"
+            android:layout_marginTop="@dimen/margin_m"
+            android:layout_marginEnd="@dimen/margin_m"
             app:hintEnabled="false"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -42,10 +47,11 @@
             android:id="@+id/email_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginTop="@dimen/margin_start"
-            android:layout_marginEnd="@dimen/margin_start"
+            android:layout_marginStart="@dimen/margin_m"
+            android:layout_marginTop="@dimen/margin_m"
+            android:layout_marginEnd="@dimen/margin_m"
             app:hintEnabled="false"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_input_layout">
@@ -61,15 +67,41 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ProgressBar
+            android:id="@+id/email_loading_progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/email_progress_bar_height"
+            android:layout_marginTop="@dimen/margin_l_negative"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/email_input_layout"
+            app:layout_constraintEnd_toEndOf="@+id/email_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/email_input_layout"
+            />
+
+        <TextView
+            android:id="@+id/email_available_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_m_negative"
+            android:text="@string/email_is_available"
+            android:textColor="@color/teal_700"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/email_input_layout"
+            app:layout_constraintEnd_toEndOf="@+id/email_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/email_input_layout"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginTop="@dimen/margin_start"
-            android:layout_marginEnd="@dimen/margin_start"
+            android:layout_marginStart="@dimen/margin_m"
+            android:layout_marginTop="@dimen/margin_m"
+            android:layout_marginEnd="@dimen/margin_m"
             app:hintEnabled="false"
             app:passwordToggleEnabled="true"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_input_layout">
@@ -89,11 +121,12 @@
             android:id="@+id/confirm_password_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginTop="@dimen/margin_start"
-            android:layout_marginEnd="@dimen/margin_start"
+            android:layout_marginStart="@dimen/margin_m"
+            android:layout_marginTop="@dimen/margin_m"
+            android:layout_marginEnd="@dimen/margin_m"
             app:hintEnabled="false"
             app:passwordToggleEnabled="true"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/password_input_layout">
@@ -142,5 +175,8 @@
             app:layout_constraintTop_toBottomOf="@id/tcs_check_box" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 </layout>
 
