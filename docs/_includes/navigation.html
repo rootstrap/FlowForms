@@ -1,6 +1,8 @@
 <nav id="sidebar-wrapper">
     <ul class="sidebar-nav">
-        <li class="sidebar-brand">FlowForms docs</li>
+        <div class="rs-row center-main-axis">
+            <h4 class="sidebar-brand">FlowForms index</h4>
+        </div>
         {% for item in site.data.navigation %}
         <li> <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a> </li>
         {% endfor %}

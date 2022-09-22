@@ -3,29 +3,31 @@
 <head>
     <meta charset="utf-8">
     <title></title>
-    <link href="/assets/css/styles.css" rel="stylesheet" >
-    <link href="/assets/css/fontawesome.all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/androidstudio.min.css">
 </head>
 <body>
     <div id="main-content">
-        <div class="rs-row center-second-axis content-header">
-
-    <a id="menu-toggle" href="#"> <i class="fa fa-align-justify"> </i> </a>
-    <h1>FlowForms</h1>
-</div>
-
-        <div class="rs-row">
-            <nav id="sidebar-wrapper">
+        <nav id="sidebar-wrapper">
     <ul class="sidebar-nav">
-        <li class="sidebar-brand">FlowForms docs</li>
+        <div class="rs-row center-main-axis">
+            <h4 class="sidebar-brand">FlowForms index</h4>
+        </div>
         
         <li> <a href="/" >Home</a> </li>
         
         <li> <a href="/pages/about.html" >About</a> </li>
         
+        <li> <a href="/pages/android-quickstart.html" >Android quickstart</a> </li>
+        
+        <li> <a href="/pages/kmp-quickstart.html" >KMP quickstart</a> </li>
+        
     </ul>
 </nav>
 
+        <div class="rs-row">
+            <div id="sidebar-empty-space"></div> <!-- TODO : Remove this on smaller devices -->
             <div class="rs-column center-second-axis">
                 <div id="page-content-wrapper">
                     <div class="page-content inset">
@@ -59,5 +61,8 @@
     <script src="/assets/js/jquery-1.10.2.js"></script>
     <script src="/assets/js/bootstrap.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.0-beta1/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.0-beta1/languages/kotlin.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>

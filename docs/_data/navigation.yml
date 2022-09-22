@@ -2,3 +2,7 @@
   link: /
 - name: About
   link: /pages/about.html
+- name: Android quickstart
+  link: /pages/android-quickstart.html
+- name: KMP quickstart
+  link: /pages/kmp-quickstart.html
