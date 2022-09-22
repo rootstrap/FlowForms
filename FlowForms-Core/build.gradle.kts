@@ -6,10 +6,12 @@ plugins {
 }
 
 group = "com.rootstrap"
-version = "0.0.2"
+version = "0.0.3"
 
 kotlin {
-    android()
+    android {
+        publishLibraryVariants("release")
+    }
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
@@ -55,6 +57,12 @@ android {
     defaultConfig {
         minSdk = 23
         targetSdk = 32
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+        }
     }
 }
 
