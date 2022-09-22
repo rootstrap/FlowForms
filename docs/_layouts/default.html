@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
     <link href="/assets/css/styles.css" rel="stylesheet" >
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/css/fontawesome.all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div id="wrapper">
-        {% include navigation.html %}
-
+    <div id="main-content">
         {% include header.html %}
-
-        <div id="page-content-wrapper">
-            <div class="page-content inset">
-                {{ content }}
+        <div class="rs-row">
+            {% include navigation.html %}
+            <div class="rs-column center-second-axis">
+                <div id="page-content-wrapper">
+                    <div class="page-content inset">
+                            {{ content }}
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script src="/assets/js/jquery-1.10.2.js"></script>

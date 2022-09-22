@@ -1,10 +1,8 @@
-<nav>
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">FlowForms docs</li>
-            {% for item in site.data.navigation %}
-            <li> <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a> </li>
-            {% endfor %}
-        </ul>
-    </div>
+<nav id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">FlowForms docs</li>
+        {% for item in site.data.navigation %}
+        <li> <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a> </li>
+        {% endfor %}
+    </ul>
 </nav>
