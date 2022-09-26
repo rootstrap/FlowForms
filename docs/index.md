@@ -51,10 +51,10 @@ dependencies {
 }
 </code></pre>
 
-## Excellent, lets get started
+## Excellent! Lets get started
 To start creating forms at lighting speed please refer to one of our quickstart guides below :
- - Android quickStart guide
- - Kotlin Multi-Platform quickstart guide
+ - [Android quickStart guide](pages/android-quickstart)
+ - [Kotlin Multi-Platform quickstart guide](pages/kmp-quickstart)
 
 For additional features and advanced use cases please refer to our Documentation index
- - Documentation index
+ - [documentation index](pages/documentation-index)

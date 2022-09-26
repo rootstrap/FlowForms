@@ -2,20 +2,36 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ page.title }}</title>
+    <title>FlowForms docs - index</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link rel="stylesheet" href="/assets/css/fontawesome.all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/androidstudio.min.css">
 </head>
 <body>
     <div id="main-content">
-        {% include navigation.html %}
+        <nav id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <div class="rs-row center-main-axis">
+            <h4 class="sidebar-brand">FlowForms index</h4>
+        </div>
+        
+        <li> <a href="/" >Home</a> </li>
+        
+        <li> <a href="/pages/android-quickstart" >Android quickstart</a> </li>
+        
+        <li> <a href="/pages/kmp-quickstart" >KMP quickstart</a> </li>
+        
+    </ul>
+</nav>
+
         <div class="rs-row">
             <div id="sidebar-empty-space"></div> <!-- TODO : Remove this on smaller devices -->
             <div class="rs-column center-second-axis">
                 <div id="page-content-wrapper">
                     <div class="page-content inset">
-                            {{ content }}
+                            <h2 id="wip">WIP</h2>
+
+
                     </div>
                 </div>
             </div>

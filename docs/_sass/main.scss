@@ -6,6 +6,10 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+a {
+  color: #fff;
+}
+
 .rs-row {
   width: 100%;
   display: flex;
@@ -52,6 +56,10 @@ body {
 
 .inset {
   padding: 20px;
+}
+
+.comment {
+  color: #c2c2c2;
 }
 
 // Sidebar

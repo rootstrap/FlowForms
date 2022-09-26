@@ -1,8 +1,6 @@
 - name: Home
   link: /
-- name: About
-  link: /pages/about.html
 - name: Android quickstart
-  link: /pages/android-quickstart.html
+  link: /pages/android-quickstart
 - name: KMP quickstart
-  link: /pages/kmp-quickstart.html
+  link: /pages/kmp-quickstart
