@@ -76,23 +76,14 @@ class SignUpFormFragment : Fragment() {
 }
 </code></pre>
 <div class="comment">In the above snippet we are collecting (observing) our fields' status and displaying an error message in their input layouts when the field is incorrect (ie. a field's validation failed). Both REQUIRED_UNSATISFIED and MIN_LENGTH_UNSATISFIED are status codes of the fields' validations.
-Additionally, we are observing the general form status, enabling a "continue" button when the form is correct (ie. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field)</div>
+Additionally, we are observing the general form status, enabling a "continue" button when the form is correct (ie. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field).</div>
 
 **3 :** Bind your input views to the form fields using our bind form's extension function : 
 
 <pre><code class="kotlin">
 class SignUpFormFragment : Fragment() {
     ...
-    private var binding : SignUpFormBindingFragment? = null
-    private lateinit var viewModel : SignUpViewModel
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java] // or use you favorite DI tool
-        ...
-        bindFields()
-    }
-
+    // call this method after collecting the fields and form status
     private fun bindFields() {
         binding?.apply {
             viewModel.form.bind(lifecycleScope,
@@ -112,6 +103,6 @@ android:text="@={viewModel.userName}"
 </code></pre>
 For further information about two-way databiding, refer to [this official documentation](https://developer.android.com/topic/libraries/data-binding/two-way). However, the snippets above can be easily adapted to avoid using two-way databinding.
 
-**FlowForms**'s full potential is better appreciated when making more complex forms, you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) included the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all.
+**FlowForms**'s full potential is better appreciated when making more complex forms, you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) included the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all. BTW, there is an example using Activity and another one using Fragment.
 
 However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](pages/documentation-index)
