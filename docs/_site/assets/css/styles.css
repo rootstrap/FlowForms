@@ -20,7 +20,13 @@ a { color: #fff; }
 
 .inset { padding: 20px; }
 
-.comment { color: #c2c2c2; }
+.comment { color: #b0b0b0; }
+
+.badges-container a { margin: 4px; }
+
+.index-title { margin-top: 0px; margin-bottom: 8px; }
+
+.comment-icon { margin-right: 8px; }
 
 #sidebar-empty-space { width: 250px; }
 

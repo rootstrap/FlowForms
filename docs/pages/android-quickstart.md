@@ -29,7 +29,7 @@ class SignUpViewModel : ViewModel() {
     }
 }
 </code></pre>
-<div class="comment">In the above snippet we are declaring a form with two fields (Username & Password). Both fields are required and the password field also requires to have at least 8 characters. </div>
+<p class="comment">In the above snippet we are declaring a form with two fields (Username & Password). Both fields are required and the password field also requires to have at least 8 characters. </p>
 
 **2 :** Listen to the fields status on your Fragment or Activity using our repeatOnLifeCycleScope extension : 
 
@@ -75,8 +75,8 @@ class SignUpFormFragment : Fragment() {
     }
 }
 </code></pre>
-<div class="comment">In the above snippet we are collecting (observing) our fields' status and displaying an error message in their input layouts when the field is incorrect (ie. a field's validation failed). Both REQUIRED_UNSATISFIED and MIN_LENGTH_UNSATISFIED are status codes of the fields' validations.
-Additionally, we are observing the general form status, enabling a "continue" button when the form is correct (ie. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field).</div>
+<p class="comment">In the above snippet we are collecting (observing) our fields' status and displaying an error message in their input layouts when the field is incorrect (ie. a field's validation failed). Both REQUIRED_UNSATISFIED and MIN_LENGTH_UNSATISFIED are status codes of the fields' validations.
+Additionally, we are observing the general form status, enabling a "continue" button when the form is correct (ie. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field).</p>
 
 **3 :** Bind your input views to the form fields using our bind form's extension function : 
 
@@ -94,7 +94,7 @@ class SignUpFormFragment : Fragment() {
     }
 }
 </code></pre>
-<div class="comment">In the above snippet we are binding the userName input to the username field in the form, and the password input to the password field. This automatically calls the respective field's validations when any of the inputs change, in our case it is when the user types something in them.</div>
+<p class="comment">In the above snippet we are binding the userName input to the username field in the form, and the password input to the password field. This automatically calls the respective field's validations when any of the inputs change, in our case it is when the user types something in them.</p>
 
 And that's one of the easiest forms we can create using **FlowForms**, we don't need to care about managing the field's validation triggering nor making any complex logic to enable or disable the continue button. 
 This quickstart example is also meant to be used with two-way databinding, setting and using our fields' values directly in our xml layouts as the following :
