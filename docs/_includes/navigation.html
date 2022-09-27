@@ -4,28 +4,28 @@
             <h4 class="sidebar-brand">FlowForms index</h4>
         </div>
         {% for item in site.data.navigation %}
-        <li> 
-            <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
-                {{ item.name }}
-            </a> 
-        </li>
-        {% endfor %}
-        <li id="quickstart-guides"> 
-            <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
-                <div class="rs-row center-second-axis"> 
-                    QuickStart guides 
-                    <div> <i id="quickstart-guides-chevron" class="fa-solid fa-chevron-right" ></i> </div   >
-                </div>
-            </a> 
-        </li> 
-        <div id="quickstart-guides-items">
-            {% for item in site.data.quickstarts %}
-            <li> 
+            <li id="{{ item.id }}"> 
                 <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
-                    <div class="sub-item">{{ item.name }}</div>
+                    <div class="rs-row center-second-axis spread-main-axis">
+                        {{ item.name }}
+                        {% if item.items != null %} 
+                            <div class="chevron-container"> <i id="{{ item.id }}-chevron" class="fa-solid fa-chevron-right" ></i> </div>
+                        {% endif %}
+                    </div>
                 </a> 
             </li>
-            {% endfor %}
-        </div>
+            {% if item.items != null %} 
+            <div id="{{ item.id }}-items" class="sidenav-sub-items-container">
+                {% for subItem in item.items %}
+                <li class="sub-item"> 
+                    <a href="{{ subItem.link }}" {% if page.url == subItem.link %}class="current"{% endif %}>
+                        <div class="sub-item">{{ subItem.name }}</div>
+                    </a> 
+                </li>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        {% endfor %}
     </ul>
 </nav>

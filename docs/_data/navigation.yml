@@ -1,3 +1,26 @@
 - name: Home
   link: /
-  
+  id: home
+- name: QuickStart guides
+  link: #
+  id: quickstart-guides
+  items: 
+    - name: Android quickstart
+      link: /pages/android-quickstart
+    - name: KMP quickstart
+      link: /pages/kmp-quickstart  
+- name: Core docs
+  link: #
+  id: core-docs
+  items: 
+    - name: Index
+      link: /pages/documentation-index
+- name: Android utilities
+  link: #
+  id: android-utils
+  items: 
+    - name: android utils test
+      link: /pages/android-quickstart
+- name: About
+  link: /about
+  id: about

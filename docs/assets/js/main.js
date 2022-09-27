@@ -9,3 +9,15 @@ $("#quickstart-guides").click(function(e) {
     $("#quickstart-guides-items").toggleClass("active");
     $("#quickstart-guides-chevron").toggleClass("chevron-active");
 });
+
+$("#core-docs").click(function(e) {
+    e.preventDefault();
+    $("#core-docs-items").toggleClass("active");
+    $("#core-docs-chevron").toggleClass("chevron-active");
+});
+
+$("#android-utils").click(function(e) {
+    e.preventDefault();
+    $("#android-utils-items").toggleClass("active");
+    $("#android-utils-chevron").toggleClass("chevron-active");
+});

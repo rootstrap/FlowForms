@@ -94,12 +94,12 @@ class Bar {
 }
 </code></pre>
 <p class="comment">In the above snippet we are triggering the USERNAME field's validations whenever the text changes, these validations are the ones we specify when declaring the form in the Foo class.</p>
-<div class="rs-row"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">userNameInput and passwordInput are not part of kotlin's API and does not exists. We just used them to illustrate how to apply the code</div> </div>
+<div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">userNameInput and passwordInput are not part of kotlin's API and does not exists. We just used them to illustrate how to apply the code</div> </div>
 
 And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable the continue button. 
 
 **FlowForms**'s full potential is better appreciated when making more complex forms, for an android usage example you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) included the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all, except that it uses some specific android utilities in the UI layer. BTW, there is an example using Activity and another one using Fragment.
 
-<div class="rs-row center-second-axis"> <i class="comment-icon fa-solid fa-wand-magic-sparkles"></i> <div class="comment">A multi platform example app would be very helpful and a very good addition to the library. Want to collaborate? Fork the repository and make a Pull request! </div> </div>
+<div class="rs-row comment"> <i class="comment-icon fa-solid fa-wand-magic-sparkles"></i> <div class="comment">A multi platform example app would be very helpful and a very good addition to the library. Want to collaborate? Fork the repository and make a Pull request! </div> </div>
 
 However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](pages/documentation-index)

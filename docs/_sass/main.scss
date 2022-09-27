@@ -1,3 +1,21 @@
+html {
+
+  padding: 3em 1em;
+  margin: auto;
+  line-height: 1.75;
+  font-size: 1em;
+  text-align: justify;
+  
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 1em 0 1em;
+}
+
+p,ul,ol {
+  margin-bottom: 1em;
+  font-family: Helvetica, Arial, sans-serif;
+}
 
 body {
   margin: 0px;
@@ -37,6 +55,17 @@ a {
 
 .align-rigth-main-axis {
   justify-content: end;
+}
+
+.rs-row.comment {
+  align-items: center;
+  padding: 8px;
+  background-color: #2b2b2b;
+  border-radius: 8px;
+}
+
+.spread-main-axis {
+  justify-content: space-between;
 }
 
 .content-header {
@@ -83,14 +112,6 @@ a {
   margin-left: 16px;
 }
 
-#quickstart-guides-items {
-  display: none;
-}
-
-#quickstart-guides-items.active {
-  display: block;
-}
-
 .chevron-active {
   transform: rotate(90deg);
   transition: all 0.2s ease 0s;
@@ -106,6 +127,14 @@ a {
   width: 200px;
   padding: 0px;
   list-style: none;
+}
+
+.sidenav-sub-items-container {
+  display: none;
+}
+
+.sidenav-sub-items-container.active {
+  display: block;
 }
 
 #sidebar-wrapper {
@@ -144,8 +173,14 @@ a {
 
 .sidebar-nav li {
   width: 100%;
-  line-height: 40px;
+  line-height: 36px;
   text-indent: 16px;
+}
+
+.sidebar-nav li.sub-item {
+  width: 100%;
+  line-height: 30px;
+  text-indent: 0px;
 }
 
 .sidebar-nav li a {
