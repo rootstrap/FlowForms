@@ -4,7 +4,28 @@
             <h4 class="sidebar-brand">FlowForms index</h4>
         </div>
         {% for item in site.data.navigation %}
-        <li> <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a> </li>
+        <li> 
+            <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
+                {{ item.name }}
+            </a> 
+        </li>
         {% endfor %}
+        <li id="quickstart-guides"> 
+            <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
+                <div class="rs-row center-second-axis"> 
+                    QuickStart guides 
+                    <div> <i id="quickstart-guides-chevron" class="fa-solid fa-chevron-right" ></i> </div   >
+                </div>
+            </a> 
+        </li> 
+        <div id="quickstart-guides-items">
+            {% for item in site.data.quickstarts %}
+            <li> 
+                <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
+                    <div class="sub-item">{{ item.name }}</div>
+                </a> 
+            </li>
+            {% endfor %}
+        </div>
     </ul>
 </nav>

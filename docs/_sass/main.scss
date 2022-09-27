@@ -35,6 +35,10 @@ a {
   align-items: center;
 }
 
+.align-rigth-main-axis {
+  justify-content: end;
+}
+
 .content-header {
   height: 80px;
   top: 0px;
@@ -73,6 +77,23 @@ a {
 
 .comment-icon {
   margin-right: 8px;
+}
+
+.sub-item {
+  margin-left: 16px;
+}
+
+#quickstart-guides-items {
+  display: none;
+}
+
+#quickstart-guides-items.active {
+  display: block;
+}
+
+.chevron-active {
+  transform: rotate(90deg);
+  transition: all 0.2s ease 0s;
 }
 
 // Sidebar
@@ -122,6 +143,7 @@ a {
 }
 
 .sidebar-nav li {
+  width: 100%;
   line-height: 40px;
   text-indent: 16px;
 }
@@ -132,10 +154,21 @@ a {
   text-decoration: none;
 }
 
+.sidebar-nav li i {
+  color: #999999;
+  padding: 8px;
+  text-indent: 0px;
+  transition: all 0.2s ease 0s;
+}
+
 .sidebar-nav li a:hover {
   color: #fff;
   background: rgba(255,255,255,0.2);
   text-decoration: none;
+}
+
+.sidebar-nav li:hover i {
+  color: #fff;
 }
 
 .sidebar-nav li a:active,
