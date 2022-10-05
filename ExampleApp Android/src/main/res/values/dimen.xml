@@ -5,5 +5,5 @@
     <dimen name="margin_l_negative">-24dp</dimen>
     <dimen name="margin_top">10dp</dimen>
     <dimen name="email_progress_bar_height">12dp</dimen>
-    <dimen name="test_dimen">1dp</dimen>
+    <dimen name="test_dimen">10dp</dimen>
 </resources>
