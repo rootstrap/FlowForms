@@ -15,6 +15,10 @@
   items: 
     - name: Index
       link: /pages/documentation-index
+    - name: FlowForms
+      link: /pages/core/FlowForm
+    - name: FlowFields
+      link: /pages/core/FlowField
 - name: Android utilities
   link: #
   id: android-utils

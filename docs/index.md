@@ -52,7 +52,7 @@ dependencies {
 </code></pre>
 
 ## Excellent! Lets get started
-To start creating forms at lighting speed please refer to one of our quickstart guides below :
+To start creating forms at lightning speed please refer to one of our quickstart guides below :
  - [Android quickStart guide](pages/android-quickstart)
  - [Kotlin Multi-Platform quickstart guide](pages/kmp-quickstart)
 
