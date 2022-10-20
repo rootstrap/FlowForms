@@ -112,7 +112,7 @@ We learnt how to build a form, how to react to a form status and also how to rea
 
 Basically, the form status changes automatically based on its fields status, so we don't need to care about it. What we are looking for is how to change its fields' status, and actually it is almost automatic too, as their status will change based on the validations the Field has.
 
-So, the only thing we need to do, is just to call the form's triggerValidations method when we need to git the specific field ID we are validating. 
+So, the only thing we need to do, is just to call the form's triggerValidations method with the specific field ID we are validating when we need to. 
 For example, everytime the password input is updated by the user, we just trigger the **password field validations**
 
 <pre><code class="kotlin">
@@ -132,8 +132,8 @@ fun triggerValidationsWhenInputIsUpdated() {
     }
 }
 </code></pre>
-<p class="comment">In the above code snippet we are triggering the validarions for the password field whenever its value changes (input value was updated), it gains focus (onFocus) and when it loses the focus (onBlur). <br>
-Here passwordInput represents an input your UI library, so the use may change based on it. The current example is fictitious so it is not based in any existing library</p>
+<p class="comment">In the above code snippet we are triggering the validations for the password field whenever its value changes (input value was updated), it gains focus (onFocus) and when it loses the focus (onBlur). <br>
+Here passwordInput represents an input in your UI library, so it may change based on the library you use. The current example is fictitious so it is not based in any existing library</p>
 
 This will automatically trigger any of the password field's validations, which will then update the field's status based on their results, which will also automatically update the form's status.
 
@@ -145,3 +145,6 @@ Actually, there are 3 types of validations :
 
 To learn more about the validations please refer to the Field validations section.
 <!-- TODO : Link to reacting to field status section -->
+
+If using **Android's UI**, we made a bunch of utilities to reduce even more the code needed for this. To take a look at it please refer to the Android utilities section
+<!-- TODO : Link to android utilities section -->
