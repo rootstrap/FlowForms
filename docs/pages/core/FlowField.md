@@ -1,6 +1,6 @@
 ---
 layout: default
-title: FlowForms docs - Forms
+title: FlowForms docs - Fields
 ---
 
 ### What is a FlowField?
@@ -54,11 +54,11 @@ val form = flowForm {
 </code></pre>
 <p class="comment">Declaring an empty field with a "username" ID and different types of validations. </p>
 
-**OnValueChange validations** : Are usually the most common validations, they are executed when triggering the onValueChange validations.
+* **OnValueChange validations** : Are usually the most common validations, they are executed when triggering the onValueChange validations.
 
-**OnBlur validations** : They are executed when triggering the onBlur validations, also known as "when the field loses the focus".
+* **OnBlur validations** : They are executed when triggering the onBlur validations, also known as "when the field loses the focus".
 
-**OnFocus validations** : They are executed when triggering the onFocus validations, also known as "when the field gains focus".
+* **OnFocus validations** : They are executed when triggering the onFocus validations, also known as "when the field gains focus".
 
 In the above example, we are declaring a "username" field that is Required and must at least have 3 characters, the same use case as the other examples. However, we are declaring that the `Required` validation will be executed only when the field's value changes or when it gains focus _(onFocus)_, but not when it loses focus. And we are also declaring that the `MinLength` validation will be executed only when the field loses focus _(onBlur)_, so the user doesn't see the error while typing.
 
@@ -76,15 +76,15 @@ We did it that way so it is easy to customize the value of our variables before 
 Well, when we refer to the Field's state, we are not talking about the data bounded to that field (the `userName`). We talk about the **status** of the field, which represent if the field's validations has been triggered or not, and their respective results. For example, a field can be in a **Correct** status if **all** its validations were triggered and were all successful.
 
 Basically, each of the field status represents one possible situation a field can have : 
-* UNMODIFIED : No validations were triggered in the field.
-* CORRECT : All validations in the field were triggered and were successful.
-* IN_PROGRESS : The field is processing some asynchronous validations.
-* INCOMPLETE : There are some validations in the Field that were executed and were successful, but not all validations were executed yet. This is the case when, for example, there are OnValueChange validations and onBlur validations, and only the onValueChange validations were triggered (because the user didn't removed the focus from the field yet)
-* INCORRECT : There is a failing validation without an specific error code, or there are more than one validation failing, which could happen when setting `failFast` as `false` on a Validation.
-* Custom status codes : The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation. Each one of the built-in Validations has its own custom error status code, which we can see in the built-in validations section.
+* `UNMODIFIED` : No validations were triggered in the field.
+* `CORRECT` : All validations in the field were triggered and were successful.
+* `IN_PROGRESS` : The field is processing one or more asynchronous validations.
+* `INCOMPLETE` : There are some validations in the Field that were executed and were successful, but not all validations were executed yet. This is the case when, for example, there are OnValueChange validations and onBlur validations, and only the onValueChange validations were triggered (because the user didn't removed the focus from the field yet)
+* `INCORRECT` : There is a failing validation without an specific error code, or there are more than one validation failing, which could happen when setting `failFast` as `false` on a Validation.
+* `Custom status codes` : The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation. Each one of the built-in Validations has its own custom error status code, which we can see in the built-in validations section.
 <!-- TODO : link to Built-in validations section -->
 
-#### Reacting to the field status
+### Reacting to the field status
 
 Generally, we will react to the changes in our fields' status in the next way:
 
@@ -105,7 +105,7 @@ private suspend fun listenStatusChanges() {
 In the above example, status.code is where we got the status identifier, which will be one of the mentioned options in the previous list. 
 There we are showing a custom error message for each of our validations' custom error codes and we are just hiding the error messages for any other field status, because in our case we don't need to care about the other possible status codes, but it is good to know that they are there, as they are be useful for different use cases.
 
-#### Accessing Validation Results on the field's status
+### Accessing Validation Results on the field's status
 
 Sometimes, we may want to get additional information from the validations executed in a Field, for example, which validations failed in an Incorrect field with various `non failFast` validations. For such cases we can get the `validationResults` from within the same status object:
 
@@ -120,4 +120,7 @@ private suspend fun listenStatusChanges() {
 <p class="comment">Getting the ValidationResults on a field with "username" ID whenever its status changes.</p>
 
 The validation results is a list containing the results of all the validations **completely executed**, being them successful or failure.
-Each of these validation results contains a `resultId` (for example, a REQUIRED_UNSATISFIED in the case of the Required validation), and an `extras` map of String to Any, where you can add additional data that the field status client can read.
+Each of these validation results contains a `resultId` (for example, a REQUIRED_UNSATISFIED in the case of the Required validation), and an `extras` map of String to Any, where you can add additional data that the field status client can read (for example, a web request error that we want to handle outside the validation).
+
+Please refer to the Validations section for more information
+<!-- TODO : link to Validation section -->

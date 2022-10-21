@@ -31,7 +31,6 @@ val form = flowForm {
 However, by using the DSL these fields can be further customized, adding validations or modifying their behaviors, which is covered in the FlowFields section.
 <!-- TODO : Add link to FlowFields page -->
 
-
 ### Reacting to the form
 
 As mentioned before, a FlowForm has a status, which is updated automatically whenever any of its fields is updated. We can listen to the status changes by collecting its public `status` var, as shown below
@@ -54,13 +53,14 @@ suspend fun listenToFormStatus() {
 
 As we can see there are 4 possible status codes for the form. Each one representing its current state :
 
- - `Incorrect : One of the form's fields is either incorrect or has a custom error code.`
- - `Unmodified : No fields were validated since form creation.`
- - `Incomplete : Some fields were validated but not all of them.`
- - `Correct : All fields in the form are correct.`
+ - `INCORRECT` : One of the form's fields is either incorrect or has a custom error code.
+ - `UNMODIFIED` : No fields were validated since form creation.
+ - `INCOMPLETE` : Some fields were validated but not all of them.
+ - `CORRECT` : All fields in the form are correct.
 
  By reacting to these status you can customize the form's behavior, however, it is not mandatory to react to all of them together.
 
+<p class="comment">As an example, in a sign-up form we can have a "register" button that only enables when the form's status code is CORRECT and disables on any other status.</p>
 
 ### Listen to its fields' status
 
