@@ -81,8 +81,9 @@ Basically, each of the field status represents one possible situation a field ca
 * **IN_PROGRESS** : `The field is processing one or more asynchronous validations.`
 * **INCOMPLETE** : `There are some validations in the Field that were executed and were successful, but not all validations were executed yet. This is the case when, for example, there are OnValueChange validations and onBlur validations, and only the onValueChange validations were triggered (because the user didn't removed the focus from the field yet)`
 * **INCORRECT** : `There is a failing validation without an specific error code, or there are more than one validation failing, which could happen when setting failFast as false on a Validation.`
-* **Custom status codes** : `The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation. Each one of the built-in Validations has its own custom error status code, which we can see in the built-in validations section.`
-<!-- TODO : link to Built-in validations section -->
+* **Custom status codes** : `The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation.` 
+
+Each one of the built-in Validations has its own custom error status code, which we can see in the [built-in validations section](Validation#built-in-validations).
 
 ## Reacting to the field status
 
@@ -120,7 +121,7 @@ private suspend fun listenStatusChanges() {
 <p class="comment">Getting the ValidationResults on a field with "username" ID whenever its status changes.</p>
 
 The validation results is a list containing the results of all the validations **completely executed**, being them successful or failure.
-Each of these validation results contains a `resultId` (for example, a REQUIRED_UNSATISFIED in the case of the Required validation), and an `extras` map of String to Any, where you can add additional data that the field status client can read (for example, a web request error that we want to handle outside the validation).
 
-Please refer to the Validations section for more information
-<!-- TODO : link to Validation section -->
+Each of these validation results contains a `resultId` (for example, `REQUIRED_UNSATISFIED` in the case of the Required validation), and an `extras` map of String to Any.
+
+Please refer to the [Validations page](Validation) for more information.

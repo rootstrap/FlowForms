@@ -9,7 +9,7 @@ a Validation is a class that represents a validation process for a given value. 
 
 In fact, A validation is an abstract class with some optional parameters to define how the client will use them and a `validate()` method that must be implemented by any specific Validation type.
 
-## The ValidationResult
+## ValidationResult
 
 The `validate()` method mentioned before doesn't receive any input, and returns a ValidationResult. 
 
@@ -51,7 +51,7 @@ If the validation is not fulfilled and `failFast` is false, then the field's val
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> failFast is true by default on all Validations </div> </div>
 
-### Async validations
+## Async validations
 
 One of the goals of FlowForms is to run validations asynchronously as easy as possible. And to do that, we only to set the `async` property as true when creating a Validation object.
 
@@ -78,7 +78,7 @@ Whenever we **re-trigger** the field's validations, all current async validation
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> async is false by default on all Validations </div> </div>
 
-### Custom validations
+## Custom validations
 
 creating custom validations is a pretty easy process. In fact, all our built-in validations are pre-defined custom validations. Let's see the Required Validation implementation as an example :
 
@@ -109,7 +109,6 @@ The `validate()` function requires us to provide a `ValidationResult` instance, 
 Another thing we can add to the `ValidationResult` is the `extras` property, which is a `Map` of `String` to `Any` that we can use to communicate details from the validation to the field status' client.
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> As a side note, the `validate()` function is a suspend function, so we can execute any IO/background code safely (as long as we use it in combination with `async=true` or run those process in a different coroutine). </div> </div>
-
 
 ## Changing the field's validation behavior
 
