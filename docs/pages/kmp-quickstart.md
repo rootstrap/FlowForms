@@ -38,11 +38,11 @@ class Bar {
     ...
     private val foo = Foo()
     
-    override fun listenToFlowFormStatus() {
+    suspend fun listenToFlowFormStatus() = coroutineScope {
         foo.form.fields.value.let {
-            launch { it[SignUpViewModel.USERNAME]?.status?.collect(::onUserNameStatusChange) }
-            launch { it[SignUpViewModel.PASSWORD]?.status?.collect(::onPasswordStatusChange) }
-            launch { viewModel.form.status.collect(::onFormStatusChange) }
+            launch { it[Foo.USERNAME]?.status?.collect(::onUserNameStatusChange) }
+            launch { it[Foo.PASSWORD]?.status?.collect(::onPasswordStatusChange) }
+            launch { foo.form.status.collect(::onFormStatusChange) }
         }
     }
 

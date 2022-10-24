@@ -3,13 +3,13 @@ layout: default
 title: FlowForms docs - Validations
 ---
 
-### What is a Validation?
+## What is a Validation?
 
 a Validation is a class that represents a validation process for a given value. It is used by the FlowFields to determine its state, and can be parameterized to change how it will behave in a field.
 
 In fact, A validation is an abstract class with some optional parameters to define how the client will use them and a `validate()` method that must be implemented by any specific Validation type.
 
-### The ValidationResult
+## The ValidationResult
 
 The `validate()` method mentioned before doesn't receive any input, and returns a ValidationResult. 
 
@@ -19,21 +19,21 @@ If the validation is not successful, then any string can be returned as a `resul
 
 The `extras` map is a map of String to Any, which is helpful when we need to share data from the Validation to the field status client, like for example, when there is a web request error that we want to handle outside of the validation.
 
-### Built-in Validations
+## Built-in Validations
 
 There are various out of the box validations that covers the majority of common use cases in forms so we don't need to implement them over and over across different projects:
-* `Required` : Validates if a String is not null nor empty. 
-* `RequiredTrue` : Validates if a boolean is not null and is true.
-* `RequiredFalse` : Validates if a boolean is not null and is false.
-* `MaxLength` : Validates if a string has more than the desired amount of characters.
-* `MinLength` : Validates if a string has less than the desired amount of characters.
-* `Match` : Validates if an object is equal to another object by using == (`.equals()`).
-* `MatchRegex` : Validates if a string matches the specified regex.
-* `BasicEmailFormat` : Validates if a string matches a basic email format.
+* **Required** : `Validates if a String is not null nor empty.` 
+* **RequiredTrue** : `Validates if a boolean is not null and is true.`
+* **RequiredFalse** : `Validates if a boolean is not null and is false.`
+* **MaxLength** : `Validates if a string has more than the desired amount of characters.`
+* **MinLength** : `Validates if a string has less than the desired amount of characters.`
+* **Match** : `Validates if an object is equal to another object by using == (.equals()).`
+* **MatchRegex** : `Validates if a string matches the specified regex.`
+* **BasicEmailFormat** : `Validates if a string matches a basic email format.`
 
 For further details we can take a look at the Kdoc in each of the classes, where the ValidationResults for the failure cases are displayed.
 
-### FailFast validations
+## FailFast validations
 
 `failFast` is one of the properties that we can configure when creating a Validation object. It determines if the field's validation process should stop or continue when this validation is not fulfilled. 
 
@@ -68,7 +68,7 @@ val form = flowForm {
 
 as you can see in the example above, we are setting `dispatcher = Dispatchers.IO`, which sets an asynchronous coroutineDispatcher to the form (Dispatchers.IO). This is a required attribute that we need to set in the form when we are using asynchronous validations.
 
-<div class="rs-row comment"> <i class="comment-icon fa-exclamation-triangle"></i> <div class="comment"> Dispatchers.IO is an android coroutine dispatcher for IO operations, you may need to use a different one based on your platform.</div> </div>
+<div class="rs-row comment"> <i class="comment-icon fa fa-exclamation-triangle"></i> <div class="comment"> Dispatchers.IO is an android coroutine dispatcher for IO operations, you may need to use a different one based on your platform.</div> </div>
 
 If a field has multiple asynchronous validations, all of them will be started at the same time. By default, if one of them is not fulfilled, the rest of the async validations will be cancelled automatically and the ValidationResults will be delivered to the field, updating its status. The `failFast` rule also applies here, modifying the mentioned behavior.
 
@@ -111,7 +111,7 @@ Another thing we can add to the `ValidationResult` is the `extras` property, whi
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> As a side note, the `validate()` function is a suspend function, so we can execute any IO/background code safely (as long as we use it in combination with `async=true` or run those process in a different coroutine). </div> </div>
 
 
-### Changing the field's validation behavior
+## Changing the field's validation behavior
 
 By default all the Fields use the `DefaultFieldValidationBehavior` class to manage the validation process, including managing its asynchronous validations and how the field status is delivered.
 
@@ -129,4 +129,4 @@ val form = flowForm {
 
 Usually you will not need to create a custom validation behavior as the `DefaultFieldValidationBehavior` should cover almost any use case. We encourage to raise a new issue in the repository if there is something we are not taking into account, so "creating a custom validation behavior" should be the last resort, as we can not garantee that the library is going to work as expected (because you are customizing it).
 
-<div class="rs-row comment"> <i class="comment-icon fa-exclamation-triangle"></i> <div class="comment"> Cancelling the current validations when re-triggering them is done at the Field level, so it will not be overriden when using a custom validation behavior.</div> </div>
+<div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> Cancelling the current validations when re-triggering them is done at the Field level, so it will not be overriden when using a custom validation behavior.</div> </div>

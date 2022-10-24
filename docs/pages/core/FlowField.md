@@ -3,7 +3,7 @@ layout: default
 title: FlowForms docs - Fields
 ---
 
-### What is a FlowField?
+## What is a FlowField?
 
 A FlowField represents a field in a form. It has a state and 0 or more validations. 
 Within a `flowForm { ... }` call, we can create a FlowField using the FlowForms DSL :
@@ -19,7 +19,7 @@ val form = flowForm {
 
 But that doesn't do much by itself, one of the goals of FlowForms is to provide an easy way to declare the field's validations, which we will cover in the next section
 
-### Adding validations to a field
+## Adding validations to a field
 
 Whenever we use the `field()` function, we can add an unlimited amount of validations to the field by simply adding them after the field's ID.
 
@@ -37,7 +37,7 @@ In the above example, we are basically declaring a **Required** field with "user
 
 Is important to note the `var userName` declared before the form, as whenever we trigger the field's onValueChange validations its two validations (Required and MinLength) will check if the `userName` property meets their criteria, so it is important to update the `userName` var before validating the field.
 
-#### There are 3 types of validations that a field can have.
+### There are 3 types of validations that a field can have.
 
 Currently, a field can have 3 types of validations, with the difference on when they are executed :
 <pre><code class="kotlin">
@@ -65,26 +65,26 @@ In the above example, we are declaring a "username" field that is Required and m
 This flexibility allows us to define different behaviors for the different situations a field can have in our apps easily, allowing us to provide better UI experiences with minimum effort.
 
 
-### Field state
+## Field state
 
 As you have seen, the `userName` variable is independent from the form itself, and it is returned by the functions we add to the Validations (between the brackets `{ }` added after declaring the Validation). 
 
 We did it that way so it is easy to customize the value of our variables before validating them, for example, we can have a phoneNumber with a mask, and we can add or remove the mask before validating the field, or we can declare different validations for different sections of the phone number and then split the phone number into its various "sections" and send each section to their specific Validations. The use cases are a lot and can be as complex as the human brain can go.
 
-#### But before we mentioned that the field has a state, if the `userName` value is not the state of the field, then what is it?
+### But before we mentioned that the field has a state, if the `userName` value is not the state of the field, then what is it?
 
 Well, when we refer to the Field's state, we are not talking about the data bounded to that field (the `userName`). We talk about the **status** of the field, which represent if the field's validations has been triggered or not, and their respective results. For example, a field can be in a **Correct** status if **all** its validations were triggered and were all successful.
 
 Basically, each of the field status represents one possible situation a field can have : 
-* `UNMODIFIED` : No validations were triggered in the field.
-* `CORRECT` : All validations in the field were triggered and were successful.
-* `IN_PROGRESS` : The field is processing one or more asynchronous validations.
-* `INCOMPLETE` : There are some validations in the Field that were executed and were successful, but not all validations were executed yet. This is the case when, for example, there are OnValueChange validations and onBlur validations, and only the onValueChange validations were triggered (because the user didn't removed the focus from the field yet)
-* `INCORRECT` : There is a failing validation without an specific error code, or there are more than one validation failing, which could happen when setting `failFast` as `false` on a Validation.
-* `Custom status codes` : The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation. Each one of the built-in Validations has its own custom error status code, which we can see in the built-in validations section.
+* **UNMODIFIED** : `No validations were triggered in the field.`
+* **CORRECT** : `All validations in the field were triggered and were successful.`
+* **IN_PROGRESS** : `The field is processing one or more asynchronous validations.`
+* **INCOMPLETE** : `There are some validations in the Field that were executed and were successful, but not all validations were executed yet. This is the case when, for example, there are OnValueChange validations and onBlur validations, and only the onValueChange validations were triggered (because the user didn't removed the focus from the field yet)`
+* **INCORRECT** : `There is a failing validation without an specific error code, or there are more than one validation failing, which could happen when setting failFast as false on a Validation.`
+* **Custom status codes** : `The field is in an incorrect status but only one Validation was not successful, so instead of just being "Incorrect" the new status code of the field is the result code of the failing Validation. Each one of the built-in Validations has its own custom error status code, which we can see in the built-in validations section.`
 <!-- TODO : link to Built-in validations section -->
 
-### Reacting to the field status
+## Reacting to the field status
 
 Generally, we will react to the changes in our fields' status in the next way:
 
@@ -105,7 +105,7 @@ private suspend fun listenStatusChanges() {
 In the above example, status.code is where we got the status identifier, which will be one of the mentioned options in the previous list. 
 There we are showing a custom error message for each of our validations' custom error codes and we are just hiding the error messages for any other field status, because in our case we don't need to care about the other possible status codes, but it is good to know that they are there, as they are be useful for different use cases.
 
-### Accessing Validation Results on the field's status
+## Accessing Validation Results on the field's status
 
 Sometimes, we may want to get additional information from the validations executed in a Field, for example, which validations failed in an Incorrect field with various `non failFast` validations. For such cases we can get the `validationResults` from within the same status object:
 
