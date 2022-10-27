@@ -3,17 +3,15 @@ layout: default
 title: Flow Forms, Declarative and reactive form management library
 ---
 
-<div class="rs-row center-main-axis"> 
-  <div class="rs-column center-second-axis"> 
-      <a href="http://www.rootstrap.com"> <img src="https://s3-us-west-1.amazonaws.com/rootstrap.com/img/rs.png" width="100"/> </a>
-      <h1 class="index-title"> FlowForms </h1>
-      <div class="rs-row center-main-axis badges-container"> 
-        <a href="https://jitpack.io/#rootstrap/FlowForms"> <img src="https://jitpack.io/v/rootstrap/FlowForms.svg" /> </a> 
-        <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/"> <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" /> </a>
-        <a href="https://opensource.org/licenses/MIT"> <img src="https://img.shields.io/badge/License-MIT-yellow.svg" /> </a>
-      </div>
-      <h3> KMP library for form management </h3>
-  </div>
+<div class="rs-column center-second-axis"> 
+    <a href="http://www.rootstrap.com"> <img src="https://s3-us-west-1.amazonaws.com/rootstrap.com/img/rs.png" width="100"/> </a>
+    <img src="/images/logotype-FlowForms-transparent.png" width="400" class="logotype-header"> 
+    <div class="rs-row center-main-axis badges-container"> 
+      <a href="https://jitpack.io/#rootstrap/FlowForms"> <img src="https://jitpack.io/v/rootstrap/FlowForms.svg" /> </a> 
+      <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/"> <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" /> </a>
+      <a href="https://opensource.org/licenses/MIT"> <img src="https://img.shields.io/badge/License-MIT-yellow.svg" /> </a>
+    </div>
+    <h3 class="index-subtitle"> KMP library for form management </h3>
 </div>
 
 ## What is FlowForms?

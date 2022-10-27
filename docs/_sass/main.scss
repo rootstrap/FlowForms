@@ -95,6 +95,15 @@ a {
   color: #b0b0b0;
 }
 
+
+.isotype-container {
+  background-color: #050537;
+}
+
+.badges-container {
+  margin-top: 16px;
+}
+
 .badges-container a {
   margin: 4px;
 }
@@ -102,6 +111,10 @@ a {
 .index-title {
   margin-top: 0px;
   margin-bottom: 8px;
+}
+
+.index-subtitle {
+  margin-top: 0px;
 }
 
 .comment-icon {
@@ -117,6 +130,10 @@ a {
   transition: all 0.2s ease 0s;
 }
 
+.logotype-header {
+  border-radius: 6px;
+}
+
 // Sidebar
 
 #sidebar-empty-space {
@@ -125,6 +142,7 @@ a {
 
 .sidebar-nav {
   width: 200px;
+  margin-top: 0px;
   padding: 0px;
   list-style: none;
 }
@@ -209,21 +227,6 @@ a {
 .sidebar-nav li a:active,
 .sidebar-nav li a:focus {
   text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-  height: 65px;
-  line-height: 60px;
-  font-size: 18px;
-}
-
-.sidebar-nav > .sidebar-brand a {
-  color: #999999;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
-  background: none;
 }
 
 .current-nav-option {
