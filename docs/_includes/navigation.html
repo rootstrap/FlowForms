@@ -1,31 +1,38 @@
 <nav id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-        <div class="rs-row center-main-axis isotype-container">
-            <img src="/images/isotype-FlowForms.png" width="70%">
-        </div>
-        {% for item in site.data.navigation %}
-            <li id="{{ item.id }}"> 
-                <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
-                    <div class="rs-row center-second-axis spread-main-axis">
-                        {{ item.name }}
-                        {% if item.items != null %} 
-                            <div class="chevron-container"> <i id="{{ item.id }}-chevron" class="fa-solid fa-chevron-right" ></i> </div>
-                        {% endif %}
-                    </div>
-                </a> 
-            </li>
-            {% if item.items != null %} 
-            <div id="{{ item.id }}-items" class="sidenav-sub-items-container">
-                {% for subItem in item.items %}
-                <li class="sub-item"> 
-                    <a href="{{ subItem.link }}" {% if page.url == subItem.link %}class="current"{% endif %}>
-                        <div class="sub-item">{{ subItem.name }}</div>
+    <ul id="sidebar-container" class="sidebar-nav-container active">
+        <a id="menu-toggle" href="#">  
+            <div class="sidebar-toggle-container">
+                <i id="menu-toggle-arrow" class="fa-solid fa-chevron-left fa-lg active"></i> 
+            </div> 
+        </a>
+        <ul class="sidebar-nav">
+            <div class="rs-row center-main-axis isotype-container">
+                <img src="/images/isotype-FlowForms.png" width="70%">
+            </div>
+            {% for item in site.data.navigation %}
+                <li id="{{ item.id }}"> 
+                    <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
+                        <div class="rs-row center-second-axis spread-main-axis">
+                            {{ item.name }}
+                            {% if item.items != null %} 
+                                <div class="chevron-container"> <i id="{{ item.id }}-chevron" class="fa-solid fa-chevron-right" ></i> </div>
+                            {% endif %}
+                        </div>
                     </a> 
                 </li>
-                {% endfor %}
-            </div>
-            {% endif %}
+                {% if item.items != null %} 
+                <div id="{{ item.id }}-items" class="sidenav-sub-items-container">
+                    {% for subItem in item.items %}
+                    <li class="sub-item"> 
+                        <a href="{{ subItem.link }}" {% if page.url == subItem.link %}class="current"{% endif %}>
+                            <div class="sub-item">{{ subItem.name }}</div>
+                        </a> 
+                    </li>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
-        {% endfor %}
+            {% endfor %}
+        </ul>
     </ul>
 </nav>

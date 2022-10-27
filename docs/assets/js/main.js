@@ -1,7 +1,8 @@
 
 $("#menu-toggle").click(function(e) {
     e.preventDefault();
-    $("#sidebar-wrapper").toggleClass("active");
+    $("#sidebar-container").toggleClass("active");
+    $("#menu-toggle-arrow").toggleClass("active");
 });
 
 $("#quickstart-guides").click(function(e) {
