@@ -28,6 +28,8 @@
   items: 
     - name: Binding
       link: /pages/android-utils/Binding
+    - name: Flow collection
+      link: /pages/android-utils/Flow-collection
 - name: About
   link: /about
   id: about
