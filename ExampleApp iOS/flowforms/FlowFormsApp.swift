@@ -2,7 +2,7 @@ import SwiftUI
 import shared
 
 @main
-struct FlowForms: App {
+struct FlowFormsApp: App {
 	var body: some Scene {
 		WindowGroup {
       FFormView(viewModel: FFormViewModel())
