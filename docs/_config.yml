@@ -23,7 +23,7 @@ email: hello@rootstrap.com
 description: >- # this means to ignore newlines until "baseurl:"
   Reactive and declarative Kotlin multi platform (KMP) form management library based on coroutines
   and Flows, currently available for Android, KMP/KMM, and JVM target projects.
-baseurl: /
+baseurl: /FlowForms
 url: https://rootstrap.github.io
 twitter_username:
 github_username: rootstrap
