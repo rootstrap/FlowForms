@@ -7,11 +7,11 @@
         </a>
         <ul class="sidebar-nav">
             <div class="rs-row center-main-axis isotype-container">
-                <img src="/images/isotype-FlowForms.png" width="70%">
+                <img src="{{site.baseurl}}/images/isotype-FlowForms.png" width="70%">
             </div>
             {% for item in site.data.navigation %}
                 <li id="{{ item.id }}"> 
-                    <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
+                    <a href="{% if item.link != '#' %}{{ site.baseurl }}{% endif %}{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>
                         <div class="rs-row center-second-axis spread-main-axis">
                             {{ item.name }}
                             {% if item.items != null %} 
@@ -24,7 +24,7 @@
                 <div id="{{ item.id }}-items" class="sidenav-sub-items-container">
                     {% for subItem in item.items %}
                     <li class="sub-item"> 
-                        <a href="{{ subItem.link }}" {% if page.url == subItem.link %}class="current"{% endif %}>
+                        <a href="{{ site.baseurl }}{{ subItem.link }}" {% if page.url == subItem.link %}class="current"{% endif %}>
                             <div class="sub-item">{{ subItem.name }}</div>
                         </a> 
                     </li>
