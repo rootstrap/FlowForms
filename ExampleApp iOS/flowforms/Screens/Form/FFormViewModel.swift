@@ -6,11 +6,10 @@
 //  Copyright © 2022 orgName. All rights reserved.
 //
 
-import Foundation
 import Combine
 
 final class FFormViewModel: ObservableObject {
-  
+
   @Published var termsAccepted = false
   @Published var nameConfiguration = FFTextFieldViewConfiguration(
     title: LocalizedString.SignUpView.nameTitle,
