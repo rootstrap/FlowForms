@@ -10,6 +10,9 @@ title: Flow Forms, Declarative and reactive form management library
       <a href="https://jitpack.io/#rootstrap/FlowForms"> <img src="https://jitpack.io/v/rootstrap/FlowForms.svg" /> </a> 
       <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/"> <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" /> </a>
       <a href="https://opensource.org/licenses/MIT"> <img src="https://img.shields.io/badge/License-MIT-yellow.svg" /> </a>
+      <a href="https://github.com/rootstrap/FlowForms/graphs/commit-activity"> <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"/> </a>
+      <a href="https://rootstrap.github.io/FlowForms/"> <img src="https://readthedocs.org/projects/ansicolortags/badge/?version=latest"/> </a>
+      <a href="https://github.com/rootstrap/FlowForms"> <img src="https://badgen.net/badge/icon/github?icon=github&label"/> </a>
     </div>
     <h3 class="index-subtitle"> KMP library for form management </h3>
 </div>
