@@ -1,4 +1,4 @@
-![FlowForms Logo](https://github.com/rootstrap/FlowForms/blob/pages/docs/images/logotype-FlowForms-transparent.png?raw=true)
+![FlowForms Logo](https://github.com/rootstrap/FlowForms/blob/pages/docs/images/logotype-FlowForms-small-background.png?raw=true)
 
 [![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Maintained : Yes!](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rootstrap/FlowForms/graphs/commit-activity) [![Documentation](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://rootstrap.github.io/FlowForms/) ![Build Status](https://github.com/rootstrap/FlowForms/actions/workflows/gradle.yml/badge.svg)
 
