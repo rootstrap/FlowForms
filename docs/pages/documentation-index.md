@@ -3,7 +3,7 @@ layout: default
 title: FlowForms docs - index
 ---
 
-## Documentation index
+## FlowForms documentation index
 
 **Quickstarts**
  * [Android quickstart](android-quickstart)
