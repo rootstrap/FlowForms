@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+ FlowForms
+
+  Created by Tarek Radovan on 26/10/2022.
+  Copyright © 2022 orgName. All rights reserved.
+*/
+"signup_name_title" = "Name";
+"signup_title" = "Sign Up";
+"signup_email_title" = "Email";
+"signup_password_title" = "Password";
+"signup_confirm_password_title" = "Confirm Password";
+"signup_button" = "SIGN UP";
+"signup_name_textfield_error" = "Please enter a name";
+"signup_email_textfield_error" = "Please enter a valid email";
+"signup_password_textfield_error" = "Please enter a valid password";
+"signup_password_confirmation_textfield_error" = "Passwords don't match!";
+"terms_conditions_text" = "Accept terms and conditions";
+"successfully_signup" = "Registered user successfully";
