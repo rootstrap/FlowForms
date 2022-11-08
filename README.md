@@ -50,8 +50,8 @@ It aims to reduce all the boiler plate needed to work with application forms by 
 
 For example, in the above snippet we are declaring the whole sign up form behavior, and now we only need to care about connecting it with our UI, which may  vary per platform and is explained in the "[Excellent! Lets get started](excellent-lets-get-started)" section.
 
-## Sounds good, how can I get it?
-Add the JitPack repository to your root build.gradle file, at the end of repositories :
+## Installation (using gradle)
+Add the JitPack repository to your **root** build.gradle file, at the end of repositories :
 ```kotlin
 allprojects {
   repositories {
@@ -83,6 +83,16 @@ dependencies {
 To start creating forms at lightning speed please refer to one of our quickstart guides below :
  - [Android quickstart guide](https://rootstrap.github.io/FlowForms/pages/android-quickstart)
  - [Kotlin Multi-Platform quickstart guide](https://rootstrap.github.io/FlowForms/pages/kmp-quickstart)
+
+## Features
+ - Declarative way of creating a form and define its behavior
+ - Automatic handling of field and form state, which exposes a reactive api using Kotlin's flows.
+ - Easy asynchronous validations using coroutines
+ - FailFast validations (configurable)
+ - Built-in validations so we don't need to write the same logic across projects/modules.
+ - Custom validations
+ - UI binding utilities for Android
+ - And more!
 
 For additional features and advanced use cases please refer to our Documentation index
  - [documentation index](https://rootstrap.github.io/FlowForms/pages/documentation-index)
