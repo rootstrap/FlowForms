@@ -100,6 +100,7 @@ a {
 
 .badges-container {
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .badges-container a {
@@ -202,13 +203,6 @@ a {
   transition: all 0.5s ease;
 }
 
-@media only screen and (max-width: 768px) {
-  
-  #sidebar-empty-space {
-    display: none;
-  }
-}
-
 #page-content-wrapper {
   width: 100%;
 }
@@ -255,4 +249,20 @@ a {
 
 .current-nav-option {
   color: green;
+}
+
+@media only screen and (max-width: 768px) {
+  
+  #sidebar-empty-space {
+    display: none;
+  }
+
+  html {
+    padding: 3em 1em;
+    margin: auto;
+    line-height: 1.75;
+    font-size: 1em;
+    text-align: start;
+  }
+
 }
