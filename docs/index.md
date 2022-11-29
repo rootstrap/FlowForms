@@ -5,7 +5,7 @@ title: Flow Forms, Declarative and reactive form management library
 
 <div class="rs-column center-second-axis"> 
     <a href="http://www.rootstrap.com"> <img src="https://s3-us-west-1.amazonaws.com/rootstrap.com/img/rs.png" width="100"/> </a>
-    <img src="{{site.baseurl}}/images/logotype-FlowForms-transparent.png" width="400" class="logotype-header"> 
+    <img src="{{site.baseurl}}/images/logotype-FlowForms-transparent.png" width="75%" class="logotype-header"> 
     <div class="rs-row center-main-axis badges-container"> 
       <a href="https://jitpack.io/#rootstrap/FlowForms"> <img src="https://jitpack.io/v/rootstrap/FlowForms.svg" /> </a> 
       <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/"> <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" /> </a>
@@ -38,7 +38,7 @@ Add FlowForms dependency in your module's build.gradle file :
 <pre><code class="kotlin">
 dependencies {
   ..
-  val flowFormsVersion = "0.0.3"
+  val flowFormsVersion = "1.0.0"
     
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")

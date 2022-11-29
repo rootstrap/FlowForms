@@ -1,11 +1,9 @@
 html {
-
   padding: 3em 1em;
   margin: auto;
   line-height: 1.75;
   font-size: 1em;
   text-align: justify;
-  
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -102,6 +100,7 @@ a {
 
 .badges-container {
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .badges-container a {
@@ -147,6 +146,8 @@ a {
   top: 0px;
   left: 0px;
   padding: 0px;
+  bottom: 0px;
+  margin-bottom: 0px;
   transform: translate(-200px, 0px);
   transition: all 0.4s ease 0s;
 }
@@ -189,8 +190,10 @@ a {
 #sidebar-wrapper .sidebar-nav {
   background: #2b2b2b;
   width: 200px;
-  height: 100vh;
+  height: 100%;
   margin-top: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0px;
   position: fixed;
   left: 0px;
@@ -198,13 +201,6 @@ a {
   bottom: 0px;
   list-style: none;
   transition: all 0.5s ease;
-}
-
-@media only screen and (max-width: 768px) {
-  
-  #sidebar-empty-space {
-    display: none;
-  }
 }
 
 #page-content-wrapper {
@@ -253,4 +249,20 @@ a {
 
 .current-nav-option {
   color: green;
+}
+
+@media only screen and (max-width: 768px) {
+  
+  #sidebar-empty-space {
+    display: none;
+  }
+
+  html {
+    padding: 3em 1em;
+    margin: auto;
+    line-height: 1.75;
+    font-size: 1em;
+    text-align: start;
+  }
+
 }
