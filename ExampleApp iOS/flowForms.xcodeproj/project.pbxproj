@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,13 +16,16 @@
 		E52B9C452909C7A5004FD562 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C442909C7A5004FD562 /* LocalizedString.swift */; };
 		E52B9C482909C823004FD562 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E52B9C472909C823004FD562 /* Localizable.strings */; };
 		E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C4A2909C886004FD562 /* String+extension.swift */; };
+		E535AD1D291D9562007E0707 /* FFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540851A290AD64700706CB4 /* FFormViewModel.swift */; };
 		E5408518290AD62E00706CB4 /* FlowFormsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408517290AD62E00706CB4 /* FlowFormsApp.swift */; };
 		E540851B290AD64700706CB4 /* FFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408519290AD64700706CB4 /* FFormView.swift */; };
-		E540851C290AD64700706CB4 /* FFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540851A290AD64700706CB4 /* FFormViewModel.swift */; };
 		E5408520290ADC2E00706CB4 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E540851F290ADC2E00706CB4 /* Colors.xcassets */; };
 		E5408522290ADC6A00706CB4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408521290ADC6A00706CB4 /* Colors.swift */; };
 		E5408526290ADE0800706CB4 /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408525290ADE0800706CB4 /* PromptView.swift */; };
 		E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540852A290B140800706CB4 /* PromptPresenter.swift */; };
+		E5A0C8A62939029400C6E216 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A52939029400C6E216 /* KMPNativeCoroutinesAsync */; };
+		E5A0C8A82939029400C6E216 /* KMPNativeCoroutinesCombine in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A72939029400C6E216 /* KMPNativeCoroutinesCombine */; };
+		E5A0C8AA2939029400C6E216 /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A92939029400C6E216 /* KMPNativeCoroutinesCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +67,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A0C8A62939029400C6E216 /* KMPNativeCoroutinesAsync in Frameworks */,
+				E5A0C8A82939029400C6E216 /* KMPNativeCoroutinesCombine in Frameworks */,
+				E5A0C8AA2939029400C6E216 /* KMPNativeCoroutinesCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +214,11 @@
 			dependencies = (
 			);
 			name = FlowForms;
+			packageProductDependencies = (
+				E5A0C8A52939029400C6E216 /* KMPNativeCoroutinesAsync */,
+				E5A0C8A72939029400C6E216 /* KMPNativeCoroutinesCombine */,
+				E5A0C8A92939029400C6E216 /* KMPNativeCoroutinesCore */,
+			);
 			productName = iOss;
 			productReference = 7555FF7B242A565900829871 /* FlowForms.app */;
 			productType = "com.apple.product-type.application";
@@ -236,6 +247,9 @@
 				Base,
 			);
 			mainGroup = 7555FF72242A565900829871;
+			packageReferences = (
+				E5A0C8A42939029400C6E216 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
+			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -262,7 +276,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		7555FFB5242A651A00829871 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -288,9 +302,9 @@
 				E5408522290ADC6A00706CB4 /* Colors.swift in Sources */,
 				E5408518290AD62E00706CB4 /* FlowFormsApp.swift in Sources */,
 				E52B9C412909C424004FD562 /* FFTextFieldViewConfiguration.swift in Sources */,
-				E540851C290AD64700706CB4 /* FFormViewModel.swift in Sources */,
 				E5408526290ADE0800706CB4 /* PromptView.swift in Sources */,
 				E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */,
+				E535AD1D291D9562007E0707 /* FFormViewModel.swift in Sources */,
 				E540851B290AD64700706CB4 /* FFormView.swift in Sources */,
 				E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */,
 				E52B9C392909C134004FD562 /* Constants.swift in Sources */,
@@ -424,6 +438,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlowForms/Preview Content\"";
+				DEVELOPMENT_TEAM = K8RM345779;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = FlowForms/Info.plist;
@@ -449,6 +464,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlowForms/Preview Content\"";
+				DEVELOPMENT_TEAM = K8RM345779;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = FlowForms/Info.plist;
@@ -490,6 +506,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E5A0C8A42939029400C6E216 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E5A0C8A52939029400C6E216 /* KMPNativeCoroutinesAsync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A0C8A42939029400C6E216 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesAsync;
+		};
+		E5A0C8A72939029400C6E216 /* KMPNativeCoroutinesCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A0C8A42939029400C6E216 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesCombine;
+		};
+		E5A0C8A92939029400C6E216 /* KMPNativeCoroutinesCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A0C8A42939029400C6E216 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7555FF73242A565900829871 /* Project object */;
 }

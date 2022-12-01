@@ -34,10 +34,22 @@ struct FFormView: View {
       VStack {
         Spacer()
         VStack(spacing: UI.Layout.mediumPadding) {
-          FFTextFieldView(configuration: $viewModel.nameConfiguration)
-          FFTextFieldView(configuration: $viewModel.emailConfiguration)
-          FFTextFieldView(configuration: $viewModel.passwordConfiguration)
-          FFTextFieldView(configuration: $viewModel.passwordConfirmationConfiguration)
+          FormModelTextView(
+            title: "Name",
+            value: viewModel.nameBinding
+          )
+          FormModelTextView(
+            title: "Email",
+            value: viewModel.emailBinding
+          )
+          FormModelTextView(
+            title: "Password",
+            value: viewModel.passwordBinding
+          )
+          FormModelTextView(
+            title: "Confirm password",
+            value: viewModel.passwordConfirmationBinding
+          )
         }
         .padding([.leading, .trailing], UI.Layout.largePadding)
         .frame(alignment: .center)

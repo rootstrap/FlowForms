@@ -8,30 +8,32 @@
 import SwiftUI
 import shared
 
-struct FFTextFieldView: View {
+struct FormModelTextView: View {
 
-  @Binding var configuration: FFTextFieldViewConfiguration
+  @Binding var valueText: String
+  @Binding var title: String
+
+  init(title: String, value: Binding<String>) {
+    _title = Binding.constant(title)
+    _valueText = value
+  }
   
   var body: some View {
     VStack {
       ZStack {
-        Text(configuration.title)
+        Text(title)
           .frame(maxWidth: .infinity, alignment: .leading)
           .font(Font.headline.weight(.regular))
-          .foregroundColor(configuration.isEmpty ? .gray : .black)
-          .offset(configuration.isEmpty ? .zero : CGSize(width: .zero, height: UI.OssTextField.titleOffSet))
+          .foregroundColor(.black)
+          .offset(valueText.isEmpty ? .zero : CGSize(width: .zero, height: UI.OssTextField.titleOffSet))
           .animation(.easeOut(duration: UI.OssTextField.textAnimationDuration),
-                     value: configuration.value)
+                     value: valueText)
           .scaleEffect(
-            configuration.isEmpty ? UI.OssTextField.titleScaleEmpty : UI.OssTextField.titleScaleNonEmpty,
+            valueText.isEmpty ? UI.OssTextField.titleScaleEmpty : UI.OssTextField.titleScaleNonEmpty,
             anchor: .bottomLeading
           )
-        if configuration.isSecure {
-          SecureField("", text: $configuration.value)
-        } else {
-          TextField("", text: $configuration.value)
-            .autocapitalization(.none)
-        }
+        TextField("", text: $valueText)
+          .autocapitalization(.none)
       }
       Rectangle()
         .frame(
@@ -39,17 +41,7 @@ struct FFTextFieldView: View {
           maxHeight: UI.OssTextField.textfieldLineHeight,
           alignment: .bottomLeading
         )
-        .foregroundColor(configuration.shouldShowError ? .red : .gray)
-      Text(configuration.errorMessage)
-        .foregroundColor(.red)
-        .font(.footnote)
-        .animation(.easeInOut)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .offset(CGSize(
-          width: .zero,
-          height: UI.OssTextField.errorTextOffset
-        ))
-        .opacity(configuration.shouldShowError ? 1 : .zero)
+        .foregroundColor(.gray)
     }.frame(maxWidth: .infinity, maxHeight: 60)
   }
 }
