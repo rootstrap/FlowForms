@@ -40,7 +40,7 @@ For further details we can take a look at the Kdoc in each of the classes, where
 <pre><code class="kotlin">
 var userName = ""
 val form = flowForm {
-    field("username", Required(failFast = false) { field })
+    field("username", Required(failFast = false) { userName })
 }
 </code></pre>
 <p class="comment">Setting failFast as false in the Required Validation for the userName</p>

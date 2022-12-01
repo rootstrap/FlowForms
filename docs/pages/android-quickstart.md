@@ -103,6 +103,6 @@ android:text="@={viewModel.userName}"
 </code></pre>
 For further information about two-way databiding, refer to [this official documentation](https://developer.android.com/topic/libraries/data-binding/two-way). However, the snippets above can be easily adapted to avoid using two-way databinding.
 
-**FlowForms**'s full potential is better appreciated when making more complex forms, you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) included in the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all. BTW, there is an example using Activity and another one using Fragment.
+**FlowForms**'s full potential is better appreciated when making more complex forms, you can review the [android example app ViewModel](https://github.com/rootstrap/FlowForms/blob/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example/SignUpViewModel.kt) included in the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all. BTW, there is an example using Activity and another one using Fragment.
 
 However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](pages/documentation-index)
