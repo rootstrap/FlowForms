@@ -102,4 +102,4 @@ And that's one of the easiest forms we can create using **FlowForms** in KMP, we
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-wand-magic-sparkles"></i> <div class="comment">A multi platform example app would be very helpful and a very good addition to the library. Want to collaborate? Fork the repository and make a Pull request! </div> </div>
 
-However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](pages/documentation-index)
+However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](documentation-index)
