@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.rootstrap"
-version = "0.0.3"
+version = "1.0.0"
 
 kotlin {
     android {
