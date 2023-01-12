@@ -16,3 +16,4 @@
 local.properties
 /docs/.jekyll-cache/Jekyll/
 /docs/_site/
+/shared/build
