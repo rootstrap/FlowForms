@@ -38,6 +38,18 @@ tasks {
           //  rename("(.*).sh", "$1")
         }
         into("$rootDir/.git/hooks")
+        eachFile {
+            fileMode = 0b111101101
+        }
+    }
+
+    register<Delete>("deletePreviousGitHooks") {
+        description = "Deleting previous gitHook."
+
+        val preCommit = "${rootProject.rootDir}/.git/hooks/pre-commit"
+        if (file(preCommit).exists()) {
+            delete(preCommit)
+        }
     }
 
    /* register<Exec>("installGitHooks") {
@@ -72,6 +84,7 @@ tasks {
     fileMode 0777
 }*/
 
+project.tasks.getByPath("copyGitHooks").dependsOn(tasks.named("deletePreviousGitHooks"))
 project.tasks.getByPath(":FlowForms-Core:preBuild").dependsOn(tasks.named("copyGitHooks"))
 //tasks[":app:preBuild"].dependsOn(tasks.named("copyGitHooks"))
 
