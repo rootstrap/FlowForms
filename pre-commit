@@ -2,7 +2,6 @@
 
 echo "Running git pre-commit hook"
 
-./gradlew ktlint
 ./gradlew FlowForms-Core:check
 
 RESULT=$?
