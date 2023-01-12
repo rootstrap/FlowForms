@@ -59,7 +59,7 @@ class SignUpFormFragment : Fragment() {
             repeatOnLifeCycleScope(
                 { it[SignUpFormModel.NAME]?.status?.collect(::onNameStatusChange) },
                 { it[SignUpFormModel.EMAIL]?.status?.collect(::onEmailStatusChange) },
-                { it[SignUpFormModel.NEW_PASSWORD]?.status?.collect(::onPasswordStatusChange) },
+                { it[SignUpFormModel.PASSWORD]?.status?.collect(::onPasswordStatusChange) },
                 { it[SignUpFormModel.CONFIRM_PASSWORD]?.status?.collect(::onConfirmPasswordChange) },
                 { viewModel.form.status.collect(::onFormStatusChange) }
             )
@@ -71,7 +71,7 @@ class SignUpFormFragment : Fragment() {
             viewModel.form.bind(lifecycleScope,
                 nameInputEditText to SignUpFormModel.NAME,
                 emailInputEditText to SignUpFormModel.EMAIL,
-                passwordInputEditText to SignUpFormModel.NEW_PASSWORD,
+                passwordInputEditText to SignUpFormModel.PASSWORD,
                 confirmPasswordInputEditText to SignUpFormModel.CONFIRM_PASSWORD
             )
             viewModel.form.bind(this@SignUpFormFragment, lifecycleScope,

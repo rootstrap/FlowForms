@@ -12,7 +12,7 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWOR
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
-import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.PASSWORD
 import kotlinx.coroutines.Dispatchers
 
 class SignUpViewModel : ViewModel() {
@@ -26,14 +26,14 @@ class SignUpViewModel : ViewModel() {
             BasicEmailFormat { formModel.email },
             EmailDoesNotExistsInRemoteStorage(async = true) { formModel.email }
         )
-        field(NEW_PASSWORD,
-            Required { formModel.newPassword },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
+        field(PASSWORD,
+            Required { formModel.password },
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.password }
         )
         field(CONFIRM_PASSWORD,
             Required { formModel.confirmPassword },
             MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword },
-            Match { formModel.newPassword to formModel.confirmPassword }
+            Match { formModel.password to formModel.confirmPassword }
         )
         field(CONFIRMATION, RequiredTrue { formModel.confirm.value })
         dispatcher = Dispatchers.IO
