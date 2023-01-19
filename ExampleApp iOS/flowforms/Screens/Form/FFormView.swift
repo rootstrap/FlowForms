@@ -9,11 +9,14 @@ import SwiftUI
 import shared
 
 struct FFormView: View {
-
+  @ObservedObject private var formManager: FormManager
   @ObservedObject private var viewModel: FFormViewModel
+  
   @State var showPrompt: Bool = false
-  init(viewModel: FFormViewModel) {
+  @State var errorHeight: CGFloat = 0
+  init(viewModel: FFormViewModel, formManager: FormManager = FormManager()) {
     self.viewModel = viewModel
+    self.formManager = formManager
   }
 
   func signUp() {
@@ -34,21 +37,30 @@ struct FFormView: View {
       VStack {
         Spacer()
         VStack(spacing: UI.Layout.mediumPadding) {
-          FormModelTextView(
-            title: "Name",
-            value: viewModel.nameBinding
-          )
+          VStack {
+            FormModelTextView(
+              title: "Name",
+              value: formManager.name
+            )
+            Text("Enter a valid name")
+              .frame(maxWidth: .infinity, maxHeight: errorHeight, alignment: .leading)
+              .opacity(errorHeight == 0 ? 0 : 1)
+            .onReceive(formManager.$nameValid) { value in
+              errorHeight = value ? 0 : 30
+            }
+          }
+          
           FormModelTextView(
             title: "Email",
-            value: viewModel.emailBinding
+            value: formManager.email
           )
           FormModelTextView(
             title: "Password",
-            value: viewModel.passwordBinding
+            value: formManager.password
           )
           FormModelTextView(
             title: "Confirm password",
-            value: viewModel.passwordConfirmationBinding
+            value: formManager.confirmPassword
           )
         }
         .padding([.leading, .trailing], UI.Layout.largePadding)
@@ -62,11 +74,12 @@ struct FFormView: View {
         Button {
           if
             viewModel.termsAccepted,
-            viewModel.isValidData {
+            formManager.isValid {
             signUp()
           }
         } label: {
           Text(LocalizedString.FFormView.signUpTitle)
+            .foregroundColor(formManager.isValid ? .black : .gray)
         }
         .frame(
           maxWidth: .infinity,
