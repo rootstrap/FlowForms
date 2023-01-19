@@ -16,6 +16,11 @@ interface FieldDefinition {
      */
     val id : String
 
+    // TODO Kdoc
+    val onValueChangeValidations : List<Validation>
+    val onBlurValidations : List<Validation>
+    val onFocusValidations : List<Validation>
+
     /**
      * Flow with the field's status. Initially it will be in an [UNMODIFIED] state.
      * As long as the [Validation]s are triggered, this flow will be updated based on the [Validation]s
@@ -33,7 +38,10 @@ interface FieldDefinition {
      * will be cancelled along with the coroutine that triggered this method via a [ValidationsCancelledException],
      * and then the OnValueChange validations will be triggered again from scratch as expected.
      */
-    suspend fun triggerOnValueChangeValidations(asyncCoroutineDispatcher: CoroutineDispatcher? = null) : Boolean
+    suspend fun triggerOnValueChangeValidations(
+        asyncCoroutineDispatcher: CoroutineDispatcher? = null,
+        additionalValidations: List<Validation> = emptyList()
+    ) : Boolean
 
     /**
      * Triggers the onBlur validations associated on a [Field][com.rootstrap.flowforms.core.field.FlowField]

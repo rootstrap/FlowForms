@@ -7,6 +7,7 @@ import com.rootstrap.flowforms.core.validation.Match
 import com.rootstrap.flowforms.core.validation.MinLength
 import com.rootstrap.flowforms.core.validation.Required
 import com.rootstrap.flowforms.core.validation.RequiredTrue
+import com.rootstrap.flowforms.core.validation.on
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRMATION
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWORD
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
@@ -28,7 +29,8 @@ class SignUpViewModel : ViewModel() {
         )
         field(PASSWORD,
             Required { formModel.password },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.password }
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.password },
+            Match { formModel.password to formModel.confirmPassword } on CONFIRM_PASSWORD
         )
         field(CONFIRM_PASSWORD,
             Required { formModel.confirmPassword },

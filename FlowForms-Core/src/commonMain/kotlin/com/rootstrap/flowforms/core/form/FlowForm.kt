@@ -5,6 +5,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FieldDefinition
 import com.rootstrap.flowforms.core.field.FlowField
+import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +28,6 @@ class FlowForm internal constructor(
 
     /**
      * Flow with the map of fields contained in this form.
-     * Initially it is an empty map until [setFields] is called with some fields in it.
      */
     val fields = _fields.asStateFlow()
 
@@ -70,6 +70,7 @@ class FlowForm internal constructor(
         }
     }
 
+    // TODO add new cross field validations kdoc
     /**
      * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
      * Returns the result of the validations or false if the field does not exist.
@@ -82,7 +83,21 @@ class FlowForm internal constructor(
      */
     suspend fun validateOnValueChange(fieldId : String) : Boolean {
         return try {
-            this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
+            val field = _fields.value[fieldId] ?: return false
+
+            val success = field.triggerOnValueChangeValidations(coroutineDispatcher)
+            if (success) {
+                val crossFieldValidations = field.onValueChangeValidations
+                    .filterIsInstance<CrossFieldValidation>()
+                    .groupBy { it.targetFieldId }
+
+                for (validationsPerField in crossFieldValidations) {
+                    val targetField = _fields.value[validationsPerField.key] ?: continue
+                    val validations = validationsPerField.value
+                    targetField.triggerOnValueChangeValidations(coroutineDispatcher, validations)
+                }
+            }
+            success
         } catch (ex : ValidationsCancelledException) {
             false
         }

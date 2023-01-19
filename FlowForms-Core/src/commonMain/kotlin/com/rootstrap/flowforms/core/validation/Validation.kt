@@ -12,7 +12,7 @@ import com.rootstrap.flowforms.core.field.FlowField
  * @param async Determines if the validation should be triggered asynchronously.
  * Defaults to false.
  */
-abstract class Validation(val failFast : Boolean = true, val async : Boolean = false) {
+abstract class Validation(open val failFast : Boolean = true, open val async : Boolean = false) {
 
     /**
      * Represents a validation that must return a result when invoked.
@@ -43,3 +43,6 @@ data class ValidationResult(
         val Incorrect = ValidationResult(INCORRECT)
     }
 }
+
+// TODO add new cross field validations kdoc
+infix fun Validation.on(fieldId: String) = CrossFieldValidation(this, fieldId)

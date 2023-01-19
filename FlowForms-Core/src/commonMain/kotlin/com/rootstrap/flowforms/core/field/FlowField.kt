@@ -5,6 +5,7 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,11 +26,18 @@ import kotlinx.coroutines.withContext
  */
 class FlowField(
     override val id : String,
-    private val onValueChangeValidations : List<Validation> = mutableListOf(),
-    private val onBlurValidations : List<Validation> = mutableListOf(),
-    private val onFocusValidations : List<Validation> = mutableListOf(),
-    private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior()
+    override val onValueChangeValidations : List<Validation> = emptyList(),
+    override val onBlurValidations : List<Validation> = emptyList(),
+    override val onFocusValidations : List<Validation> = emptyList(),
+    private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior(),
 ) : FieldDefinition {
+
+    private val filteredOnValueChangeValidations = onValueChangeValidations
+        .filter { it !is CrossFieldValidation }
+    private val filteredOnFocusValidations = onFocusValidations
+        .filter { it !is CrossFieldValidation }
+    private val filteredOnBlurValidations = onBlurValidations
+        .filter { it !is CrossFieldValidation }
 
     private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
         if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
@@ -82,12 +90,16 @@ class FlowField(
         }
     }
 
-    override suspend fun triggerOnValueChangeValidations(asyncCoroutineDispatcher: CoroutineDispatcher?) : Boolean {
+    override suspend fun triggerOnValueChangeValidations(
+        asyncCoroutineDispatcher: CoroutineDispatcher?,
+        additionalValidations: List<Validation>
+    ) : Boolean {
         cancelValidationsInProgress(ON_VALUE_CHANGE)
         onValueChangeCoroutinesJob = Job()
         return coroutineScope {
             withContext(onValueChangeCoroutinesJob!!) {
-                validationBehavior.triggerValidations(_onValueChangeStatus, onValueChangeValidations, asyncCoroutineDispatcher)
+                val allValidations = filteredOnValueChangeValidations + additionalValidations
+                validationBehavior.triggerValidations(_onValueChangeStatus, allValidations, asyncCoroutineDispatcher)
             }
         }
     }
