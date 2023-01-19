@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Running git pre-commit hook"
+
+./gradlew FlowForms-Core:check
+
+RESULT=$?
+
+# return 1 exit code if running checks fails
+[ $RESULT -ne 0 ] && echo "Please fix the remaining issues before committing" && exit 1
+echo "😎" && exit 0
