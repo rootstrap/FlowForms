@@ -203,9 +203,9 @@ class FlowFormTest {
     fun `GIVEN a form with a field for each validation option WHEN calling the form's validation methods THEN assert the fields corresponding validations are triggered exactly once`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-        val field1 = mockk<FlowField>()
-        val field2 = mockk<FlowField>()
-        val field3 = mockk<FlowField>()
+        val field1 = mockkEmptyFlowField()
+        val field2 = mockkEmptyFlowField()
+        val field3 = mockkEmptyFlowField()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -271,8 +271,8 @@ class FlowFormTest {
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and the validations are correct THEN assert all the fields validations are triggered`()
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-        val field1 = mockk<FlowField>()
-        val field2 = mockk<FlowField>()
+        val field1 = mockkEmptyFlowField()
+        val field2 = mockkEmptyFlowField()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -350,8 +350,8 @@ class FlowFormTest {
             = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
-        val field1 = mockk<FlowField>()
-        val field2 = mockk<FlowField>()
+        val field1 = mockkEmptyFlowField()
+        val field2 = mockkEmptyFlowField()
 
         every { field1.id } returns "field1"
         every { field1.status } returns flowOf(FieldStatus())
@@ -383,6 +383,12 @@ class FlowFormTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    private fun mockkEmptyFlowField() = mockk<FlowField> {
+        every { onValueChangeValidations } returns emptyList()
+        every { onFocusValidations } returns emptyList()
+        every { onBlurValidations } returns emptyList()
     }
 
 }
