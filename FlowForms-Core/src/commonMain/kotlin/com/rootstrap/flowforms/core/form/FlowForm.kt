@@ -94,7 +94,9 @@ class FlowForm internal constructor(
                 for (validationsPerField in crossFieldValidations) {
                     val targetField = _fields.value[validationsPerField.key] ?: continue
                     val validations = validationsPerField.value
-                    targetField.triggerOnValueChangeValidations(coroutineDispatcher, validations)
+                    if (targetField.getCurrentStatus().code != UNMODIFIED) {
+                        targetField.triggerOnValueChangeValidations(coroutineDispatcher, validations)
+                    }
                 }
             }
             success

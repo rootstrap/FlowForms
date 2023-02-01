@@ -53,9 +53,11 @@ class FlowField(
     private var onFocusCoroutinesJob : Job? = null
     private var onBlurCoroutinesJob : Job? = null
 
+    private lateinit var currentStatus : FieldStatus
+
     override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
-        when {
+        currentStatus = when {
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
                 getIncorrectFieldStatus(onValueChangeStatus, onBlurStatus, onFocusStatus)
             thereAreValidationsInProgress(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
@@ -67,6 +69,7 @@ class FlowField(
             else ->
                 FieldStatus(CORRECT)
         }
+        currentStatus
     }
 
     private fun thereAreFailedValidations(vararg fieldStatuses : FieldStatus) =
@@ -92,22 +95,22 @@ class FlowField(
 
     override suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
-        additionalValidations: List<Validation>
-    ) = triggerValidations(ON_VALUE_CHANGE, additionalValidations, asyncCoroutineDispatcher)
+        validations: List<Validation>
+    ) = triggerValidations(ON_VALUE_CHANGE, validations, asyncCoroutineDispatcher)
 
     override suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
-        additionalValidations: List<Validation>
-    ) = triggerValidations(ON_BLUR, additionalValidations, asyncCoroutineDispatcher)
+        validations: List<Validation>
+    ) = triggerValidations(ON_BLUR, validations, asyncCoroutineDispatcher)
 
     override suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
-        additionalValidations: List<Validation>
-    ) = triggerValidations(ON_FOCUS, additionalValidations, asyncCoroutineDispatcher)
+        validations: List<Validation>
+    ) = triggerValidations(ON_FOCUS, validations, asyncCoroutineDispatcher)
 
     private suspend fun triggerValidations(
         validationType: String,
-        additionalValidations: List<Validation>,
+        validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?,
     ) : Boolean {
         val coroutinesJob = restartJob(validationType)
@@ -119,8 +122,8 @@ class FlowField(
 
         return coroutineScope {
             withContext(coroutinesJob) {
-                val allValidations = fieldValidations + additionalValidations
-                validationBehavior.triggerValidations(statusFlow, allValidations, asyncCoroutineDispatcher)
+                val finalValidations = validations.ifEmpty { fieldValidations }
+                validationBehavior.triggerValidations(statusFlow, finalValidations, asyncCoroutineDispatcher)
             }
         }
     }
@@ -148,6 +151,8 @@ class FlowField(
             it.join()
         }
     }
+
+    override fun getCurrentStatus() = currentStatus
 
     companion object {
         /**

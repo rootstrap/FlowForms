@@ -40,7 +40,7 @@ interface FieldDefinition {
      */ // TODO Kdoc additional param
     suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
-        additionalValidations: List<Validation> = emptyList()
+        validations: List<Validation> = emptyList()
     ) : Boolean
 
     /**
@@ -53,7 +53,7 @@ interface FieldDefinition {
      */
     suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
-        additionalValidations: List<Validation> = emptyList()
+        validations: List<Validation> = emptyList()
     ) : Boolean
 
     /**
@@ -66,6 +66,9 @@ interface FieldDefinition {
      */
     suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
-        additionalValidations: List<Validation> = emptyList()
+        validations: List<Validation> = emptyList()
     ) : Boolean
+
+    fun getCurrentStatus() : FieldStatus
+
 }
