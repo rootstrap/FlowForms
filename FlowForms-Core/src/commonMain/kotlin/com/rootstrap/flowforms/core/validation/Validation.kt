@@ -44,5 +44,11 @@ data class ValidationResult(
     }
 }
 
-// TODO add new cross field validations kdoc
-infix fun Validation.on(fieldId: String) = CrossFieldValidation(this, fieldId)
+/**
+ * Turns this validation into a cross-field validation, which will be ran whenever the field in
+ * which it is attached to is validated as Correct, but the result will affect the field of the
+ * specified targetFieldId instead of the field in which it is attached to.
+ *
+ * @param targetFieldId the ID of the field that this validation will affect.
+ */
+infix fun Validation.on(targetFieldId: String) = CrossFieldValidation(this, targetFieldId)

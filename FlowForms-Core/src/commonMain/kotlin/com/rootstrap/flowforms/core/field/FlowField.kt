@@ -5,6 +5,10 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_BLUR
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_FOCUS
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_VALUE_CHANGE
 import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
@@ -109,7 +113,7 @@ class FlowField(
     ) = triggerValidations(ON_FOCUS, validations, asyncCoroutineDispatcher)
 
     private suspend fun triggerValidations(
-        validationType: String,
+        validationType: ValidationType,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?,
     ) : Boolean {
@@ -128,7 +132,7 @@ class FlowField(
         }
     }
 
-    private suspend fun restartJob(validationType : String) : Job {
+    private suspend fun restartJob(validationType : ValidationType) : Job {
         return when(validationType) {
             ON_VALUE_CHANGE -> {
                 cancelJob(onValueChangeCoroutinesJob)
@@ -159,21 +163,6 @@ class FlowField(
          * Internal status for the empty [Validation]s' states.
          */
         private const val UNSET = "unset"
-
-        /**
-         * Internal key for on value change validations
-         */
-        private const val ON_VALUE_CHANGE = "on-value-change"
-
-        /**
-         * Internal key for on focus validations
-         */
-        private const val ON_FOCUS = "on-focus"
-
-        /**
-         * Internal key for on blur validations
-         */
-        private const val ON_BLUR = "on-blur"
 
         private const val CANCEL_MESSAGE =
             "Validations cancelled because they are being triggered again"
