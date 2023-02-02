@@ -28,4 +28,10 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - name: Gradle check task - Build and Test FlowForms-Core
       run: ./gradlew FlowForms-Core:check
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.2.0
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+      with:
+        coverageLocations: FlowForms-Core/build/reports/kover/report.xml:xml
         
