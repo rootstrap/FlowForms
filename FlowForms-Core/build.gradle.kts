@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlinx.kover") version "0.5.1"
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("com.android.library")
     `maven-publish`
 }
@@ -43,12 +43,8 @@ kotlin {
 
 val rootPkg = "com.rootstrap.flowforms"
 
-tasks.koverMergedHtmlReport {
-    excludes = listOf(
-        "${rootPkg}.core.common.StatusCodes",
-        "${rootPkg}.util.*",
-        "${rootPkg}.core.BuildConfig"
-    )
+kover {
+    engine.set(kotlinx.kover.api.DefaultJacocoEngine)
 }
 
 android {
