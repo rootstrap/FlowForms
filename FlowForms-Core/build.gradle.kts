@@ -50,6 +50,15 @@ kover {
 
 koverMerged {
     enable()
+
+    xmlReport {
+        onCheck.set(false)
+        reportFile.set(layout.buildDirectory.file("$buildDir/reports/kover/result.xml"))
+    }
+    htmlReport {
+        onCheck.set(false)
+        reportDir.set(layout.buildDirectory.dir("$buildDir/reports/kover/html-result"))
+    }
 }
 
 android {
