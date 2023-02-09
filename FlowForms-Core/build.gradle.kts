@@ -44,7 +44,12 @@ kotlin {
 val rootPkg = "com.rootstrap.flowforms"
 
 kover {
+    isDisabled.set(false)
     engine.set(kotlinx.kover.api.DefaultJacocoEngine)
+}
+
+koverMerged {
+    enable()
 }
 
 android {
