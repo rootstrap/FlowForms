@@ -23,9 +23,9 @@ fun getTestDispatcher(testScheduler: TestCoroutineScheduler): TestDispatcher {
 
 fun validation(result : ValidationResult, failFast : Boolean = false, async : Boolean = false)
         = mockk<Validation> {
-    every { async } returns async
+    every { this@mockk.async } returns async
     every { this@mockk.failFast } returns failFast
-    coEvery { validate() } coAnswers { result }
+    coEvery { this@mockk.validate() } coAnswers { result }
 }
 
 fun asyncValidation(delayInMillis : Long, result : ValidationResult, failFast : Boolean = false)

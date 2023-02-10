@@ -169,7 +169,7 @@ class FlowForm internal constructor(
 
         for (validationsPerField in crossFieldValidations) {
             val targetField = _fields.value[validationsPerField.key] ?: continue
-            val validations = validationsPerField.value
+            val validations = validationsPerField.value.map { it.validation }
             if (targetField.getCurrentStatus().code != UNMODIFIED) {
                 when (validationType) {
                     ON_VALUE_CHANGE ->
