@@ -46,13 +46,13 @@ class SignUpFormActivity : AppCompatActivity() {
     }
 
     private fun listenStatusChanges() {
-        viewModel.form.fields.value.let {
+        viewModel.form.apply {
             repeatOnLifeCycleScope(
-                { it[NAME]?.status?.collect(::onNameStatusChange) },
-                { it[EMAIL]?.status?.collect(::onEmailStatusChange) },
-                { it[PASSWORD]?.status?.collect(::onPasswordStatusChange) },
-                { it[CONFIRM_PASSWORD]?.status?.collect(::onConfirmPasswordChange) },
-                { viewModel.form.status.collect(::onFormStatusChange) }
+                { field(NAME)?.status?.collect(::onNameStatusChange) },
+                { field(EMAIL)?.status?.collect(::onNameStatusChange) },
+                { field(PASSWORD)?.status?.collect(::onNameStatusChange) },
+                { field(CONFIRM_PASSWORD)?.status?.collect(::onNameStatusChange) },
+                { status.collect(::onFormStatusChange) }
             )
         }
     }

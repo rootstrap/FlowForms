@@ -26,6 +26,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.fail
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -53,9 +54,9 @@ class FlowFormTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus())
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus())
 
         flowForm {
@@ -72,9 +73,9 @@ class FlowFormTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(INCORRECT))
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus())
 
         flowForm {
@@ -88,13 +89,13 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 2 fields WHEN one field become correct THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
-            = runTest {
+    = runTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus())
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
         flowForm {
@@ -108,13 +109,13 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 2 fields WHEN both fields become correct at the same time THEN assert the form status changes from UNMODIFIED to CORRECT`()
-            = runTest {
+    = runTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
         flowForm {
@@ -128,18 +129,18 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 3 fields WHEN only two fields become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE`()
-            = runTest {
+    = runTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
 
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
-        every { field3.id } returns "field3"
+        every { field3.id } returns FIELD_ID_3
         every { field3.status } returns flowOf(FieldStatus())
 
         flowForm {
@@ -154,18 +155,18 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 3 fields WHEN one field become correct and one become incorrect THEN assert the form status changes from UNMODIFIED to INCOMPLETE TO INCORRECT`()
-            = runTest {
+    = runTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(INCORRECT))
 
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
-        every { field3.id } returns "field3"
+        every { field3.id } returns FIELD_ID_3
         every { field3.status } returns flowOf(FieldStatus())
 
         flowForm {
@@ -180,18 +181,18 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 3 fields WHEN they become correct at different times THEN assert the form status changes from UNMODIFIED to INCOMPLETE x2 to CORRECT`()
-            = runTest {
+    = runTest {
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
         val field3 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
 
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
 
-        every { field3.id } returns "field3"
+        every { field3.id } returns FIELD_ID_3
         every { field3.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
 
         flowForm {
@@ -207,11 +208,11 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with a field for each validation option WHEN calling the form's validation methods THEN assert the fields corresponding validations are triggered exactly once`()
-            = runTest {
+    = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-        val field1 = mockkFlowField(id = "field1")
-        val field2 = mockkFlowField(id = "field2")
-        val field3 = mockkFlowField(id = "field3")
+        val field1 = mockkFlowField(id = FIELD_ID_1)
+        val field2 = mockkFlowField(id = FIELD_ID_2)
+        val field3 = mockkFlowField(id = FIELD_ID_3)
 
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
         coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
@@ -223,9 +224,9 @@ class FlowFormTest {
         }
 
         form.status.test {
-            form.validateOnValueChange("field1")
-            form.validateOnBlur("field2")
-            form.validateOnFocus("field3")
+            form.validateOnValueChange(FIELD_ID_1)
+            form.validateOnBlur(FIELD_ID_2)
+            form.validateOnFocus(FIELD_ID_3)
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
             coVerify(exactly = 1) { field2.triggerOnBlurValidations(coroutineDispatcher) }
@@ -237,7 +238,7 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form without fields WHEN the validate methods are called THEN assert the app does not crashes`()
-            = runTest {
+    = runTest {
         val form = flowForm { }
         val nonExistentFieldId = "fieldNonExistent"
 
@@ -253,7 +254,7 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form without fields WHEN calling the form's validate functions THEN assert the results are all false `()
-            = runTest {
+    = runTest {
         val form = flowForm { }
         val nonExistentFieldId = ""
 
@@ -267,10 +268,10 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and the validations are correct THEN assert all the fields validations are triggered`()
-            = runTest {
+    = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
-        val field1 = mockkFlowField("field1")
-        val field2 = mockkFlowField("field2")
+        val field1 = mockkFlowField(FIELD_ID_1)
+        val field2 = mockkFlowField(FIELD_ID_2)
 
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
         coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns true
@@ -302,18 +303,18 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and at onValueChange it is not correct THEN assert only onValueChangeValidations were triggered`()
-            = runTest {
+    = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
         val field1 = mockk<FlowField>()
         val field2 = mockk<FlowField>()
 
-        every { field1.id } returns "field1"
+        every { field1.id } returns FIELD_ID_1
         every { field1.status } returns flowOf(FieldStatus())
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
         coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns true
         coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
-        every { field2.id } returns "field2"
+        every { field2.id } returns FIELD_ID_2
         every { field2.status } returns flowOf(FieldStatus())
         coEvery { field2.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
@@ -341,11 +342,11 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with two fields with each kind of validation WHEN calling the form's validateAll method and at onFocus it is not correct THEN assert that onBlur validations were not triggered`()
-            = runTest {
+    = runTest {
         val coroutineDispatcher = StandardTestDispatcher(testScheduler, name = TEST_IO_DISPATCHER_NAME)
 
-        val field1 = mockkFlowField("field1")
-        val field2 = mockkFlowField("field2")
+        val field1 = mockkFlowField(FIELD_ID_1)
+        val field2 = mockkFlowField(FIELD_ID_2)
 
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns true
         coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns false
@@ -378,11 +379,9 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 1 CORRECT field with cross-field validations and, 1 CORRECT and 1 INCORRECT fields WHEN field one is validated THEN assert the other fields are also validated`()
     = runTest {
-        val field2Id = "field2"
-        val field3Id = "field3"
-        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
-        val crossFieldValidation2 = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
-        val crossFieldValidation3 = CrossFieldValidation(validation(ValidationResult.Correct), field3Id)
+        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), FIELD_ID_2)
+        val crossFieldValidation2 = CrossFieldValidation(validation(ValidationResult.Correct), FIELD_ID_2)
+        val crossFieldValidation3 = CrossFieldValidation(validation(ValidationResult.Correct), FIELD_ID_3)
         val field1RegularValidation = validation(ValidationResult.Correct)
 
         val field1Validations = listOf(
@@ -393,18 +392,18 @@ class FlowFormTest {
         )
         val field2Validations = listOf(validation(ValidationResult.Correct, failFast = true))
 
-        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        val field1 = mockkFlowField(FIELD_ID_1, allValidationsList = field1Validations)
         coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field1.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field1.triggerOnBlurValidations(any(), any()) } returns true
 
-        val field2 = mockkFlowField(field2Id, allValidationsList = field2Validations)
+        val field2 = mockkFlowField(FIELD_ID_2, allValidationsList = field2Validations)
         coEvery { field2.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field2.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field2.triggerOnBlurValidations(any(), any()) } returns true
         every { field2.getCurrentStatus() } returns FieldStatus(CORRECT)
 
-        val field3 = mockkFlowField(field3Id)
+        val field3 = mockkFlowField(FIELD_ID_3)
         coEvery { field3.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field3.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field3.triggerOnBlurValidations(any(), any()) } returns true
@@ -454,8 +453,7 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 1 CORRECT field with cross-field validations and 1 UNMODIFIED field WHEN the field one is validated THEN assert the other field is not`()
     = runTest {
-        val field2Id = "field2"
-        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
+        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), FIELD_ID_2)
         val field1RegularValidation = validation(ValidationResult.Correct)
 
         val field1Validations = listOf(
@@ -464,12 +462,12 @@ class FlowFormTest {
         )
         val field2Validations = listOf(validation(ValidationResult.Correct, failFast = true))
 
-        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        val field1 = mockkFlowField(FIELD_ID_1, allValidationsList = field1Validations)
         coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field1.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field1.triggerOnBlurValidations(any(), any()) } returns true
 
-        val field2 = mockkFlowField(field2Id, allValidationsList = field2Validations)
+        val field2 = mockkFlowField(FIELD_ID_2, allValidationsList = field2Validations)
         coEvery { field2.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field2.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field2.triggerOnBlurValidations(any(), any()) } returns true
@@ -507,18 +505,17 @@ class FlowFormTest {
     @Test
     fun `GIVEN a form with 1 INCORRECT field with cross-field validations and 1 UNMODIFIED field WHEN field one is validated THEN assert the other field is not`()
     = runTest {
-        val field2Id = "field2"
-        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
+        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), FIELD_ID_2)
         val field1RegularValidation = validation(ValidationResult.Incorrect)
         val field1Validations = listOf(
             field1RegularValidation,
             crossFieldValidation,
         )
-        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        val field1 = mockkFlowField(FIELD_ID_1, allValidationsList = field1Validations)
         coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns false
         coEvery { field1.triggerOnFocusValidations(any(), any()) } returns false
         coEvery { field1.triggerOnBlurValidations(any(), any()) } returns false
-        val field2 = mockkFlowField(field2Id)
+        val field2 = mockkFlowField(FIELD_ID_2)
 
         val form = flowForm {
             fields(field1, field2)
@@ -558,7 +555,7 @@ class FlowFormTest {
             field1RegularValidation,
             crossFieldValidation,
         )
-        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        val field1 = mockkFlowField(FIELD_ID_1, allValidationsList = field1Validations)
         coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field1.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field1.triggerOnBlurValidations(any(), any()) } returns true
@@ -586,8 +583,8 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 1 field WHEN validation process is cancelled THEN assert the validation result is false`()
-            = runTest {
-        val field1 = mockkFlowField("field1")
+    = runTest {
+        val field1 = mockkFlowField(FIELD_ID_1)
         coEvery { field1.triggerOnValueChangeValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
         coEvery { field1.triggerOnFocusValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
         coEvery { field1.triggerOnBlurValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
@@ -601,6 +598,34 @@ class FlowFormTest {
         assertFalse { form.validateOnBlur(field1.id) }
     }
 
+    @Test
+    fun `GIVEN a form with 2 fields WHEN getting them by id THEN assert they are retrieved`() {
+        val field1 = mockkFlowField(FIELD_ID_1)
+        val field2 = mockkFlowField(FIELD_ID_2)
+
+        val form = flowForm {
+            fields(field1, field2)
+        }
+
+        assertEquals(field1, form.field(FIELD_ID_1))
+        assertEquals(field2, form.field(FIELD_ID_2))
+    }
+
+    @Test
+    fun `GIVEN a form WHEN getting a field with an incorrect id THEN assert null is retrieved`() {
+        val field1 = mockkFlowField(FIELD_ID_1)
+        val field2 = mockkFlowField(FIELD_ID_2)
+
+        val form = flowForm {
+            fields(field1, field2)
+        }
+
+        val emptyForm = flowForm { }
+
+        assertNull(form.field("non-existing-field-id"))
+        assertNull(emptyForm.field("non-existing-field-id"))
+    }
+
     private fun mockkFlowField(
         id : String? = null,
         status: Flow<FieldStatus> = flowOf(FieldStatus()),
@@ -611,6 +636,12 @@ class FlowFormTest {
         every { this@mockk.onBlurValidations } returns allValidationsList
         id?.let { every { this@mockk.id } returns id }
         every { this@mockk.status } returns status
+    }
+
+    companion object {
+        private const val FIELD_ID_1 = "field1"
+        private const val FIELD_ID_2 = "field2"
+        private const val FIELD_ID_3 = "field3"
     }
 
 }

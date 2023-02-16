@@ -75,6 +75,15 @@ class FlowForm internal constructor(
     }
 
     /**
+     * Returns the field with the given ID, or null if it doesn't exist on this form
+     * at this specific moment.
+     *
+     * @param id the ID of the field to retrieve.
+     * @return a FieldDefinition instance for the given ID, or null.
+     */
+    fun field(id: String) = fields.value[id]
+
+    /**
      * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
      *
      * For additional information please refer to [DOC_FIELD_VALIDATION_BEHAVIOR]
