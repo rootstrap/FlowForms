@@ -13,6 +13,7 @@ import com.rootstrap.flowforms.core.util.validation
 import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
+import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -452,7 +453,7 @@ class FlowFormTest {
 
     @Test
     fun `GIVEN a form with 1 CORRECT field with cross-field validations and 1 UNMODIFIED field WHEN the field one is validated THEN assert the other field is not`()
-            = runTest {
+    = runTest {
         val field2Id = "field2"
         val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
         val field1RegularValidation = validation(ValidationResult.Correct)
@@ -501,6 +502,103 @@ class FlowFormTest {
         coVerify(exactly = 0) {
             field2.triggerOnBlurValidations(validations = listOf(crossFieldValidation.validation))
         }
+    }
+
+    @Test
+    fun `GIVEN a form with 1 INCORRECT field with cross-field validations and 1 UNMODIFIED field WHEN field one is validated THEN assert the other field is not`()
+    = runTest {
+        val field2Id = "field2"
+        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), field2Id)
+        val field1RegularValidation = validation(ValidationResult.Incorrect)
+        val field1Validations = listOf(
+            field1RegularValidation,
+            crossFieldValidation,
+        )
+        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns false
+        coEvery { field1.triggerOnFocusValidations(any(), any()) } returns false
+        coEvery { field1.triggerOnBlurValidations(any(), any()) } returns false
+        val field2 = mockkFlowField(field2Id)
+
+        val form = flowForm {
+            fields(field1, field2)
+        }
+
+        form.validateOnValueChange(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnValueChangeValidations(validations = emptyList())
+        }
+        coVerify(exactly = 0) {
+            field2.triggerOnValueChangeValidations(any(), any())
+        }
+
+        form.validateOnFocus(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnFocusValidations(validations = emptyList())
+        }
+        coVerify(exactly = 0) {
+            field2.triggerOnValueChangeValidations(any(), any())
+        }
+
+        form.validateOnBlur(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnBlurValidations(validations = emptyList())
+        }
+        coVerify(exactly = 0) {
+            field2.triggerOnValueChangeValidations(any(), any())
+        }
+    }
+
+    @Test
+    fun `GIVEN a form with only 1 CORRECT field with a cross-field validation WHEN the field is validated THEN assert it does not crash because dye to the missing target field`()
+    = runTest {
+        val crossFieldValidation = CrossFieldValidation(validation(ValidationResult.Correct), "non-existing-field-id")
+        val field1RegularValidation = validation(ValidationResult.Correct)
+        val field1Validations = listOf(
+            field1RegularValidation,
+            crossFieldValidation,
+        )
+        val field1 = mockkFlowField("field1", allValidationsList = field1Validations)
+        coEvery { field1.triggerOnValueChangeValidations(any(), any()) } returns true
+        coEvery { field1.triggerOnFocusValidations(any(), any()) } returns true
+        coEvery { field1.triggerOnBlurValidations(any(), any()) } returns true
+
+        val form = flowForm {
+            fields(field1)
+        }
+
+        form.validateOnValueChange(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnValueChangeValidations(validations = emptyList())
+        }
+
+        form.validateOnFocus(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnFocusValidations(validations = emptyList())
+        }
+
+        form.validateOnBlur(field1.id)
+        coVerify(exactly = 1) {
+            field1.triggerOnBlurValidations(validations = emptyList())
+        }
+        // if this test doesn't crash it means it worked.
+    }
+
+    @Test
+    fun `GIVEN a form with 1 field WHEN validation process is cancelled THEN assert the validation result is false`()
+            = runTest {
+        val field1 = mockkFlowField("field1")
+        coEvery { field1.triggerOnValueChangeValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
+        coEvery { field1.triggerOnFocusValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
+        coEvery { field1.triggerOnBlurValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
+
+        val form = flowForm {
+            fields(field1)
+        }
+
+        assertFalse { form.validateOnValueChange(field1.id) }
+        assertFalse { form.validateOnFocus(field1.id) }
+        assertFalse { form.validateOnBlur(field1.id) }
     }
 
     private fun mockkFlowField(
