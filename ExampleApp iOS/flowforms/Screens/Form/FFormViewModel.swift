@@ -12,14 +12,6 @@ import SwiftUI
 import KMPNativeCoroutinesCombine
 import KMPNativeCoroutinesCore
 
-final class FFormViewModel: ObservableObject {
-
-  @Published var termsAccepted = false
-
-  var cancelBag = Set<AnyCancellable>()
-  init() { }
-}
-
 private extension LocalizedString {
   enum SignUpView {
     static let nameTitle = "signup_name_title".localized
@@ -35,7 +27,16 @@ private extension LocalizedString {
 
 class FormManager: ObservableObject {
   let formModel = FormModel()
-  let claseNueva = ClaseNueva()
+
+  var termsAccepted: Binding<Bool> {
+    bindSwitch(
+      field: formModel.termsAccepted,
+      id: FormModel.companion.TERMS_ACCEPTED
+    ) {
+        print("switch : \($0)")
+        self.formModel.termsAccepted = $0
+      }
+  }
   
   var name: Binding<String> {
     bindField(
@@ -74,55 +75,104 @@ class FormManager: ObservableObject {
   }
 
   private var nameValidPublisher = CurrentValueSubject<Bool, Never>(false)
-  @Published var nameValid: Bool = false
-  @Published var emailValid: Bool = false
-  @Published var passwordValid: Bool = false
-  @Published var confirmPasswordValid: Bool = false
- 
   
- var isValid: Bool {
-   nameValid
-   && emailValid
- }
+  @Published private var nameStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  @Published private var emailStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  @Published private var passwordStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  @Published private var confirmPasswordStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  @Published private var formStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  
+  var emailVerificationInProgress: Bool {
+    return emailStatus == FFCStatusCodes.shared.IN_PROGRESS
+  }
+  
+  var formValid: Bool {
+    return formStatus == FFCStatusCodes.shared.CORRECT
+  }
+  
+  var nameComprobations: AnyPublisher<Bool, Never> {
+    $nameStatus
+      .receive(on: DispatchQueue.main)
+      .map({ $0 == FFCStatusCodes.shared.REQUIRED_UNSATISFIED})
+      .eraseToAnyPublisher()
+  }
+  
+  var emailComprobation: AnyPublisher<Bool, Never> {
+    $emailStatus
+      .receive(on: DispatchQueue.main)
+      .map({ status in
+        print(status)
+          return (status == FFCStatusCodes.shared.BASIC_EMAIL_FORMAT_UNSATISFIED)
+          || (status == FFCStatusCodes.shared.REQUIRED_UNSATISFIED)
+      }).eraseToAnyPublisher()
+  }
+  
+  var passwordComprobation: AnyPublisher<Bool, Never> {
+    $passwordStatus
+      .receive(on: DispatchQueue.main)
+      .map({
+        ($0 == FFCStatusCodes.shared.MIN_LENGTH_UNSATISFIED)
+        || ($0 == FFCStatusCodes.shared.REQUIRED_UNSATISFIED)
+      }).eraseToAnyPublisher()
+  }
+  
+  var confirmedPasswordComprobation: AnyPublisher<Bool, Never> {
+    $confirmPasswordStatus
+      .receive(on: DispatchQueue.main)
+      .map({
+        ($0 == FFCStatusCodes.shared.MATCH_UNSATISFIED)
+        || ($0 == FFCStatusCodes.shared.REQUIRED_UNSATISFIED)
+      }).eraseToAnyPublisher()
+  }
   
  var cancelBag: Set<AnyCancellable> = []
 
  init() {
-  
-  
+   
+   bindForm(inPublisher: &$formStatus)
+   
    bind(
      field: formModel.form.fieldFor(id: FormModel.companion.NAME),
-     inPublisher: &$nameValid,
-     errorMessage: "invalid name"
+     inPublisher: &$nameStatus
    )
    bind(
      field: formModel.form.fieldFor(id: FormModel.companion.EMAIL),
-     inPublisher: &$emailValid
+     inPublisher: &$emailStatus
    )
    bind(
      field: formModel.form.fieldFor(id: FormModel.companion.PASSWORD),
-     inPublisher: &$passwordValid
+     inPublisher: &$passwordStatus
    )
    bind(
      field: formModel.form.fieldFor(id: FormModel.companion.CONFIRM_PASSWORD),
-     inPublisher: &$confirmPasswordValid
+     inPublisher: &$confirmPasswordStatus
    )
  }
   
+  func bindForm(inPublisher publisher: inout Published<String>.Publisher) {
+    let formPublisher = createPublisher(for: formModel.form.statusNative)
+    
+    formPublisher
+      .receive(on: DispatchQueue.main)
+      .map({ status in
+        return status.code
+      })
+      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
+      .assign(to: &publisher)
+  }
+  
   func bind(
     field: FFCFlowField,
-    inPublisher publisher: inout Published<Bool>.Publisher,
-    errorMessage: String = ""
+    inPublisher publisher: inout Published<String>.Publisher
   ){
     let fieldPublisher = createPublisher(for: field.statusNative)
     
     fieldPublisher
       .receive(on: DispatchQueue.main)
       .map({ status in
-        return true
-        //return status.code == FFCStatusCodes.shared.CORRECT
+        return status.code
       })
-      .replaceError(with: false)
+      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
       .assign(to: &publisher)
   }
   
@@ -131,7 +181,24 @@ class FormManager: ObservableObject {
     id: String,
     completion: @escaping (String) -> Void
   ) -> Binding<String> {
-
+    return
+      Binding(
+        get: { field },
+        set: {
+          completion($0)
+          self.formModel.form.validateOnValueChange(
+            fieldId: id
+          ) { _ , _ in }
+          self.objectWillChange.send()
+        }
+      )
+  }
+  
+  func bindSwitch(
+    field: Bool,
+    id: String,
+    completion: @escaping (Bool) -> Void
+  ) -> Binding<Bool> {
     return
       Binding(
         get: { field },

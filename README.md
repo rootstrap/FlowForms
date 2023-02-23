@@ -1,24 +1,57 @@
-# FlowForms
+![FlowForms Logo](https://github.com/rootstrap/FlowForms/blob/pages/docs/images/logotype-FlowForms-small-background.png?raw=true)
 
-[![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Maintained : Yes!](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rootstrap/FlowForms/graphs/commit-activity) [![Documentation](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://rootstrap.github.io/FlowForms/) ![Build Status](https://github.com/rootstrap/FlowForms/actions/workflows/gradle.yml/badge.svg)
 
-
-WIP badges :
-- ![Build Status](https://github.com/rootstrap/FlowForms/workflows/CI/badge.svg)
-- [![Maintainability](https://api.codeclimate.com/v1/badges/FlowForms/maintainability)](https://codeclimate.com/github/rootstrap/FlowForms/maintainability)
-- [![Test Coverage](https://api.codeclimate.com/v1/badges/FlowForms/test_coverage)](https://codeclimate.com/github/rootstrap/FlowForms/test_coverage)
-
-KMP library for form management
+### KMP library for form management
 
 ---
 
-#### :warning: Considerations :warning:
-- This project works on top of [KMP](https://kotlinlang.org/docs/multiplatform.html) (currently in alpha) and `ExperimentalCoroutinesApi`, so use it with caution.
+## What is FlowForms?
+FlowForms is a declarative and reactive Kotlin multiplatform library for Form management
 
----
+```kotlin
+class SignUpViewModel {
+
+    val formModel = SignUpFormModel()
+
+    val form = flowForm {
+        field(NAME, Required { formModel.name })
+        field(EMAIL,
+            Required { formModel.email },
+            BasicEmailFormat { formModel.email },
+            EmailDoesNotExistsInRemoteStorage(async = true) { formModel.email }
+        )
+        field(NEW_PASSWORD,
+            Required { formModel.newPassword },
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
+        )
+        field(CONFIRM_PASSWORD,
+            Required { formModel.confirmPassword },
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword }
+        ) {
+            onBlur(Match { formModel.newPassword to formModel.confirmPassword })
+        }
+        field(CONFIRMATION, RequiredTrue { formModel.confirm.value })
+        dispatcher = Dispatchers.IO // your async dispatcher of preference, this one is from Android
+    }
+
+    companion object {
+        const val NAME = "name"
+        const val EMAIL = "email"
+        const val CONFIRMATION = "confirmation"
+        const val NEW_PASSWORD = "new_password"
+        const val CONFIRM_PASSWORD = "confirm_password"
+        const val MIN_PASSWORD_LENGTH = 6
+    }
+}
+```
+
+It aims to reduce all the boiler plate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations, allowing to mix both synchronous and asynchronous validations quickly and easily, while also exposing a simple yet powerful API to react to the form and its field status changes under different circumstances.
+
+For example, in the above snippet we are declaring the whole sign up form behavior, and now we only need to care about connecting it with our UI, which may  vary per platform and is explained in the "[Excellent! Lets get started](excellent-lets-get-started)" section.
 
 ## Installation (using gradle)
-- Add the JitPack repository to your root build.gradle file, at the end of repositories :
+Add the JitPack repository to your **root** build.gradle file, at the end of repositories :
 ```kotlin
 allprojects {
   repositories {
@@ -28,43 +61,49 @@ allprojects {
 }
 ```
 
-- Add FlowForms dependency in you module's build.gradle file :
+Based on your project, add FlowForms dependency in your module's build.gradle file :
 ```kotlin
 dependencies {
   ..
-  val flowFormsVersion = "0.0.3"
+  val flowFormsVersion = "1.0.0"
     
-  // Use this to get FlowForms Core module on Android 
+  // On KMP projects
+  implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
+
+  // On android projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // Use this to get FlowForms Core module on jvm targets
+  // On JVM projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
-
-  // Use this to get the whole FlowForms Core module (for all available targets)
-  implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
-  
-  // Use this to get every FlowForms modules together (currently we only have FlowForms Core so it's the same as above but shorter) 
-  implementation("com.github.rootstrap:FlowForms:$flowFormsVersion")
   ..
 }
 ```
 
-- Only FlowForms Core is available at the moment. It's a kotlin only library so you can use FlowForms-Core dependency whenever you use Kotlin.
+## Excellent! Lets get started
+To start creating forms at lightning speed please refer to one of our quickstart guides below :
+ - [Android quickstart guide](https://rootstrap.github.io/FlowForms/pages/android-quickstart)
+ - [Kotlin Multi-Platform quickstart guide](https://rootstrap.github.io/FlowForms/pages/kmp-quickstart)
 
----
+## Features
+ - Declarative way of creating a form and define its behavior
+ - Automatic handling of field and form state, which exposes a reactive api using Kotlin's flows.
+ - Easy asynchronous validations using coroutines
+ - FailFast validations (configurable)
+ - Built-in validations so we don't need to write the same logic across projects/modules.
+ - Custom validations
+ - UI binding utilities for Android
+ - And more!
 
-## Usage
-- WIP 🚧
+For additional features and advanced use cases please refer to our Documentation index
+ - [documentation index](https://rootstrap.github.io/FlowForms/pages/documentation-index)
 
 ---
 
 ## Contributing
 Bug reports (please use Issues) and pull requests are welcome on GitHub at https://github.com/rootstrap/FlowForms. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-For more information check the [official notion page](https://www.notion.so/rootstrap/FlowForms-KMP-library-for-form-management-starting-with-Android-43ee69a08a17450a89cf8db695ec1bd9), where you can see the project's goals, architecture and desired usability.
-
 ### Prerequisites
-- At the moment, the project can only be ran inside Android Studio due to Intellij's lack of support for the Android Gradle Plugin (AGP) 7.+. A GIT issue will be created to reduce the AGP version to the latest supported by the IntelliJ IDEA IDE. As MPP projects are intended to be ran using Intellij IDEA.
+- At the moment, the project can only be ran inside Android Studio due to Intellij's lack of support for the Android Gradle Plugin (AGP) 7.+. You can follow [this GIT issue](https://github.com/rootstrap/FlowForms/issues/9) to know when we will add IntelliJ IDEA IDE support (you can collaborate too 😉), As MPP projects are intended to be ran using Intellij IDEA.
 
 ### Unit testing
 
@@ -76,9 +115,6 @@ To run the tests on the module **FlowForms Core** we need to write the following
 The above command executes all the configured tests in the FlowForms-Core module while also generating coverage reports.
 
 **FlowForms Core** uses [Kover](https://github.com/Kotlin/kotlinx-kover) for code coverage and [Coroutines-test](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-test/README.md), [Mockk](https://github.com/mockk/mockk), and [Turbine](https://github.com/cashapp/turbine) for testing the common kotlin module.
-
-#### FlowForms Android Ext
-WIP 🚧
 
 ---
 

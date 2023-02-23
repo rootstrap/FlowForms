@@ -5,7 +5,7 @@ import shared
 struct FlowFormsApp: App {
 	var body: some Scene {
 		WindowGroup {
-      FFormView(viewModel: FFormViewModel())
+      FFormView()
 		}
 	}
 }

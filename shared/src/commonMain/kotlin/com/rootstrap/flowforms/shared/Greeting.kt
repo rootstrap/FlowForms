@@ -2,15 +2,12 @@ package com.rootstrap.flowforms.shared
 
 import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.dsl.flowForm
-import com.rootstrap.flowforms.core.field.FieldDefinition
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
 import com.rootstrap.flowforms.core.validation.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 class Greeting {
     private val platform: Platform = getPlatform()
@@ -20,8 +17,8 @@ class Greeting {
     }
 }
 
-class ClaseNueva {
-    var title: String = ""
+class StatusCode {
+    var code = StatusCodes
 }
 
 class FormModel {
@@ -32,11 +29,12 @@ class FormModel {
     var confirmPassword: String = ""
 
     val form = flowForm {
-        field(CONFIRMATION, RequiredTrue { termsAccepted })
         field(NAME, Required { name })
-        field(EMAIL, BasicEmailFormat { email }, Required { email})
+        field(EMAIL, Required { email}, BasicEmailFormat { email }, EmailDoesNotExistsInRemoteStorage(async=true) { email })
         field(PASSWORD, MinLength(8) { password })
         field(CONFIRM_PASSWORD, MinLength(8) { confirmPassword}, Match { password to confirmPassword })
+        field(TERMS_ACCEPTED, RequiredTrue { termsAccepted })
+        dispatcher = Dispatchers.Unconfined
     }
 
     companion object {
@@ -44,7 +42,7 @@ class FormModel {
         const val EMAIL = "email"
         const val PASSWORD = "password"
         const val CONFIRM_PASSWORD = "confirm_password"
-        const val CONFIRMATION = "confirmation"
+        const val TERMS_ACCEPTED = "terms_accepted"
     }
 }
 
