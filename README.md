@@ -46,7 +46,7 @@ class SignUpViewModel {
 }
 ```
 
-It aims to reduce all the boiler plate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations, allowing to mix both synchronous and asynchronous validations quickly and easily, while also exposing a simple yet powerful API to react to the form and its field status changes under different circumstances.
+It aims to reduce all the boilerplate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations, allowing to mix both synchronous and asynchronous validations quickly and easily, while also exposing a simple yet powerful API to react to the form and its field status changes under different circumstances.
 
 For example, in the above snippet we are declaring the whole sign up form behavior, and now we only need to care about connecting it with our UI, which may  vary per platform and is explained in the "[Excellent! Lets get started](excellent-lets-get-started)" section.
 

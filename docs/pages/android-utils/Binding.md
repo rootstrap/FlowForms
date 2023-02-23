@@ -9,7 +9,7 @@ At a glance, to trigger the Form's field validations we need to call its trigger
 
 ### View to FlowField binding 
 
-Well, for android projects we have a `FlowForm.bind(...)` extension method that helps us reduce that boiler plate. In this case this "bind" function allow us to bind a field in our FlowForm to a View in the UI, which will automatically take care of triggering the FlowForm's `onValueChange`, `onFocus`, and `onBlur` validations for each field we specify when such events occur.
+Well, for android projects we have a `FlowForm.bind(...)` extension method that helps us reduce that boilerplate. In this case this "bind" function allow us to bind a field in our FlowForm to a View in the UI, which will automatically take care of triggering the FlowForm's `onValueChange`, `onFocus`, and `onBlur` validations for each field we specify when such events occur.
 
 <pre><code class="kotlin">
 private fun bindFields() {

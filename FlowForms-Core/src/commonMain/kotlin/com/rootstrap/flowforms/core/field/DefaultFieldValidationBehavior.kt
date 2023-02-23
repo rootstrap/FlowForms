@@ -36,7 +36,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
     ) : Boolean {
         val (asyncValidations, syncValidations) = validations.partition { it.async }
         if (asyncValidations.isNotEmpty() && asyncCoroutineDispatcher == null) {
-            throw IllegalStateException("Async coroutine dispatcher could not be null in order to use async validations")
+            throw IllegalStateException("Async coroutine dispatcher could not be null in order to use async validations. Did you forget to set the dispatcher variable on the form declaration?")
         }
 
         val validationProcessData = ValidationProcessData(
