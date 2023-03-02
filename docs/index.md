@@ -43,10 +43,10 @@ dependencies {
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
 
-  // On android projects :
+  // On android-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // On JVM projects :
+  // On JVM-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
   ..
 }

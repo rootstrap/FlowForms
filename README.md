@@ -23,14 +23,14 @@ class SignUpViewModel {
         )
         field(NEW_PASSWORD,
             Required { formModel.newPassword },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword },
+            Match { formModel.newPassword to formModel.confirmPassword } on CONFIRM_PASSWORD 
         )
         field(CONFIRM_PASSWORD,
             Required { formModel.confirmPassword },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword }
-        ) {
-            onBlur(Match { formModel.newPassword to formModel.confirmPassword })
-        }
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword },
+            Match { formModel.newPassword to formModel.confirmPassword }
+        )
         field(CONFIRMATION, RequiredTrue { formModel.confirm.value })
         dispatcher = Dispatchers.IO // your async dispatcher of preference, this one is from Android
     }
@@ -70,10 +70,10 @@ dependencies {
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
 
-  // On android projects :
+  // On android-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // On JVM projects :
+  // On JVM-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
   ..
 }
@@ -87,10 +87,12 @@ To start creating forms at lightning speed please refer to one of our quickstart
 ## Features
  - Declarative way of creating a form and define its behavior
  - Automatic handling of field and form state, which exposes a reactive api using Kotlin's flows.
- - Easy asynchronous validations using coroutines
- - FailFast validations (configurable)
+ - Separately define OnValueChange, OnFocus, and OnBlur validations.
+ - Easy asynchronous validations powered by coroutines
+ - FailFast validations _(configurable)_
  - Built-in validations so we don't need to write the same logic across projects/modules.
- - Custom validations
+ - Cross-field validations _(with just a keyword!)_
+ - Custom validations with ease
  - UI binding utilities for Android
  - And more!
 

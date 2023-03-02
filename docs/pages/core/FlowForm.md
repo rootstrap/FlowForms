@@ -113,10 +113,13 @@ Basically, the form status changes automatically based on its fields status, so 
 So, the only thing we need to do, is just to call the form's triggerValidations method with the specific field ID we are validating when we need to. 
 For example, everytime the password input is updated by the user, we just trigger the **password field validations**
 
-<p class="comment">
-If using <b>Android's xml UI</b>, all the code below is simplified as a one-liner for some View types. To take a look please refer to the <a href="../android-utils/Binding">Android binding page</a>
-</p>
-
+<div class="rs-row comment"> 
+    <i class="comment-icon fa-solid fa-circle-info"></i> 
+    <div class="comment">
+        If using <b>Android's xml UI</b>, all the code below is simplified as a one-liner for some View types. To take a look please refer to the <a href="../android-utils/Binding">Android binding page</a>
+    </div>
+</div>
+    
 <pre><code class="kotlin">
 val form = ...
 val coroutineScope: CoroutineScope = ...
