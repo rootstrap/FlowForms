@@ -28,6 +28,7 @@ title: FlowForms docs - index
  * [Fail Fast validations](core/Validation#failfast-validations)
  * [Async validations](core/Validation#async-validations)
  * [Built-in validations](core/Validation#built-in-validations)
+ * [Cross-field validations](core/Validation#cross-field-validations)
  * [Custom validations](core/Validation#custom-validations)
  * [Changing the field's validation behavior](core/Validation#changing-the-fields-validation-behavior)
 

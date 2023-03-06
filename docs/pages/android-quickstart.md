@@ -43,11 +43,11 @@ class SignUpFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java] // or use you favorite DI tool
         ...
-        viewModel.form.fields.value.let {
+        viewModel.form.apply {
             repeatOnLifeCycleScope(
-                { it[SignUpViewModel.USERNAME]?.status?.collect(::onUserNameStatusChange) },
-                { it[SignUpViewModel.PASSWORD]?.status?.collect(::onPasswordStatusChange) },
-                { viewModel.form.status.collect(::onFormStatusChange) }
+                { field(SignUpViewModel.USERNAME)?.status?.collect(::onUserNameStatusChange) },
+                { field(SignUpViewModel.PASSWORD)?.status?.collect(::onPasswordStatusChange) },
+                { status.collect(::onFormStatusChange) }
             )
         }
     }
@@ -75,8 +75,8 @@ class SignUpFormFragment : Fragment() {
     }
 }
 </code></pre>
-<p class="comment">In the above snippet we are collecting (observing) our fields' status and displaying an error message in their input layouts when the field is incorrect (ie. a field's validation failed). Both REQUIRED_UNSATISFIED and MIN_LENGTH_UNSATISFIED are status codes of the fields' validations.
-Additionally, we are observing the general form status, enabling a "continue" button when the form is correct (ie. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field).</p>
+<p class="comment">In the above snippet we are getting each field using the form.field(...) function, and then collecting (observing) their status and displaying an error message in their input layouts when the field is incorrect (i.e. a field's validation failed). Both REQUIRED_UNSATISFIED and MIN_LENGTH_UNSATISFIED are specific status codes of the defined fields' validations in the form declaration (on the VM).
+Additionally, we are collecting the general form status, enabling a "continue" button when the form is correct (i.e. all its fields are correct) and disabling it when any of its fields are incorrect (at least one validation failed on some field).</p>
 
 **3 :** Bind your input views to the form fields using our bind form's extension function : 
 
@@ -101,8 +101,8 @@ This quickstart example is also meant to be used with two-way databinding, setti
 <pre><code class="xml">
 android:text="@={viewModel.userName}"
 </code></pre>
-For further information about two-way databiding, refer to [this official documentation](https://developer.android.com/topic/libraries/data-binding/two-way). However, the snippets above can be easily adapted to avoid using two-way databinding.
+For further information about two-way databiding, refer to [this official documentation](https://developer.android.com/topic/libraries/data-binding/two-way). However, the snippets above can be easily adapted to not use two-way databinding.
 
 **FlowForms**'s full potential is better appreciated when making more complex forms, you can review the [android example app ViewModel](https://github.com/rootstrap/FlowForms/blob/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example/SignUpViewModel.kt) included in the project. Which makes use of asynchronous validations and many other capabilities. You will see that the implementation steps doesn't change at all. BTW, there is an example using Activity and another one using Fragment.
 
-However, the example app and this guide does not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](documentation-index)
+However, the example app and this guide does not cover all **FlowForms**'s features (but a lot of them), so for a detailed list of all the available features please refer to the [documentation index](documentation-index)

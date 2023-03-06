@@ -9,7 +9,7 @@ At a glance, to trigger the Form's field validations we need to call its trigger
 
 ### View to FlowField binding 
 
-Well, for android projects we have a `FlowForm.bind(...)` extension method that helps us reduce that boiler plate. In this case this "bind" function allow us to bind a field in our FlowForm to a View in the UI, which will automatically take care of triggering the FlowForm's `onValueChange`, `onFocus`, and `onBlur` validations for each field we specify when such events occur.
+Well, for android projects we have a `FlowForm.bind(...)` extension method that helps us reduce that boilerplate. In this case this "bind" function allow us to bind a field in our FlowForm to a View in the UI, which will automatically take care of triggering the FlowForm's `onValueChange`, `onFocus`, and `onBlur` validations for each field we specify when such events occur.
 
 <pre><code class="kotlin">
 private fun bindFields() {
@@ -36,7 +36,7 @@ At the moment, for automatic View to FlowField binding we support the following 
 
 Trying to use an unsupported View type will result in `IllegalArgumentException`.
 
-<div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">We will be adding more View types in the future, please feel free to raise an issue with your use case if you don't find the View you are using in the above list.</div> </div>
+<div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">Please feel free to raise an issue with your use case if you don't find the View you are using in the above list and we will be glad to add it in a future release.</div> </div>
 
 ### LiveData to FlowField binding 
 
@@ -61,7 +61,7 @@ In this case, whenever the specified LiveData's value change the indicated field
 
 ### Why do we need to pass lifecycleScope when using the bind extensions?
 
-The bind methods require to pass the `lifecycleScope` as argument because the validate functions in the FlowForm are `suspending functions`, hence they need to be called from a `coroutine`, and using the `lifecycleScope` gives us the benefit that anything we called will be immediatelly cancelled if the `lifecycleScope` is `cancelled/destroyed`. 
+The bind methods require to pass the `lifecycleScope` as argument because the validate functions in the FlowForm are `suspending functions`, hence they need to be called from a `coroutine`, and using the `lifecycleScope` gives us the benefit that anything we called will be immediately cancelled if the `lifecycleScope` is `cancelled/destroyed`. 
 
 In the case of binding a `LiveData` to a `FlowField`, we also need to pass a `LifecycleOwner` to be able to listen to the `LiveData` changes only when the fragment's/activity's lifecycle is on an active state (`started` or `resumed`). basically we call the `LiveData.observe(...)` method using the given `LifecycleOwner`.
 
