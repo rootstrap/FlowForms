@@ -1,6 +1,6 @@
 ![FlowForms Logo](https://github.com/rootstrap/FlowForms/blob/pages/docs/images/logotype-FlowForms-small-background.png?raw=true)
 
-[![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Maintained : Yes!](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rootstrap/FlowForms/graphs/commit-activity) [![Documentation](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://rootstrap.github.io/FlowForms/) ![Build Status](https://github.com/rootstrap/FlowForms/actions/workflows/gradle.yml/badge.svg)
+[![](https://jitpack.io/v/rootstrap/FlowForms.svg)](https://jitpack.io/#rootstrap/FlowForms) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Maintained : Yes!](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rootstrap/FlowForms/graphs/commit-activity) [![Documentation](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://rootstrap.github.io/FlowForms/) ![Build Status](https://github.com/rootstrap/FlowForms/actions/workflows/gradle.yml/badge.svg)
 
 ### KMP library for form management
 
@@ -23,14 +23,14 @@ class SignUpViewModel {
         )
         field(NEW_PASSWORD,
             Required { formModel.newPassword },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword }
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.newPassword },
+            Match { formModel.newPassword to formModel.confirmPassword } on CONFIRM_PASSWORD 
         )
         field(CONFIRM_PASSWORD,
             Required { formModel.confirmPassword },
-            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword }
-        ) {
-            onBlur(Match { formModel.newPassword to formModel.confirmPassword })
-        }
+            MinLength(MIN_PASSWORD_LENGTH) { formModel.confirmPassword },
+            Match { formModel.newPassword to formModel.confirmPassword }
+        )
         field(CONFIRMATION, RequiredTrue { formModel.confirm.value })
         dispatcher = Dispatchers.IO // your async dispatcher of preference, this one is from Android
     }
@@ -46,7 +46,7 @@ class SignUpViewModel {
 }
 ```
 
-It aims to reduce all the boiler plate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations, allowing to mix both synchronous and asynchronous validations quickly and easily, while also exposing a simple yet powerful API to react to the form and its field status changes under different circumstances.
+It aims to reduce all the boilerplate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations, allowing to mix both synchronous and asynchronous validations quickly and easily, while also exposing a simple yet powerful API to react to the form and its field status changes under different circumstances.
 
 For example, in the above snippet we are declaring the whole sign up form behavior, and now we only need to care about connecting it with our UI, which may  vary per platform and is explained in the "[Excellent! Lets get started](excellent-lets-get-started)" section.
 
@@ -70,10 +70,10 @@ dependencies {
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
 
-  // On android projects :
+  // On android-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // On JVM projects :
+  // On JVM-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
   ..
 }
@@ -87,10 +87,12 @@ To start creating forms at lightning speed please refer to one of our quickstart
 ## Features
  - Declarative way of creating a form and define its behavior
  - Automatic handling of field and form state, which exposes a reactive api using Kotlin's flows.
- - Easy asynchronous validations using coroutines
- - FailFast validations (configurable)
+ - Separately define OnValueChange, OnFocus, and OnBlur validations.
+ - Easy asynchronous validations powered by coroutines
+ - FailFast validations _(configurable)_
  - Built-in validations so we don't need to write the same logic across projects/modules.
- - Custom validations
+ - Cross-field validations _(with just a keyword!)_
+ - Custom validations with ease
  - UI binding utilities for Android
  - And more!
 

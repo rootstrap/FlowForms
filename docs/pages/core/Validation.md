@@ -53,7 +53,7 @@ If the validation is not fulfilled and `failFast` is false, then the field's val
 
 ## Async validations
 
-One of the goals of FlowForms is to run validations asynchronously as easy as possible. And to do that, we only to set the `async` property as true when creating a Validation object.
+One of the goals of FlowForms is to run validations asynchronously as easy as possible. And to do that, we only need to set the `async` property as true when creating a Validation object.
 
 <pre><code class="kotlin">
 var userName = ""
@@ -77,6 +77,38 @@ When an async validation is about to start, the field's status is updated with t
 Whenever we **re-trigger** the field's validations, all current async validations will be cancelled automatically to avoid wasting unnecesaary resources, and a new and fresh field validation process will be started.
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment"> async is false by default on all Validations </div> </div>
+
+## Cross-field validations
+
+By using the `on` keyword on a Validation we can declare a cross-field validation. Basically, a cross-field validation is a regular validation whose result will affect the specified field instead of the current one _(which triggered the validation)_
+
+<pre><code class="kotlin">
+var password = ""
+var confirmPassword = ""
+
+val form = flowForm {
+    field(PASSWORD,
+        Match { password to confirmPassword } on CONFIRM_PASSWORD
+    )
+    field(CONFIRM_PASSWORD,
+        Match { password to confirmPassword }
+    )
+}
+</code></pre>
+<p class="comment">Declaring a Match validation on the PASSWORD field that will affect the status of the CONFIRM_PASSWORD field</p>
+
+For example, in the above code, everytime the PASSWORD field is validated, it will trigger the Match validation, but its result will affect the CONFIRM_PASSWORD field instead of the PASSWORD field.
+
+This is really useful for use cases like this one, because anytime the PASSWORD or the CONFIRM_PASSWORD fields changes the Match validation will be executed and the respective incorrect status will be applied only to one of the fields _(in this case, the CONFIRM_PASSWORD)_ 
+
+ 
+We can have as many cross-field validations as we want affecting a specific field, or even affecting different fields.
+
+The cross-field validations doesn't trigger the regular field validations of the target field, they work as a separate set of validations. In addition to that, the cross-field validations are not triggered if the target field is in the UNMODIFIED status To avoid preemptive failure.
+
+<div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">
+All the rules of the regular validations applies, they can be or not be asynchronous, failFast or not, etc.
+</div> </div>
 
 ## Custom validations
 
@@ -119,7 +151,7 @@ If you want to modify how the validation behavior process works you can create y
 <pre><code class="kotlin">
 var userName = ""
 val form = flowForm {
-    field("username", Required { userName } ) {
+    field("username", Required { userName }) {
         validationBehavior = MyCustomValidationBehavior()
     }
 }

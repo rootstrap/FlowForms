@@ -5,6 +5,11 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_BLUR
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_FOCUS
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_VALUE_CHANGE
+import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,11 +30,18 @@ import kotlinx.coroutines.withContext
  */
 class FlowField(
     override val id : String,
-    private val onValueChangeValidations : List<Validation> = mutableListOf(),
-    private val onBlurValidations : List<Validation> = mutableListOf(),
-    private val onFocusValidations : List<Validation> = mutableListOf(),
-    private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior()
+    override val onValueChangeValidations : List<Validation> = emptyList(),
+    override val onBlurValidations : List<Validation> = emptyList(),
+    override val onFocusValidations : List<Validation> = emptyList(),
+    private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior(),
 ) : FieldDefinition {
+
+    private val filteredOnValueChangeValidations = onValueChangeValidations
+        .filter { it !is CrossFieldValidation }
+    private val filteredOnFocusValidations = onFocusValidations
+        .filter { it !is CrossFieldValidation }
+    private val filteredOnBlurValidations = onBlurValidations
+        .filter { it !is CrossFieldValidation }
 
     private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
         if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
@@ -45,9 +57,11 @@ class FlowField(
     private var onFocusCoroutinesJob : Job? = null
     private var onBlurCoroutinesJob : Job? = null
 
+    private lateinit var currentStatus : FieldStatus
+
     override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
-        when {
+        currentStatus = when {
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
                 getIncorrectFieldStatus(onValueChangeStatus, onBlurStatus, onFocusStatus)
             thereAreValidationsInProgress(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
@@ -59,6 +73,7 @@ class FlowField(
             else ->
                 FieldStatus(CORRECT)
         }
+        currentStatus
     }
 
     private fun thereAreFailedValidations(vararg fieldStatuses : FieldStatus) =
@@ -82,49 +97,66 @@ class FlowField(
         }
     }
 
-    override suspend fun triggerOnValueChangeValidations(asyncCoroutineDispatcher: CoroutineDispatcher?) : Boolean {
-        cancelValidationsInProgress(ON_VALUE_CHANGE)
-        onValueChangeCoroutinesJob = Job()
+    override suspend fun triggerOnValueChangeValidations(
+        asyncCoroutineDispatcher: CoroutineDispatcher?,
+        validations: List<Validation>
+    ) = triggerValidations(ON_VALUE_CHANGE, validations, asyncCoroutineDispatcher)
+
+    override suspend fun triggerOnBlurValidations(
+        asyncCoroutineDispatcher: CoroutineDispatcher?,
+        validations: List<Validation>
+    ) = triggerValidations(ON_BLUR, validations, asyncCoroutineDispatcher)
+
+    override suspend fun triggerOnFocusValidations(
+        asyncCoroutineDispatcher: CoroutineDispatcher?,
+        validations: List<Validation>
+    ) = triggerValidations(ON_FOCUS, validations, asyncCoroutineDispatcher)
+
+    private suspend fun triggerValidations(
+        validationType: ValidationType,
+        validations: List<Validation>,
+        asyncCoroutineDispatcher: CoroutineDispatcher?,
+    ) : Boolean {
+        val coroutinesJob = restartJob(validationType)
+        val (fieldValidations, statusFlow) = when(validationType) {
+            ON_VALUE_CHANGE -> filteredOnValueChangeValidations to _onValueChangeStatus
+            ON_FOCUS -> filteredOnFocusValidations to _onFocusStatus
+            else -> filteredOnBlurValidations to _onBlurStatus
+        }
+
         return coroutineScope {
-            withContext(onValueChangeCoroutinesJob!!) {
-                validationBehavior.triggerValidations(_onValueChangeStatus, onValueChangeValidations, asyncCoroutineDispatcher)
+            withContext(coroutinesJob) {
+                val finalValidations = validations.ifEmpty { fieldValidations }
+                validationBehavior.triggerValidations(statusFlow, finalValidations, asyncCoroutineDispatcher)
             }
         }
     }
 
-    override suspend fun triggerOnBlurValidations(asyncCoroutineDispatcher: CoroutineDispatcher?) : Boolean {
-        cancelValidationsInProgress(ON_BLUR)
-        onBlurCoroutinesJob = Job()
-        return coroutineScope {
-            withContext(onBlurCoroutinesJob!!) {
-                validationBehavior.triggerValidations(_onBlurStatus, onBlurValidations, asyncCoroutineDispatcher)
+    private suspend fun restartJob(validationType : ValidationType) : Job {
+        return when(validationType) {
+            ON_VALUE_CHANGE -> {
+                cancelJob(onValueChangeCoroutinesJob)
+                 Job().also { onValueChangeCoroutinesJob = it }
+            }
+            ON_FOCUS -> {
+                cancelJob(onFocusCoroutinesJob)
+                Job().also { onFocusCoroutinesJob = it }
+            }
+            else -> {
+                cancelJob(onBlurCoroutinesJob)
+                Job().also { onBlurCoroutinesJob = it }
             }
         }
     }
 
-    override suspend fun triggerOnFocusValidations(asyncCoroutineDispatcher: CoroutineDispatcher?) : Boolean {
-        cancelValidationsInProgress(ON_FOCUS)
-        onFocusCoroutinesJob = Job()
-        return coroutineScope {
-            withContext(onFocusCoroutinesJob!!) {
-                validationBehavior.triggerValidations(_onFocusStatus, onFocusValidations, asyncCoroutineDispatcher)
-            }
-        }
-    }
-
-    private suspend fun cancelValidationsInProgress(validationType : String) {
-        val jobToCancel = when (validationType) {
-            ON_VALUE_CHANGE -> onValueChangeCoroutinesJob
-            ON_FOCUS -> onFocusCoroutinesJob
-            else -> onBlurCoroutinesJob
-        }
+    private suspend fun cancelJob(jobToCancel: Job?) {
         jobToCancel?.let {
-            it.cancel(ValidationsCancelledException(
-                "Validations cancelled because they are being triggered again"
-            ))
+            it.cancel(ValidationsCancelledException(CANCEL_MESSAGE))
             it.join()
         }
     }
+
+    override fun getCurrentStatus() = currentStatus
 
     companion object {
         /**
@@ -132,19 +164,8 @@ class FlowField(
          */
         private const val UNSET = "unset"
 
-        /**
-         * Internal key for on value change validations
-         */
-        private const val ON_VALUE_CHANGE = "on-value-change"
-
-        /**
-         * Internal key for on focus validations
-         */
-        private const val ON_FOCUS = "on-focus"
-
-        /**
-         * Internal key for on blur validations
-         */
-        private const val ON_BLUR = "on-blur"
+        private const val CANCEL_MESSAGE =
+            "Validations cancelled because they are being triggered again"
     }
+
 }
