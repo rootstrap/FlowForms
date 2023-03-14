@@ -27,6 +27,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -81,7 +82,7 @@ class FlowFormTest {
         flowForm {
             fields(field1, field2)
         }.status.test {
-            assertEquals(UNMODIFIED, awaitItem().code, )
+            assertEquals(UNMODIFIED, awaitItem().code)
             assertEquals(INCORRECT, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -101,7 +102,7 @@ class FlowFormTest {
         flowForm {
             fields(field1, field2)
         }.status.test {
-            assertEquals(UNMODIFIED, awaitItem().code, )
+            assertEquals(UNMODIFIED, awaitItem().code)
             assertEquals(INCOMPLETE, awaitItem().code)
             cancelAndIgnoreRemainingEvents()
         }
@@ -253,6 +254,13 @@ class FlowFormTest {
     }
 
     @Test
+    fun `GIVEN a form without fields WHEN validateAll is called THEN assert the form is valid`()
+            = runTest {
+        val form = flowForm { }
+        assertTrue(form.validateAllFields())
+    }
+
+    @Test
     fun `GIVEN a form without fields WHEN calling the form's validate functions THEN assert the results are all false `()
     = runTest {
         val form = flowForm { }
@@ -287,7 +295,7 @@ class FlowFormTest {
         }
 
         form.status.test {
-            form.validateAllFields()
+            assertTrue(form.validateAllFields())
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
             coVerify(exactly = 1) { field1.triggerOnFocusValidations(coroutineDispatcher) }
@@ -326,7 +334,7 @@ class FlowFormTest {
         }
 
         form.status.test {
-            form.validateAllFields()
+            assertFalse(form.validateAllFields())
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
             coVerify(exactly = 0) { field1.triggerOnBlurValidations(coroutineDispatcher) }
@@ -362,7 +370,7 @@ class FlowFormTest {
         }
 
         form.status.test {
-            form.validateAllFields()
+            assertFalse(form.validateAllFields())
 
             coVerify(exactly = 1) { field1.triggerOnValueChangeValidations(coroutineDispatcher) }
             coVerify(exactly = 1) { field1.triggerOnFocusValidations(coroutineDispatcher) }
@@ -585,9 +593,9 @@ class FlowFormTest {
     fun `GIVEN a form with 1 field WHEN validation process is cancelled THEN assert the validation result is false`()
     = runTest {
         val field1 = mockkFlowField(FIELD_ID_1)
-        coEvery { field1.triggerOnValueChangeValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
-        coEvery { field1.triggerOnFocusValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
-        coEvery { field1.triggerOnBlurValidations(any(), any()) } throws ValidationsCancelledException("test exeption")
+        coEvery { field1.triggerOnValueChangeValidations(any(), any()) } throws ValidationsCancelledException("test exception")
+        coEvery { field1.triggerOnFocusValidations(any(), any()) } throws ValidationsCancelledException("test exception")
+        coEvery { field1.triggerOnBlurValidations(any(), any()) } throws ValidationsCancelledException("test exception")
 
         val form = flowForm {
             fields(field1)

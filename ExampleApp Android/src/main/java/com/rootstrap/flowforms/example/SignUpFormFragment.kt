@@ -51,7 +51,7 @@ class SignUpFormFragment : Fragment() {
             it.lifecycleOwner = viewLifecycleOwner
             it.formModel = viewModel.formModel
             it.continueButton.setOnClickListener {
-                Toast.makeText(requireContext(), R.string.account_registered, Toast.LENGTH_SHORT).show()
+                viewModel.signUp()
             }
         }
         listenStatusChanges()
@@ -65,8 +65,21 @@ class SignUpFormFragment : Fragment() {
                 { field(EMAIL)?.status?.collect(::onEmailStatusChange) },
                 { field(PASSWORD)?.status?.collect(::onPasswordStatusChange) },
                 { field(CONFIRM_PASSWORD)?.status?.collect(::onConfirmPasswordChange) },
-                { status.collect(::onFormStatusChange) }
+                { status.collect(::onFormStatusChange) },
+
+                { viewModel.signUpEvents.collect(::onSignUpEvent) }
             )
+        }
+    }
+
+    private fun onSignUpEvent(event : SignUpEvent) {
+        when (event) {
+            is SignUpEvent.SignUpSuccess -> {
+                Toast.makeText(requireContext(), R.string.account_registered, Toast.LENGTH_SHORT).show()
+            }
+            is SignUpEvent.SignUpError -> {
+                Toast.makeText(requireContext(), getString(R.string.review_form), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -136,8 +149,8 @@ class SignUpFormFragment : Fragment() {
     private fun onFormStatusChange(status: FormStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT -> continueButton.isEnabled = true
-                else -> continueButton.isEnabled = false
+                CORRECT -> formIncorrectWarningText.visibility = View.GONE
+                else -> formIncorrectWarningText.visibility = View.VISIBLE
             }
         }
     }
