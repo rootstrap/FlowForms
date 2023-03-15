@@ -149,3 +149,28 @@ Actually, there are 3 types of validations :
  * OnBlur validations
 
 To learn more about the validations please refer to the [Adding validations to a field section](FlowField#adding-validations-to-a-field).
+
+### Validating all fields at once
+
+In some situations we may need to validate all the fields at once, _like when the business rules dictates that we need to validate the fields only when pressing the sign-up button_. So for such cases, the form comes with a handy function called validateAllFields().
+
+<pre><code class="kotlin">
+val form = ...
+val coroutineScope: CoroutineScope = ...
+
+fun signUp() {
+    coroutineScope.launch {
+        if (form.validateAllFields()) {
+            // create account
+        } else {
+            // display error
+        }
+    }
+}
+</code></pre>
+<p class="comment">The above code snippet validates all the form's fields before proceeding to the account creation</p>
+
+The `form.validateAllFields()` function triggers all the field validations for the fields in the form, honoring the same rules as the validation declarations. With the difference that if all the onValueChange validations are correct, then the onFocus validations are triggered, and if those are correct, then the onBlur validations are triggered.
+This can work with both synchronous and asynchronous validations, where the later will cause the calling coroutine to be suspended until all the validations are finished.
+
+It returns `true` if all the fields ends up in a `CORRECT` status, or false if they end up in the `INCORRECT` one. You usually will not need to do anything else rather than check if the result was `true` or `false`, because if you are already collecting the fields' status then the respective collection functions will be called as soon as they change. (even before this function call finishes)

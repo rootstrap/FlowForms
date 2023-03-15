@@ -151,15 +151,23 @@ class FlowForm internal constructor(
      * all those validations were completed (including async validations), it will continue
      * with the onFocus validations and if it is still correct then it will trigger onBlur validations.
      *
+     * It is important to note that the field order is not guaranteed during the validation process,
+     * but all fields are validated, no matter the result of the previous one.
+     *
+     * @return true if all the validations were completed successfully, false otherwise.
      */
-    suspend fun validateAllFields() {
-        try {
-            this._fields.value.forEach {
-                var fieldIsValid = validateOnValueChange(it.key)
-                fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
-                if (fieldIsValid) validateOnBlur(it.key)
+    suspend fun validateAllFields() : Boolean {
+        val validatedFieldsMap = mutableMapOf<String, Boolean>()
+        this._fields.value.keys.forEach { id ->
+            try {
+                validatedFieldsMap[id] = validateOnValueChange(id)
+                        && validateOnFocus(id)
+                        && validateOnBlur(id)
+            } catch (ignored: ValidationsCancelledException) {
+                validatedFieldsMap[id] = false
             }
-        } catch (ignored : ValidationsCancelledException) { }
+        }
+        return validatedFieldsMap.values.all { it }
     }
 
     private suspend fun getAndTriggerCrossFieldValidations(
