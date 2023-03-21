@@ -38,10 +38,11 @@ fun asyncValidation(delayInMillis : Long, result : ValidationResult, failFast : 
     }
 }
 
-suspend fun assertFieldStatusSequence(flowTurbine: FlowTurbine<FieldStatus>, vararg statuses: String): FieldStatus {
+suspend fun assertFieldStatusSequence(fieldId: String, flowTurbine: FlowTurbine<FieldStatus>, vararg statuses: String): FieldStatus {
     var lastValue : FieldStatus? = null
     statuses.forEach {
         lastValue = flowTurbine.awaitItem()
+        assertEquals(fieldId, lastValue?.fieldId)
         assertEquals(it, lastValue?.code)
     }
     return lastValue!!

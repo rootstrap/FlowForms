@@ -30,6 +30,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      *
      */
     override suspend fun triggerValidations(
+        fieldId : String,
         mutableFieldStatus: MutableStateFlow<FieldStatus>,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?
@@ -40,6 +41,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
 
         val validationProcessData = ValidationProcessData(
+            fieldId = fieldId,
             mutableFieldStatus = mutableFieldStatus,
             asyncValidations = asyncValidations,
             syncValidations = syncValidations,
@@ -78,7 +80,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
     }
 
     private suspend fun startAsyncValidationProcessWithResult(data: ValidationProcessData): Boolean {
-        data.mutableFieldStatus.emit(FieldStatus(StatusCodes.IN_PROGRESS))
+        data.mutableFieldStatus.emit(FieldStatus(fieldId = data.fieldId, code = StatusCodes.IN_PROGRESS))
         runAsyncValidations(data)
         yield()
         return updateFieldStatusWithFinalResult(data)
@@ -121,9 +123,21 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
 
     private suspend fun updateFieldStatusWithFinalResult(data: ValidationProcessData) : Boolean {
         val fieldStatus = when {
-            data.failedValResults.isEmpty() -> FieldStatus(StatusCodes.CORRECT, data.validationResults)
-            data.failedValResults.size == 1 -> FieldStatus(data.failedValResults.first().resultId, data.validationResults)
-            else -> FieldStatus(StatusCodes.INCORRECT, data.validationResults)
+            data.failedValResults.isEmpty() -> FieldStatus(
+                fieldId = data.fieldId,
+                code = StatusCodes.CORRECT,
+                validationResults = data.validationResults
+            )
+            data.failedValResults.size == 1 -> FieldStatus(
+                fieldId = data.fieldId,
+                code = data.failedValResults.first().resultId,
+                validationResults = data.validationResults
+            )
+            else -> FieldStatus(
+                fieldId = data.fieldId,
+                code = StatusCodes.INCORRECT,
+                validationResults = data.validationResults
+            )
         }
 
         yield()
@@ -132,6 +146,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
     }
 
     private class ValidationProcessData(
+        val fieldId : String,
         val mutableFieldStatus: MutableStateFlow<FieldStatus>,
         val syncValidations : List<Validation>,
         val asyncValidations : List<Validation>,

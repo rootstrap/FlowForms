@@ -44,13 +44,16 @@ class FlowField(
         .filter { it !is CrossFieldValidation }
 
     private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
-        if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
+        fieldId = id,
+        code = if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
     ))
     private val _onBlurStatus = MutableStateFlow(FieldStatus(
-        if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
+        fieldId = id,
+        code = if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
     ))
     private val _onFocusStatus = MutableStateFlow(FieldStatus(
-        if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
+        fieldId = id,
+        code = if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
     ))
 
     private var onValueChangeCoroutinesJob : Job? = null
@@ -65,13 +68,13 @@ class FlowField(
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
                 getIncorrectFieldStatus(onValueChangeStatus, onBlurStatus, onFocusStatus)
             thereAreValidationsInProgress(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(IN_PROGRESS)
+                FieldStatus(fieldId = id, code = IN_PROGRESS)
             noValidationsWereExecutedAtAll(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(UNMODIFIED)
+                FieldStatus(fieldId = id, code = UNMODIFIED)
             thereAreSomeValidationsNotExecutedYet(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(INCOMPLETE)
+                FieldStatus(fieldId = id, code = INCOMPLETE)
             else ->
-                FieldStatus(CORRECT)
+                FieldStatus(fieldId = id, code = CORRECT)
         }
         currentStatus
     }
@@ -93,7 +96,11 @@ class FlowField(
         return if (failingFields.size == 1) {
             failingFields.first()
         } else {
-            FieldStatus(INCORRECT, failingFields.map { it.validationResults }.flatten())
+            FieldStatus(
+                fieldId = id,
+                code = INCORRECT,
+                validationResults = failingFields.map { it.validationResults }.flatten()
+            )
         }
     }
 
@@ -127,7 +134,12 @@ class FlowField(
         return coroutineScope {
             withContext(coroutinesJob) {
                 val finalValidations = validations.ifEmpty { fieldValidations }
-                validationBehavior.triggerValidations(statusFlow, finalValidations, asyncCoroutineDispatcher)
+                validationBehavior.triggerValidations(
+                    fieldId = id,
+                    mutableFieldStatus = statusFlow,
+                    validations = finalValidations,
+                    asyncCoroutineDispatcher = asyncCoroutineDispatcher
+                )
             }
         }
     }
