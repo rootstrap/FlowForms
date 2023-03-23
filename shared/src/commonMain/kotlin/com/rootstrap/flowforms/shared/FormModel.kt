@@ -2,20 +2,10 @@ package com.rootstrap.flowforms.shared
 
 import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.dsl.flowForm
-import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
 import com.rootstrap.flowforms.core.validation.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-
-class Greeting {
-    private val platform: Platform = getPlatform()
-
-    fun greeting(): String {
-        return "Hello, ${platform.name}!"
-    }
-}
 
 class StatusCode {
     var code = StatusCodes
@@ -34,7 +24,7 @@ class FormModel {
         field(PASSWORD, MinLength(8) { password })
         field(CONFIRM_PASSWORD, MinLength(8) { confirmPassword}, Match { password to confirmPassword })
         field(TERMS_ACCEPTED, RequiredTrue { termsAccepted })
-        dispatcher = Dispatchers.Unconfined
+        dispatcher = Dispatchers.Default
     }
 
     companion object {
@@ -46,32 +36,4 @@ class FormModel {
     }
 }
 
-class FormModelPublishers {
-    private val formModel = FormModel()
-}
-
 fun FlowForm.fieldFor(id: String) = fields.value[id] as FlowField
-
-fun FlowField.onStatusChange(onEach: (FieldStatus) -> Unit) : Cancellable {
-    return status.collectWithCallback(onEach)
-}
-
-interface Cancellable {
-    fun cancel()
-}
-
-private fun <T> Flow<T>.collectWithCallback(onEach: (T) -> Unit): Cancellable {
-    val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
-    scope.launch {
-        collect {
-            onEach(it)
-        }
-    }
-
-    return object : Cancellable {
-        override fun cancel() {
-            scope.cancel()
-        }
-    }
-}

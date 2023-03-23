@@ -12,10 +12,12 @@ struct FormModelTextView: View {
 
   @Binding var valueText: String
   @Binding var title: String
-
-  init(title: String, value: Binding<String>) {
+  private var errorMessage: String?
+  
+  init(title: String, value: Binding<String>, errorMessage: String? = nil) {
     _title = Binding.constant(title)
     _valueText = value
+    self.errorMessage = errorMessage
   }
   
   var body: some View {
@@ -42,6 +44,13 @@ struct FormModelTextView: View {
           alignment: .bottomLeading
         )
         .foregroundColor(.gray)
+      if let errorMessage = errorMessage {
+        Text(errorMessage)
+          .font(.caption)
+          .frame(maxWidth: .infinity, maxHeight: 10, alignment: .leading)
+          .foregroundColor(.red)
+      }
     }.frame(maxWidth: .infinity, maxHeight: 60)
+    
   }
 }
