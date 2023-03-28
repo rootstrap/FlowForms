@@ -14,9 +14,10 @@ import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 
@@ -43,18 +44,18 @@ class FlowField(
     private val filteredOnBlurValidations = onBlurValidations
         .filter { it !is CrossFieldValidation }
 
-    private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
-        fieldId = id,
-        code = if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
-    private val _onBlurStatus = MutableStateFlow(FieldStatus(
-        fieldId = id,
-        code = if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
-    private val _onFocusStatus = MutableStateFlow(FieldStatus(
-        fieldId = id,
-        code = if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
+    private val _onValueChangeStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val _onBlurStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val _onFocusStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
 
     private var onValueChangeCoroutinesJob : Job? = null
     private var onFocusCoroutinesJob : Job? = null
@@ -77,6 +78,21 @@ class FlowField(
                 FieldStatus(fieldId = id, code = CORRECT)
         }
         currentStatus
+    }
+
+    init {
+        _onValueChangeStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
+        _onBlurStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
+        _onFocusStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
     }
 
     private fun thereAreFailedValidations(vararg fieldStatuses : FieldStatus) =
