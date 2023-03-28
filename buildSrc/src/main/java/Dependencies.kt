@@ -11,8 +11,7 @@ object Dependencies {
     private const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     private const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     private const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
-    private const val LIFECYCLE_COMMON = "android.arch.lifecycle:common-java8:${Versions.LIFECYCLE_COMMON}"
-    private const val LIFECYCLE_KAPT = "android.arch.lifecycle:compiler:${Versions.LIFECYCLE_COMMON}"
+    private const val LIFECYCLE_KAPT = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE_COMMON}"
     private const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE}"
     private const val LIFECYCLE_LIVEDATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
     private const val LIFECYCLE_EXTENSIONS = "androidx.lifecycle:lifecycle-extensions:${Versions.LIFECYCLE_EXTENSIONS}"
@@ -36,7 +35,6 @@ object Dependencies {
         add(CORE_KTX)
         add(APP_COMPAT)
         add(MATERIAL)
-        add(LIFECYCLE_COMMON)
         add(LIFECYCLE_RUNTIME)
     }
 
@@ -46,13 +44,15 @@ object Dependencies {
         add(APP_COMPAT)
         add(MATERIAL)
         add(CONSTRAINT_LAYOUT)
-        add(LIFECYCLE_COMMON)
-        add(LIFECYCLE_KAPT)
         add(LIFECYCLE_RUNTIME)
         add(LIFECYCLE_LIVEDATA)
         add(LIFECYCLE_EXTENSIONS)
         add(LIFECYCLE_VIEW_MODEL)
         add(GUAVA)
+    }
+
+    val appKaptLibraries = arrayListOf<String>().apply {
+        add(LIFECYCLE_KAPT)
     }
 
     val commonTestLibraries = arrayListOf<String>().apply {
