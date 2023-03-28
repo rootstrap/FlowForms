@@ -13,7 +13,7 @@ android {
         minSdk = (ExampleAppAndroidConfig.MIN_SDK)
         targetSdk = (ExampleAppAndroidConfig.TARGET_SDK)
         versionCode = 1
-        versionName = "1.3.0"
+        versionName = "1.4.0"
 
         testInstrumentationRunner = ExampleAppAndroidConfig.ANDROID_TEST_INSTRUMENTATION_RUNNER
     }
