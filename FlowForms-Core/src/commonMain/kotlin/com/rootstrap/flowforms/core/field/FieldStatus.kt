@@ -18,7 +18,7 @@ import com.rootstrap.flowforms.core.validation.ValidationResult
  * @param validationResults The list of validations with their results, triggered to reach this status.
  */
 data class FieldStatus(
-    val code : String = UNMODIFIED,
+    val code: String = UNMODIFIED,
     val fieldId: String,
-    val validationResults : List<ValidationResult> = emptyList()
+    val validationResults: List<ValidationResult> = emptyList()
 )
