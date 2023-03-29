@@ -30,7 +30,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      *
      */
     override suspend fun triggerValidations(
-        fieldId : String,
+        fieldId: String,
         mutableFieldStatus: MutableSharedFlow<FieldStatus>,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?

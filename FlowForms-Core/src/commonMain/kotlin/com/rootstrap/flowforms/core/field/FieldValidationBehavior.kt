@@ -24,7 +24,7 @@ interface FieldValidationBehavior {
      * @param asyncCoroutineDispatcher The coroutine dispatcher to use for asynchronous validations.
      */
     suspend fun triggerValidations(
-        fieldId : String,
+        fieldId: String,
         mutableFieldStatus: MutableSharedFlow<FieldStatus>,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher? = null
