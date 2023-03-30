@@ -21,8 +21,8 @@ class FormModel {
     val form = flowForm {
         field(NAME, Required { name })
         field(EMAIL, Required { email}, BasicEmailFormat { email }, EmailDoesNotExistsInRemoteStorage(async=true) { email })
-        field(PASSWORD, MinLength(8) { password })
-        field(CONFIRM_PASSWORD, MinLength(8) { confirmPassword}, Match { password to confirmPassword })
+        field(PASSWORD, Required { password }, MinLength(8) { password })
+        field(CONFIRM_PASSWORD, Required { confirmPassword }, MinLength(8) { confirmPassword}, Match { password to confirmPassword })
         field(TERMS_ACCEPTED, RequiredTrue { termsAccepted })
         dispatcher = Dispatchers.Default
     }

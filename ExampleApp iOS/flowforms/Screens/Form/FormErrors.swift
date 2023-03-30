@@ -45,11 +45,13 @@ extension FormManager {
   }
 
   var confirmedPasswordErrorMessage: String? {
-    switch passwordStatus {
+    switch confirmPasswordStatus {
     case FFCStatusCodes.shared.MATCH_UNSATISFIED:
       return "Passwords don't match"
     case FFCStatusCodes.shared.REQUIRED_UNSATISFIED:
       return "Password confirmation required"
+    case FFCStatusCodes.shared.MIN_LENGTH_UNSATISFIED:
+      return "Min length unsatisfied"
     default:
       return nil
     }

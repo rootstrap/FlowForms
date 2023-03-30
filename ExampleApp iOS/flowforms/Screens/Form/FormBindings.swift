@@ -13,7 +13,7 @@ import KMPNativeCoroutinesCombine
 import KMPNativeCoroutinesCore
 
 extension FormManager {
-  // MARK: Bindings
+  //MARK: Bindings
   var termsAccepted: Binding<Bool> {
     formModel.form.bindSwitch(
       field: formModel.termsAccepted,
@@ -26,7 +26,7 @@ extension FormManager {
   
   var name: Binding<String> {
     formModel.form.bindField(
-      field: formModel.name,
+      formModel.name,
       id: FormModel.companion.NAME
     ) {
       self.formModel.name = $0
@@ -36,7 +36,7 @@ extension FormManager {
   
   var email: Binding<String> {
     formModel.form.bindField(
-      field: formModel.email,
+      formModel.email,
       id: FormModel.companion.EMAIL
     ) {
       self.formModel.email = $0
@@ -46,7 +46,7 @@ extension FormManager {
   
   var password: Binding<String> {
     formModel.form.bindField(
-      field: formModel.password,
+      formModel.password,
       id: FormModel.companion.PASSWORD
     ) {
       self.formModel.password = $0
@@ -56,7 +56,7 @@ extension FormManager {
   
   var confirmPassword: Binding<String> {
     formModel.form.bindField(
-      field: formModel.confirmPassword,
+      formModel.confirmPassword,
       id: FormModel.companion.CONFIRM_PASSWORD
     ) {
       self.formModel.confirmPassword = $0
@@ -65,29 +65,28 @@ extension FormManager {
   }
   
   func configureBindings() {
+    formModel.form.bindStatus(withPublisher: &$formStatus)
     
-    bindForm(inPublisher: &$formStatus)
-    
-    bind(
-      field: formModel.form.fieldFor(id: FormModel.companion.NAME),
-      inPublisher: &$nameStatus
-    )
-    bind(
-      field: formModel.form.fieldFor(id: FormModel.companion.EMAIL),
-      inPublisher: &$emailStatus
-    )
-    bind(
-      field: formModel.form.fieldFor(id: FormModel.companion.PASSWORD),
-      inPublisher: &$passwordStatus
-    )
-    bind(
-      field: formModel.form.fieldFor(id: FormModel.companion.CONFIRM_PASSWORD),
-      inPublisher: &$confirmPasswordStatus
-    )
+    formModel.form
+      .fieldFor(id: FormModel.companion.NAME)
+      .bindStatus(withPublisher: &$nameStatus)
+    formModel.form
+      .fieldFor(id: FormModel.companion.EMAIL)
+      .bindStatus(withPublisher: &$emailStatus)
+    formModel.form
+      .fieldFor(id: FormModel.companion.PASSWORD)
+      .bindStatus(withPublisher: &$passwordStatus)
+    formModel.form
+      .fieldFor(id: FormModel.companion.CONFIRM_PASSWORD)
+      .bindStatus(withPublisher: &$confirmPasswordStatus)
   }
+}
+
+// MARK: FFCFlowForm
+extension FFCFlowForm {
   
-  private func bindForm(inPublisher publisher: inout Published<String>.Publisher) {
-    let formPublisher = createPublisher(for: formModel.form.statusNative)
+  func bindStatus(withPublisher publisher: inout Published<String>.Publisher) {
+    let formPublisher = createPublisher(for: statusNative)
     
     formPublisher
       .receive(on: DispatchQueue.main)
@@ -98,25 +97,8 @@ extension FormManager {
       .assign(to: &publisher)
   }
   
-  private func bind(
-    field: FFCFlowField,
-    inPublisher publisher: inout Published<String>.Publisher
-  ){
-    let fieldPublisher = createPublisher(for: field.statusNative)
-    
-    fieldPublisher
-      .receive(on: DispatchQueue.main)
-      .map({ status in
-        return status.code
-      })
-      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
-      .assign(to: &publisher)
-  }
-}
-
-extension FFCFlowForm {
   func bindField(
-    field: String,
+    _ field: String,
     id: String,
     completion: @escaping (String) -> Void
   ) -> Binding<String> {
@@ -148,4 +130,22 @@ extension FFCFlowForm {
         }
       )
   }
+}
+
+//MARK: FFCFlowField
+extension FFCFlowField {
+  func bindStatus(withPublisher
+    publisher: inout Published<String>.Publisher
+  ){
+    let fieldPublisher = createPublisher(for: self.statusNative)
+    
+    fieldPublisher
+      .receive(on: DispatchQueue.main)
+      .map({ status in
+        return status.code
+      })
+      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
+      .assign(to: &publisher)
+  }
+
 }
