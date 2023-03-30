@@ -30,9 +30,11 @@ class FlowFieldTest {
 
     @Test
     fun `GIVEN a new required field THEN assert its status is UNMODIFIED`() = runTest {
-        val field = FlowField("email")
+        val field = FlowField(FIELD_ID)
         field.status.test {
-            assertEquals(awaitItem().code, UNMODIFIED)
+            val status = awaitItem()
+            assertEquals(FIELD_ID, field.id)
+            assertEquals(UNMODIFIED, status.code)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -51,7 +53,7 @@ class FlowFieldTest {
         }
 
         val field = FlowField(
-            "email",
+            FIELD_ID,
             listOf(regularValidation, asyncValidation)
         )
 
@@ -63,13 +65,13 @@ class FlowFieldTest {
                     println("First async validation was cancelled : ${ex.message}")
                 }
             }
-            assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)
+            assertFieldStatusSequence(FIELD_ID, this, UNMODIFIED, IN_PROGRESS)
             launch {
                 field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             }
             delay(50)
 
-            assertFieldStatusSequence(this, StatusCodes.INCORRECT)
+            assertFieldStatusSequence(FIELD_ID, this, StatusCodes.INCORRECT)
             coVerify(exactly = 2) { regularValidation.validate() }
             coVerify(exactly = 1) { asyncValidation.validate() }
 
@@ -81,23 +83,23 @@ class FlowFieldTest {
     fun `GIVEN a field WHEN status change from UNMODIFIED to IN_PROGRESS to CORRECT THEN assert getCurrentStatus gives the respective status on each stage`()
         = runTest {
         val fieldValidationBehavior = mockk<FieldValidationBehavior> {}
-        val field = FlowField("id", validationBehavior = fieldValidationBehavior)
+        val field = FlowField(FIELD_ID, validationBehavior = fieldValidationBehavior)
 
         coEvery {
-            fieldValidationBehavior.triggerValidations(mutableFieldStatus = any(), emptyList())
+            fieldValidationBehavior.triggerValidations(any(), mutableFieldStatus = any(), emptyList())
         } coAnswers {
-            val onValueChangeStatusFlow = it.invocation.args[0] as MutableStateFlow<FieldStatus>
+            val onValueChangeStatusFlow = it.invocation.args[1] as MutableStateFlow<FieldStatus>
             when (onValueChangeStatusFlow.value.code) {
                 UNMODIFIED -> {
-                    onValueChangeStatusFlow.value = FieldStatus(IN_PROGRESS)
+                    onValueChangeStatusFlow.value = FieldStatus(fieldId = FIELD_ID, code = IN_PROGRESS)
                     false
                 }
                 IN_PROGRESS -> {
-                    onValueChangeStatusFlow.value = FieldStatus(CORRECT)
+                    onValueChangeStatusFlow.value = FieldStatus(fieldId = FIELD_ID, code = CORRECT)
                     true
                 }
                 else -> {
-                    onValueChangeStatusFlow.value = FieldStatus(UNMODIFIED)
+                    onValueChangeStatusFlow.value = FieldStatus(fieldId = FIELD_ID, code = UNMODIFIED)
                     false
                 }
             }
@@ -133,11 +135,11 @@ class FlowFieldTest {
         )
         val fieldValidationBehavior = mockk<FieldValidationBehavior> {
             coEvery {
-                triggerValidations(mutableFieldStatus = any(), any(), any())
+                triggerValidations(any(), mutableFieldStatus = any(), any(), any())
             } coAnswers { true }
         }
         val field = FlowField(
-            "id",
+            FIELD_ID,
             onValueChangeValidations = fieldValidations,
             onFocusValidations = fieldValidations,
             onBlurValidations = fieldValidations,
@@ -149,11 +151,15 @@ class FlowFieldTest {
         field.triggerOnBlurValidations(validations = customValidations)
 
         coVerify(exactly = 0) {
-            fieldValidationBehavior.triggerValidations(any(), fieldValidations, any())
+            fieldValidationBehavior.triggerValidations(any(), any(), fieldValidations, any())
         }
         coVerify(exactly = 3) {
-            fieldValidationBehavior.triggerValidations(any(), customValidations, any())
+            fieldValidationBehavior.triggerValidations(any(), any(), customValidations, any())
         }
+    }
+
+    companion object {
+        const val FIELD_ID = "fieldId1"
     }
 
 }

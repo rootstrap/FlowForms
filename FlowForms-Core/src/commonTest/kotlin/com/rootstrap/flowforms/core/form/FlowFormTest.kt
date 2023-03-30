@@ -56,9 +56,9 @@ class FlowFormTest {
         val field2 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus())
+        every { field1.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_1))
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus())
+        every { field2.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_2))
 
         flowForm {
             fields(field1, field2)
@@ -75,9 +75,12 @@ class FlowFormTest {
         val field2 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(INCORRECT))
+        every { field1.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1, code = INCORRECT)
+        )
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus())
+        every { field2.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_2))
 
         flowForm {
             fields(field1, field2)
@@ -95,9 +98,12 @@ class FlowFormTest {
         val field2 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus())
+        every { field1.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_1))
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field2.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_2, code = CORRECT)
+        )
 
         flowForm {
             fields(field1, field2)
@@ -115,9 +121,15 @@ class FlowFormTest {
         val field2 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field1.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1, code = CORRECT)
+        )
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field2.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_1, code = CORRECT)
+        )
 
         flowForm {
             fields(field1, field2)
@@ -136,13 +148,20 @@ class FlowFormTest {
         val field3 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
+        every { field1.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1, code = CORRECT)
+        )
 
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field2.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_2, code = CORRECT)
+        )
 
         every { field3.id } returns FIELD_ID_3
-        every { field3.status } returns flowOf(FieldStatus())
+        every { field3.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_3))
 
         flowForm {
             fields(field1, field2, field3)
@@ -162,13 +181,20 @@ class FlowFormTest {
         val field3 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(INCORRECT))
+        every { field1.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1, code = INCORRECT)
+        )
 
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field2.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_2, code = CORRECT)
+        )
 
         every { field3.id } returns FIELD_ID_3
-        every { field3.status } returns flowOf(FieldStatus())
+        every { field3.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_3))
 
         flowForm {
             fields(field1, field2, field3)
@@ -188,13 +214,25 @@ class FlowFormTest {
         val field3 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus(), FieldStatus(CORRECT))
+        every { field1.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_1),
+            FieldStatus(fieldId = FIELD_ID_1, code = CORRECT)
+        )
 
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
+        every { field2.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_2),
+            FieldStatus(fieldId = FIELD_ID_2, code = CORRECT)
+        )
 
         every { field3.id } returns FIELD_ID_3
-        every { field3.status } returns flowOf(FieldStatus(), FieldStatus(), FieldStatus(), FieldStatus(CORRECT))
+        every { field3.status } returns flowOf(
+            FieldStatus(fieldId = FIELD_ID_3),
+            FieldStatus(fieldId = FIELD_ID_3),
+            FieldStatus(fieldId = FIELD_ID_3),
+            FieldStatus(fieldId = FIELD_ID_3, code = CORRECT)
+        )
 
         flowForm {
             fields(field1, field2, field3)
@@ -317,13 +355,13 @@ class FlowFormTest {
         val field2 = mockk<FlowField>()
 
         every { field1.id } returns FIELD_ID_1
-        every { field1.status } returns flowOf(FieldStatus())
+        every { field1.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_1))
         coEvery { field1.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
         coEvery { field1.triggerOnFocusValidations(coroutineDispatcher) } returns true
         coEvery { field1.triggerOnBlurValidations(coroutineDispatcher) } returns true
 
         every { field2.id } returns FIELD_ID_2
-        every { field2.status } returns flowOf(FieldStatus())
+        every { field2.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_2))
         coEvery { field2.triggerOnValueChangeValidations(coroutineDispatcher) } returns false
         coEvery { field2.triggerOnFocusValidations(coroutineDispatcher) } returns true
         coEvery { field2.triggerOnBlurValidations(coroutineDispatcher) } returns true
@@ -409,13 +447,13 @@ class FlowFormTest {
         coEvery { field2.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field2.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field2.triggerOnBlurValidations(any(), any()) } returns true
-        every { field2.getCurrentStatus() } returns FieldStatus(CORRECT)
+        every { field2.getCurrentStatus() } returns FieldStatus(fieldId = FIELD_ID_2, code = CORRECT)
 
         val field3 = mockkFlowField(FIELD_ID_3)
         coEvery { field3.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field3.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field3.triggerOnBlurValidations(any(), any()) } returns true
-        every { field3.getCurrentStatus() } returns FieldStatus(INCORRECT)
+        every { field3.getCurrentStatus() } returns FieldStatus(fieldId = FIELD_ID_3, code = INCORRECT)
 
         val form = flowForm {
             fields(field1, field2, field3)
@@ -479,7 +517,7 @@ class FlowFormTest {
         coEvery { field2.triggerOnValueChangeValidations(any(), any()) } returns true
         coEvery { field2.triggerOnFocusValidations(any(), any()) } returns true
         coEvery { field2.triggerOnBlurValidations(any(), any()) } returns true
-        every { field2.getCurrentStatus() } returns FieldStatus(UNMODIFIED)
+        every { field2.getCurrentStatus() } returns FieldStatus(fieldId = FIELD_ID_2, code = UNMODIFIED)
 
         val form = flowForm {
             fields(field1, field2)
@@ -636,7 +674,7 @@ class FlowFormTest {
 
     private fun mockkFlowField(
         id : String? = null,
-        status: Flow<FieldStatus> = flowOf(FieldStatus()),
+        status: Flow<FieldStatus> = flowOf(FieldStatus(fieldId = id.orEmpty())),
         allValidationsList : List<Validation> = emptyList()
     ) = mockk<FlowField> {
         every { this@mockk.onValueChangeValidations } returns allValidationsList
