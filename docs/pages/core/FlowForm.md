@@ -73,11 +73,9 @@ val coroutineScope: CoroutineScope = ...
 
 suspend fun listenToFieldsStatus() {
     coroutineScope {
-        form.fields.value.let {
-            launch { it["userName"]?.status?.collect(::onUserNameStatusChange) }
-            launch { it["email"]?.status?.collect(::onEmailStatusChange) }
-            launch { it["password"]?.status?.collect(::onPasswordStatusChange) }
-        }
+        launch { form.field("userName")?.status?.collect(::onUserNameStatusChange) }
+        launch { form.field("email")?.status?.collect(::onEmailStatusChange) }
+        launch { form.field("password")?.status?.collect(::onPasswordStatusChange) }
     }
 }
 
@@ -99,7 +97,8 @@ private fun onPasswordStatusChange(status: FieldStatus) {
     }
 }
 </code></pre>
-<p class="comment">In the above code snippet we are declaring a collection function for each field that will be executed whenever the specified field status changes.</p>
+<p class="comment">In the above code snippet we are declaring a collection function for each field that will be executed whenever the specified field status changes.<br>
+Notice that we call the field(...) function to get each field from the form</p>
 
 This way we can react to each field status change and do our custom logic for any case. For more information about the fields possible status check the [Field state section](FlowField#field-state)
 
@@ -114,6 +113,13 @@ Basically, the form status changes automatically based on its fields status, so 
 So, the only thing we need to do, is just to call the form's triggerValidations method with the specific field ID we are validating when we need to. 
 For example, everytime the password input is updated by the user, we just trigger the **password field validations**
 
+<div class="rs-row comment"> 
+    <i class="comment-icon fa-solid fa-circle-info"></i> 
+    <div class="comment">
+        If using <b>Android's xml UI</b>, all the code below is simplified as a one-liner for some View types. To take a look please refer to the <a href="../android-utils/Binding">Android binding page</a>
+    </div>
+</div>
+    
 <pre><code class="kotlin">
 val form = ...
 val coroutineScope: CoroutineScope = ...
@@ -121,20 +127,20 @@ val passwordInput = ...
 
 fun triggerValidationsWhenInputIsUpdated() {
     passwordInput.doAfterTextChanged {
-        coroutineScope.launch { validateOnValueChange(fieldId) }
+        coroutineScope.launch { form.validateOnValueChange("password") }
     }
     passwordInput.doOnBlur {
-        coroutineScope.launch { validateOnBlur(fieldId) }
+        coroutineScope.launch { form.validateOnBlur("password") }
     }
     passwordInput.doOnFocus {
-        coroutineScope.launch { validateOnFocus(fieldId) }
+        coroutineScope.launch { form.validateOnFocus("password") }
     }
 }
 </code></pre>
-<p class="comment">In the above code snippet we are triggering the validations for the password field whenever its value changes (input value was updated), it gains focus (onFocus) and when it loses the focus (onBlur). <br>
+<p class="comment">In the above code snippet we are triggering the validations for the password field whenever its value changes (input value was updated), when it gains focus (onFocus) and when it loses the focus (onBlur). <br>
 Here passwordInput represents an input in your UI library, so it may change based on the library you use. We also provide some binding utilities fot specific platforms. The current example is fictitious so it is not based in any existing library</p>
 
-This will automatically trigger any of the password field's validations, which will then update the field's status based on their results, which will also automatically update the form's status.
+This will automatically trigger the password field's validations defined for each case, which will then update the field's status based on their results, which will also automatically update the form's status.
 
 Actually, there are 3 types of validations : 
 
@@ -144,4 +150,27 @@ Actually, there are 3 types of validations :
 
 To learn more about the validations please refer to the [Adding validations to a field section](FlowField#adding-validations-to-a-field).
 
-If using **Android's UI**, we made a bunch of utilities to reduce even more the code needed for this. To take a look at it please refer to the [Android binding page](../android-utils/Binding)
+### Validating all fields at once
+
+In some situations we may need to validate all the fields at once, _like when the business rules dictates that we need to validate the fields only when pressing the sign-up button_. So for such cases, the form comes with a handy function called validateAllFields().
+
+<pre><code class="kotlin">
+val form = ...
+val coroutineScope: CoroutineScope = ...
+
+fun signUp() {
+    coroutineScope.launch {
+        if (form.validateAllFields()) {
+            // create account
+        } else {
+            // display error
+        }
+    }
+}
+</code></pre>
+<p class="comment">The above code snippet validates all the form's fields before proceeding to the account creation</p>
+
+The `form.validateAllFields()` function triggers all the field validations for the fields in the form, honoring the same rules as the validation declarations. With the difference that if all the onValueChange validations are correct, then the onFocus validations are triggered, and if those are correct, then the onBlur validations are triggered.
+This can work with both synchronous and asynchronous validations, where the later will cause the calling coroutine to be suspended until all the validations are finished.
+
+It returns `true` if all the fields ends up in a `CORRECT` status, or false if they end up in the `INCORRECT` one. You usually will not need to do anything else rather than check if the result was `true` or `false`, because if you are already collecting the fields' status then the respective collection functions will be called as soon as they change. (even before this function call finishes)

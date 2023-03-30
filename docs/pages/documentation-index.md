@@ -14,6 +14,7 @@ title: FlowForms docs - index
  * [Reacting to the form](core/FlowForm#reacting-to-the-form)
  * [Reacting to its fields' status](core/FlowForm#reacting-to-its-fields-status)
  * [Triggering form validations](core/FlowForm#triggering-form-validations)
+ * [Validating all fields at once](core/FlowForm#validating-all-fields-at-once)
 
 **FlowFields**
  * [What is a FlowField?](core/FlowField#what-is-a-flowfield)
@@ -28,6 +29,7 @@ title: FlowForms docs - index
  * [Fail Fast validations](core/Validation#failfast-validations)
  * [Async validations](core/Validation#async-validations)
  * [Built-in validations](core/Validation#built-in-validations)
+ * [Cross-field validations](core/Validation#cross-field-validations)
  * [Custom validations](core/Validation#custom-validations)
  * [Changing the field's validation behavior](core/Validation#changing-the-fields-validation-behavior)
 

@@ -17,7 +17,11 @@ import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 import com.rootstrap.flowforms.core.field.FieldStatus
 import com.rootstrap.flowforms.core.form.FormStatus
 import com.rootstrap.flowforms.example.EmailDoesNotExistsInRemoteStorage.ResultCode.EMAIL_ALREADY_EXISTS
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWORD
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.PASSWORD
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
@@ -47,7 +51,7 @@ class SignUpFormFragment : Fragment() {
             it.lifecycleOwner = viewLifecycleOwner
             it.formModel = viewModel.formModel
             it.continueButton.setOnClickListener {
-                Toast.makeText(requireContext(), R.string.account_registered, Toast.LENGTH_SHORT).show()
+                viewModel.signUp()
             }
         }
         listenStatusChanges()
@@ -55,24 +59,37 @@ class SignUpFormFragment : Fragment() {
     }
 
     private fun listenStatusChanges() {
-        viewModel.form.fields.value.let {
+        viewModel.form.apply {
             repeatOnLifeCycleScope(
-                { it[SignUpFormModel.NAME]?.status?.collect(::onNameStatusChange) },
-                { it[SignUpFormModel.EMAIL]?.status?.collect(::onEmailStatusChange) },
-                { it[SignUpFormModel.NEW_PASSWORD]?.status?.collect(::onPasswordStatusChange) },
-                { it[SignUpFormModel.CONFIRM_PASSWORD]?.status?.collect(::onConfirmPasswordChange) },
-                { viewModel.form.status.collect(::onFormStatusChange) }
+                { field(NAME)?.status?.collect(::onNameStatusChange) },
+                { field(EMAIL)?.status?.collect(::onEmailStatusChange) },
+                { field(PASSWORD)?.status?.collect(::onPasswordStatusChange) },
+                { field(CONFIRM_PASSWORD)?.status?.collect(::onConfirmPasswordChange) },
+                { status.collect(::onFormStatusChange) },
+
+                { viewModel.signUpEvents.collect(::onSignUpEvent) }
             )
+        }
+    }
+
+    private fun onSignUpEvent(event : SignUpEvent) {
+        when (event) {
+            is SignUpEvent.SignUpSuccess -> {
+                Toast.makeText(requireContext(), R.string.account_registered, Toast.LENGTH_SHORT).show()
+            }
+            is SignUpEvent.SignUpError -> {
+                Toast.makeText(requireContext(), getString(R.string.review_form), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun bindFields() {
         binding?.apply {
             viewModel.form.bind(lifecycleScope,
-                nameInputEditText to SignUpFormModel.NAME,
-                emailInputEditText to SignUpFormModel.EMAIL,
-                passwordInputEditText to SignUpFormModel.NEW_PASSWORD,
-                confirmPasswordInputEditText to SignUpFormModel.CONFIRM_PASSWORD
+                nameInputEditText to NAME,
+                emailInputEditText to EMAIL,
+                passwordInputEditText to PASSWORD,
+                confirmPasswordInputEditText to CONFIRM_PASSWORD
             )
             viewModel.form.bind(this@SignUpFormFragment, lifecycleScope,
                 viewModel.formModel.confirm to SignUpFormModel.CONFIRMATION
@@ -132,8 +149,8 @@ class SignUpFormFragment : Fragment() {
     private fun onFormStatusChange(status: FormStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT -> continueButton.isEnabled = true
-                else -> continueButton.isEnabled = false
+                CORRECT -> formIncorrectWarningText.visibility = View.GONE
+                else -> formIncorrectWarningText.visibility = View.VISIBLE
             }
         }
     }

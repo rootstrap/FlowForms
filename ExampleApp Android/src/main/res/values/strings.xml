@@ -13,4 +13,6 @@
     <string name="min_length">This field should have %1$d characters</string>
     <string name="password_match">The passwords don\'t match</string>
     <string name="account_registered">Account registered</string>
+    <string name="review_form">Please review the form</string>
+    <string name="incorrect_form_warning">Form is incorrect but you can try to continue</string>
 </resources>

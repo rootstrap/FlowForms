@@ -4,7 +4,12 @@ import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.field.FieldDefinition
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_BLUR
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_FOCUS
+import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_VALUE_CHANGE
 import com.rootstrap.flowforms.core.field.FlowField
+import com.rootstrap.flowforms.core.validation.CrossFieldValidation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +32,6 @@ class FlowForm internal constructor(
 
     /**
      * Flow with the map of fields contained in this form.
-     * Initially it is an empty map until [setFields] is called with some fields in it.
      */
     val fields = _fields.asStateFlow()
 
@@ -71,18 +75,30 @@ class FlowForm internal constructor(
     }
 
     /**
+     * Returns the field with the given ID, or null if it doesn't exist on this form
+     * at this specific moment.
+     *
+     * @param id the ID of the field to retrieve.
+     * @return a FieldDefinition instance for the given ID, or null.
+     */
+    fun field(id: String) = fields.value[id]
+
+    /**
      * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
-     * Returns the result of the validations or false if the field does not exist.
      *
-     * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled, however, this does not
-     * affect the returned result of the newest call.
+     * For additional information please refer to [DOC_FIELD_VALIDATION_BEHAVIOR]
      *
-     * _for more information on this behavior please refer to [FlowField.triggerOnValueChangeValidations]._
+     * @param fieldId id of the field to validate.
      */
     suspend fun validateOnValueChange(fieldId : String) : Boolean {
         return try {
-            this._fields.value[fieldId]?.triggerOnValueChangeValidations(this.coroutineDispatcher) ?: false
+            val field = _fields.value[fieldId] ?: return false
+
+            val success = field.triggerOnValueChangeValidations(coroutineDispatcher)
+            if (success) {
+                getAndTriggerCrossFieldValidations(field, ON_VALUE_CHANGE)
+            }
+            success
         } catch (ex : ValidationsCancelledException) {
             false
         }
@@ -90,17 +106,19 @@ class FlowForm internal constructor(
 
     /**
      * Trigger onBlur validations on the specified field (if it exists in this form).
-     * Returns the result of the validations or false if the field does not exist.
      *
-     * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled, however, this does not
-     * affect the returned result of the newest call.
+     * For additional information please refer to [DOC_FIELD_VALIDATION_BEHAVIOR]
      *
-     * _for more information on this behavior please refer to [FlowField.triggerOnBlurValidations]._
+     * @param fieldId id of the field to validate.
      */
     suspend fun validateOnBlur(fieldId : String) : Boolean {
         return try {
-            this._fields.value[fieldId]?.triggerOnBlurValidations(this.coroutineDispatcher) ?: false
+            val field = this._fields.value[fieldId] ?: return false
+            val success = field.triggerOnBlurValidations(this.coroutineDispatcher)
+            if (success) {
+                getAndTriggerCrossFieldValidations(field, ON_BLUR)
+            }
+            success
         } catch (ex : ValidationsCancelledException) {
             false
         }
@@ -108,17 +126,19 @@ class FlowForm internal constructor(
 
     /**
      * Trigger onFocus validations on the specified field (if it exists in this form).
-     * Returns the result of the validations or false if the field does not exist.
      *
-     * If this method is called again while still being processing the validations it will return false
-     * in the first call, as the validations for such call were cancelled, however, this does not
-     * affect the returned result of the newest call.
+     * For additional information please refer to [DOC_FIELD_VALIDATION_BEHAVIOR]
      *
-     * _for more information on this behavior please refer to [FlowField.triggerOnFocusValidations]._
+     * @param fieldId id of the field to validate.
      */
     suspend fun validateOnFocus(fieldId : String) : Boolean {
         return try {
-            this._fields.value[fieldId]?.triggerOnFocusValidations(this.coroutineDispatcher) ?: false
+            val field = this._fields.value[fieldId] ?: return false
+            val success = field.triggerOnFocusValidations(this.coroutineDispatcher)
+            if (success) {
+                getAndTriggerCrossFieldValidations(field, ON_FOCUS)
+            }
+            success
         } catch (ex : ValidationsCancelledException) {
             false
         }
@@ -131,15 +151,70 @@ class FlowForm internal constructor(
      * all those validations were completed (including async validations), it will continue
      * with the onFocus validations and if it is still correct then it will trigger onBlur validations.
      *
+     * It is important to note that the field order is not guaranteed during the validation process,
+     * but all fields are validated, no matter the result of the previous one.
+     *
+     * @return true if all the validations were completed successfully, false otherwise.
      */
-    suspend fun validateAllFields() {
-        try {
-            this._fields.value.forEach {
-                var fieldIsValid = validateOnValueChange(it.key)
-                fieldIsValid = if (fieldIsValid) validateOnFocus(it.key) else false
-                if (fieldIsValid) validateOnBlur(it.key)
+    suspend fun validateAllFields() : Boolean {
+        val validatedFieldsMap = mutableMapOf<String, Boolean>()
+        this._fields.value.keys.forEach { id ->
+            try {
+                validatedFieldsMap[id] = validateOnValueChange(id)
+                        && validateOnFocus(id)
+                        && validateOnBlur(id)
+            } catch (ignored: ValidationsCancelledException) {
+                validatedFieldsMap[id] = false
             }
-        } catch (ignored : ValidationsCancelledException) { }
+        }
+        return validatedFieldsMap.values.all { it }
+    }
+
+    private suspend fun getAndTriggerCrossFieldValidations(
+        field : FieldDefinition,
+        validationType: ValidationType
+    ) {
+        val fieldValidations = when (validationType) {
+            ON_VALUE_CHANGE -> field.onValueChangeValidations
+            ON_FOCUS -> field.onFocusValidations
+            ON_BLUR -> field.onBlurValidations
+        }
+
+        val crossFieldValidations = fieldValidations
+            .filterIsInstance<CrossFieldValidation>()
+            .groupBy { it.targetFieldId }
+
+        for (validationsPerField in crossFieldValidations) {
+            val targetField = _fields.value[validationsPerField.key] ?: continue
+            val validations = validationsPerField.value.map { it.validation }
+            if (targetField.getCurrentStatus().code != UNMODIFIED) {
+                when (validationType) {
+                    ON_VALUE_CHANGE ->
+                        targetField.triggerOnValueChangeValidations(coroutineDispatcher, validations)
+                    ON_FOCUS ->
+                        targetField.triggerOnFocusValidations(coroutineDispatcher, validations)
+                    ON_BLUR ->
+                        targetField.triggerOnBlurValidations(coroutineDispatcher, validations)
+                }
+            }
+        }
     }
 
 }
+
+/**
+ * Returns the result of the validations or false if the field does not exist or is not valid.
+ *
+ * If this method is called again while still being processing the validations it will return false
+ * in the first call, as the validations for such call were cancelled. However, this does not
+ * affect the returned result of the newest call, which will begin to process the validations
+ * from scratch.
+ *
+ * If the field has crossField validations, those will not be executed on this field but on their
+ * target fields. Such cross-field validations are only ran if this field (whose ID was given
+ * by parameter) is valid.
+ * In addition to that condition, the cross-field validations are executed only if the target
+ * field's status is [CORRECT]
+ *
+ */
+private const val DOC_FIELD_VALIDATION_BEHAVIOR = true

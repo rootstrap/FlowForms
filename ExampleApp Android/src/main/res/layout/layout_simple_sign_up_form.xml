@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:text="@={formModel.newPassword}"
+                android:text="@={formModel.password}"
                 tools:ignore="TouchTargetSizeCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -173,6 +173,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tcs_check_box" />
+
+        <TextView
+            android:id="@+id/form_incorrect_warning_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/incorrect_form_warning"
+            android:layout_marginTop="@dimen/margin_top"
+            android:gravity="center"
+            android:textColor="@color/red"
+            app:layout_constraintTop_toBottomOf="@id/continue_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

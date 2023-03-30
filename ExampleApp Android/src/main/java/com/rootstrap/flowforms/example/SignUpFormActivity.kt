@@ -20,7 +20,7 @@ import com.rootstrap.flowforms.example.SignUpFormModel.Companion.CONFIRM_PASSWOR
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.EMAIL
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.MIN_PASSWORD_LENGTH
 import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NAME
-import com.rootstrap.flowforms.example.SignUpFormModel.Companion.NEW_PASSWORD
+import com.rootstrap.flowforms.example.SignUpFormModel.Companion.PASSWORD
 import com.rootstrap.flowforms.example.databinding.LayoutSimpleSignUpFormBinding
 import com.rootstrap.flowforms.util.bind
 import com.rootstrap.flowforms.util.repeatOnLifeCycleScope
@@ -46,13 +46,13 @@ class SignUpFormActivity : AppCompatActivity() {
     }
 
     private fun listenStatusChanges() {
-        viewModel.form.fields.value.let {
+        viewModel.form.apply {
             repeatOnLifeCycleScope(
-                { it[NAME]?.status?.collect(::onNameStatusChange) },
-                { it[EMAIL]?.status?.collect(::onEmailStatusChange) },
-                { it[NEW_PASSWORD]?.status?.collect(::onPasswordStatusChange) },
-                { it[CONFIRM_PASSWORD]?.status?.collect(::onConfirmPasswordChange) },
-                { viewModel.form.status.collect(::onFormStatusChange) }
+                { field(NAME)?.status?.collect(::onNameStatusChange) },
+                { field(EMAIL)?.status?.collect(::onNameStatusChange) },
+                { field(PASSWORD)?.status?.collect(::onNameStatusChange) },
+                { field(CONFIRM_PASSWORD)?.status?.collect(::onNameStatusChange) },
+                { status.collect(::onFormStatusChange) }
             )
         }
     }
@@ -62,7 +62,7 @@ class SignUpFormActivity : AppCompatActivity() {
             viewModel.form.bind(lifecycleScope,
                 nameInputEditText to NAME,
                 emailInputEditText to EMAIL,
-                passwordInputEditText to NEW_PASSWORD,
+                passwordInputEditText to PASSWORD,
                 confirmPasswordInputEditText to CONFIRM_PASSWORD
             )
             viewModel.form.bind(this@SignUpFormActivity, lifecycleScope,

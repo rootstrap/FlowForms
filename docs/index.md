@@ -21,7 +21,7 @@ title: Flow Forms, Declarative and reactive form management library
 FlowForms is a declarative and reactive Kotlin multiplatform library for Form management
 
 ## Why?
-It aims to reduce all the boiler plate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations _(being them synchronous or asynchronous)_, while also exposing a simple yet powerful API to react to the form and field status changes
+It aims to reduce all the boilerplate needed to work with application forms by allowing the developer to directly declare the form and its fields with their respective validations _(being them synchronous or asynchronous)_, while also exposing a simple yet powerful API to react to the form and field status changes
 
 ## Sounds good, how can I get it?
 Add the JitPack repository to your root build.gradle file, at the end of repositories :
@@ -38,15 +38,15 @@ Add FlowForms dependency in your module's build.gradle file :
 <pre><code class="kotlin">
 dependencies {
   ..
-  val flowFormsVersion = "1.0.0"
+  val flowFormsVersion = "1.3.0"
     
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")
 
-  // On android projects :
+  // On android-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-android:$flowFormsVersion")
 
-  // On JVM projects :
+  // On JVM-only projects :
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core-jvm:$flowFormsVersion")
   ..
 }
