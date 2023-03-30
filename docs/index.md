@@ -38,7 +38,7 @@ Add FlowForms dependency in your module's build.gradle file :
 <pre><code class="kotlin">
 dependencies {
   ..
-  val flowFormsVersion = "1.3.0"
+  val flowFormsVersion = "1.4.0"
     
   // On KMP projects
   implementation("com.github.rootstrap.FlowForms:FlowForms-Core:$flowFormsVersion")

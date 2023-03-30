@@ -2,6 +2,7 @@ package com.rootstrap.flowforms.core.field
 
 import com.rootstrap.flowforms.core.validation.Validation
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -24,7 +25,7 @@ interface FieldValidationBehavior {
      */
     suspend fun triggerValidations(
         fieldId: String,
-        mutableFieldStatus: MutableStateFlow<FieldStatus>,
+        mutableFieldStatus: MutableSharedFlow<FieldStatus>,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher? = null
     ) : Boolean

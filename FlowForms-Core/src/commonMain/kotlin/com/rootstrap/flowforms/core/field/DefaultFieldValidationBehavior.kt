@@ -9,7 +9,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.yield
 
 /**
@@ -31,7 +31,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      */
     override suspend fun triggerValidations(
         fieldId: String,
-        mutableFieldStatus: MutableStateFlow<FieldStatus>,
+        mutableFieldStatus: MutableSharedFlow<FieldStatus>,
         validations: List<Validation>,
         asyncCoroutineDispatcher: CoroutineDispatcher?
     ) : Boolean {
@@ -141,13 +141,13 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         }
 
         yield()
-        data.mutableFieldStatus.value = fieldStatus
+        data.mutableFieldStatus.emit(fieldStatus)
         return fieldStatus.code == StatusCodes.CORRECT
     }
 
     private class ValidationProcessData(
         val fieldId : String,
-        val mutableFieldStatus: MutableStateFlow<FieldStatus>,
+        val mutableFieldStatus: MutableSharedFlow<FieldStatus>,
         val syncValidations : List<Validation>,
         val asyncValidations : List<Validation>,
         val asyncCoroutineDispatcher: CoroutineDispatcher?,
