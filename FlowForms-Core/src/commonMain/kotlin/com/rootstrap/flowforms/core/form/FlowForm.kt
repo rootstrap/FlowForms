@@ -84,6 +84,16 @@ class FlowForm internal constructor(
     fun field(id: String) = fields.value[id]
 
     /**
+     * Convenient way to get all the fields' status flows on this form.
+     *
+     * Basically provides a list of [Flow]s where each [Flow] represent one of
+     * this form's field's status.
+     *
+     */
+    val fieldStatusFlows
+        get() = fields.value.values.map { it.status }
+
+    /**
      * Trigger onValueChange validations on the specified [FlowField] (if it exists in this form).
      *
      * For additional information please refer to [DOC_FIELD_VALIDATION_BEHAVIOR]
