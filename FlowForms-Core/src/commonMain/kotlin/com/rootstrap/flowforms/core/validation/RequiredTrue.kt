@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_TRUE_UNSATISFIED
 
@@ -26,6 +27,7 @@ class RequiredTrue(
     val valueProvider: () -> Boolean?
 ) : Validation(failFast = failFast, async = async) {
 
+    @NativeCoroutines
     override suspend fun validate() = ValidationResult(
         if (valueProvider() == true)
             CORRECT

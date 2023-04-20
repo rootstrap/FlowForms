@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
@@ -59,6 +60,7 @@ class FlowField(
 
     private lateinit var currentStatus : FieldStatus
 
+    @NativeCoroutines
     override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
         currentStatus = when {
@@ -97,16 +99,19 @@ class FlowField(
         }
     }
 
+    @NativeCoroutines
     override suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>
     ) = triggerValidations(ON_VALUE_CHANGE, validations, asyncCoroutineDispatcher)
 
+    @NativeCoroutines
     override suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>
     ) = triggerValidations(ON_BLUR, validations, asyncCoroutineDispatcher)
 
+    @NativeCoroutines
     override suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>

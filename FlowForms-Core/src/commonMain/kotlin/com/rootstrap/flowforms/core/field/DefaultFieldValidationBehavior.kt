@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
@@ -29,6 +30,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      * other validations will be cancelled.
      *
      */
+    @NativeCoroutines
     override suspend fun triggerValidations(
         mutableFieldStatus: MutableStateFlow<FieldStatus>,
         validations: List<Validation>,

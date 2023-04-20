@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
@@ -41,6 +42,7 @@ interface FieldDefinition {
      *
      * For more information about the possible statuses check [FieldStatus]
      */
+    @NativeCoroutines
     val status : Flow<FieldStatus>
 
     /**
@@ -57,6 +59,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
+    @NativeCoroutines
     suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()
@@ -76,6 +79,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
+    @NativeCoroutines
     suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()
@@ -94,6 +98,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
+    @NativeCoroutines
     suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()

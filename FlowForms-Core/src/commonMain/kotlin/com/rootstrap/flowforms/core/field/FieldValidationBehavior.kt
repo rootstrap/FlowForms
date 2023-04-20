@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.validation.Validation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ interface FieldValidationBehavior {
      *
      * Must return a boolean indicating if all the validations were successful or not.
      */
+    @NativeCoroutines
     suspend fun triggerValidations(
         mutableFieldStatus: MutableStateFlow<FieldStatus>,
         validations: List<Validation>,

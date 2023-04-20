@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
-    id("com.rickclephas.kmp.nativecoroutines") version "0.13.1"
+    id("com.google.devtools.ksp") version "1.8.20-1.0.10"
+    id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-7"
     id("org.jetbrains.kotlinx.kover") version "0.5.1"
     id("com.android.library")
     `maven-publish`
@@ -29,19 +30,22 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
+        }
         val commonMain by getting {
             dependencies {
                 implementations(Dependencies.kotlinLibraries)
             }
         }
-        val commonTest by getting {
+        val commonTest by getting
+        val jvmMain by getting
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementations(Dependencies.commonTestLibraries)
             }
         }
-        val jvmMain by getting
-        val jvmTest by getting
         val androidMain by getting {
             dependencies {
                 implementations(Dependencies.flowFormsAndroidLibraries)
