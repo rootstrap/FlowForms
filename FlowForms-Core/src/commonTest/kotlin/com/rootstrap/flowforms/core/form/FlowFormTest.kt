@@ -69,6 +69,38 @@ class FlowFormTest {
     }
 
     @Test
+    fun `GIVEN a form WHEN created with 3 fields THEN assert fieldStatusFlows gives a flow for each field state`() = runTest {
+        val field1 = mockk<FlowField>()
+        val field2 = mockk<FlowField>()
+        val field3 = mockk<FlowField>()
+
+        every { field1.id } returns FIELD_ID_1
+        every { field1.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_1))
+        every { field2.id } returns FIELD_ID_2
+        every { field2.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_2))
+        every { field3.id } returns FIELD_ID_3
+        every { field3.status } returns flowOf(FieldStatus(fieldId = FIELD_ID_3))
+
+        val fieldIds = mutableListOf(FIELD_ID_1, FIELD_ID_2, FIELD_ID_3)
+        val form = flowForm {
+            fields(field1, field2, field3)
+        }
+
+        form.fieldStatusFlows.also {
+            assertEquals(3, it.size)
+        }.forEach { fieldStatusFlow ->
+            fieldStatusFlow.test {
+                val status = awaitItem()
+
+                assertTrue(fieldIds.remove(status.fieldId))
+                assertEquals(UNMODIFIED, status.code)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+        assertTrue(fieldIds.isEmpty())
+    }
+
+    @Test
     fun `GIVEN a form with 2 fields WHEN one field become incorrect THEN assert the form status changes from UNMODIFIED to INCORRECT`()
     = runTest {
         val field1 = mockk<FlowField>()
