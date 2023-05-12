@@ -20,7 +20,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":FlowForms-Core"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementations(Dependencies.kotlinLibraries)
             }
         }
         val commonTest by getting {
@@ -48,5 +48,13 @@ android {
     defaultConfig {
         minSdk = 21
         targetSdk = 32
+    }
+}
+
+// utility functions
+
+fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(list : List<String>) {
+    list.forEach {
+        implementation(it)
     }
 }

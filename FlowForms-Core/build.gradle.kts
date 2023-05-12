@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform")
-    id("com.google.devtools.ksp") version "1.8.20-1.0.10"
-    id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-7"
+    id("com.google.devtools.ksp") version "1.8.21-1.0.11"
+    id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-9"
     id("org.jetbrains.kotlinx.kover") version "0.5.1"
     id("com.android.library")
     `maven-publish`

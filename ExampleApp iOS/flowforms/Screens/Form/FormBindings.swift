@@ -86,7 +86,7 @@ extension FormManager {
 extension FFCFlowForm {
   
   func bindStatus(withPublisher publisher: inout Published<String>.Publisher) {
-    let formPublisher = createPublisher(for: statusNative)
+    let formPublisher = createPublisher(for: status)
     
     formPublisher
       .receive(on: DispatchQueue.main)
