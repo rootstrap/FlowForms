@@ -83,7 +83,7 @@ extension FormManager {
 }
 
 // MARK: FFCFlowForm
-extension FFCFlowForm {
+extension FlowForm {
   
   func bindStatus(withPublisher publisher: inout Published<String>.Publisher) {
     let formPublisher = createPublisher(for: status)
@@ -93,7 +93,7 @@ extension FFCFlowForm {
       .map({ status in
         return status.code
       })
-      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
+      .replaceError(with: StatusCodes.shared.INCORRECT)
       .assign(to: &publisher)
   }
   
@@ -133,18 +133,18 @@ extension FFCFlowForm {
 }
 
 //MARK: FFCFlowField
-extension FFCFlowField {
+extension FlowField {
   func bindStatus(withPublisher
     publisher: inout Published<String>.Publisher
   ){
-    let fieldPublisher = createPublisher(for: self.statusNative)
+      let fieldPublisher = createPublisher(for: self.status)
     
     fieldPublisher
       .receive(on: DispatchQueue.main)
       .map({ status in
         return status.code
       })
-      .replaceError(with: FFCStatusCodes.shared.INCORRECT)
+      .replaceError(with: StatusCodes.shared.INCORRECT)
       .assign(to: &publisher)
   }
 

@@ -3,6 +3,8 @@ plugins {
     id("com.android.library")
 }
 
+fun flowFormsCoreProject() = project(":FlowForms-Core")
+
 kotlin {
     android()
 
@@ -11,15 +13,22 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
+        it.binaries {
+            framework {
+                export(flowFormsCoreProject())
+                baseName = "shared"
+            }
+            sharedLib {
+                export(flowFormsCoreProject())
+            }
         }
+
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":FlowForms-Core"))
+                api(flowFormsCoreProject())
                 implementations(Dependencies.kotlinLibraries)
             }
         }

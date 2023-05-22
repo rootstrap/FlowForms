@@ -13,9 +13,9 @@ extension FormManager {
   
   var emailErrorMessage: String? {
     switch emailStatus {
-    case FFCStatusCodes.shared.BASIC_EMAIL_FORMAT_UNSATISFIED:
+    case StatusCodes.shared.BASIC_EMAIL_FORMAT_UNSATISFIED:
       return "Bad Email format"
-    case FFCStatusCodes.shared.REQUIRED_UNSATISFIED:
+    case StatusCodes.shared.REQUIRED_UNSATISFIED:
       return "Email required"
     case EmailDoesNotExistsInRemoteStorage.companion.EMAIL_ALREADY_EXISTS:
       return "Email already exist"
@@ -26,7 +26,7 @@ extension FormManager {
   
   var nameErrorMessage: String? {
     switch nameStatus {
-    case FFCStatusCodes.shared.REQUIRED_UNSATISFIED:
+    case StatusCodes.shared.REQUIRED_UNSATISFIED:
       return "Name required"
     default:
       return nil
@@ -35,9 +35,9 @@ extension FormManager {
   
   var passwordErrorMessage: String? {
     switch passwordStatus {
-    case FFCStatusCodes.shared.MIN_LENGTH_UNSATISFIED:
+    case StatusCodes.shared.MIN_LENGTH_UNSATISFIED:
       return "Min length unsatisfied"
-    case FFCStatusCodes.shared.REQUIRED_UNSATISFIED:
+    case StatusCodes.shared.REQUIRED_UNSATISFIED:
       return "Password required"
     default:
       return nil
@@ -46,11 +46,11 @@ extension FormManager {
 
   var confirmedPasswordErrorMessage: String? {
     switch confirmPasswordStatus {
-    case FFCStatusCodes.shared.MATCH_UNSATISFIED:
+    case StatusCodes.shared.MATCH_UNSATISFIED:
       return "Passwords don't match"
-    case FFCStatusCodes.shared.REQUIRED_UNSATISFIED:
+    case StatusCodes.shared.REQUIRED_UNSATISFIED:
       return "Password confirmation required"
-    case FFCStatusCodes.shared.MIN_LENGTH_UNSATISFIED:
+    case StatusCodes.shared.MIN_LENGTH_UNSATISFIED:
       return "Min length unsatisfied"
     default:
       return nil
@@ -58,11 +58,11 @@ extension FormManager {
   }
   
   var emailVerificationInProgress: Bool {
-    return emailStatus == FFCStatusCodes.shared.IN_PROGRESS
+    return emailStatus == StatusCodes.shared.IN_PROGRESS
   }
   
   var formValid: Bool {
-    return formStatus == FFCStatusCodes.shared.CORRECT
+    return formStatus == StatusCodes.shared.CORRECT
   }
   
 }

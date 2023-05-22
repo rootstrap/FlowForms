@@ -14,11 +14,11 @@ final class FormManager: ObservableObject {
   let formModel = FormModel()
   
   // MARK: Validations
-  @Published var nameStatus: String = FFCStatusCodes.shared.UNMODIFIED
-  @Published var emailStatus: String = FFCStatusCodes.shared.UNMODIFIED
-  @Published var passwordStatus: String = FFCStatusCodes.shared.UNMODIFIED
-  @Published var confirmPasswordStatus: String = FFCStatusCodes.shared.UNMODIFIED
-  @Published var formStatus: String = FFCStatusCodes.shared.UNMODIFIED
+  @Published var nameStatus: String = StatusCodes.shared.UNMODIFIED
+  @Published var emailStatus: String = StatusCodes.shared.UNMODIFIED
+  @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
+  @Published var confirmPasswordStatus: String = StatusCodes.shared.UNMODIFIED
+  @Published var formStatus: String = StatusCodes.shared.UNMODIFIED
  
  var cancelBag: Set<AnyCancellable> = []
 

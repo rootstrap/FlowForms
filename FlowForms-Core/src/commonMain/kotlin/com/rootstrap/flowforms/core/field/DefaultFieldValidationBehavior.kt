@@ -7,6 +7,7 @@ import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -86,6 +87,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         return updateFieldStatusWithFinalResult(data)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun runAsyncValidations(
         data: ValidationProcessData
     ) {
