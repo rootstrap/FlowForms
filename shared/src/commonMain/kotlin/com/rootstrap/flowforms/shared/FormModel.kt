@@ -4,8 +4,13 @@ import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.dsl.flowForm
 import com.rootstrap.flowforms.core.field.FlowField
 import com.rootstrap.flowforms.core.form.FlowForm
-import com.rootstrap.flowforms.core.validation.*
-import kotlinx.coroutines.*
+import com.rootstrap.flowforms.core.validation.BasicEmailFormat
+import com.rootstrap.flowforms.core.validation.Match
+import com.rootstrap.flowforms.core.validation.MinLength
+import com.rootstrap.flowforms.core.validation.Required
+import com.rootstrap.flowforms.core.validation.RequiredTrue
+import com.rootstrap.flowforms.core.validation.on
+import kotlinx.coroutines.Dispatchers
 
 class StatusCode {
     var code = StatusCodes
@@ -20,9 +25,24 @@ class FormModel {
 
     val form = flowForm {
         field(NAME, Required { name })
-        field(EMAIL, Required { email}, BasicEmailFormat { email }, EmailDoesNotExistsInRemoteStorage(async=true) { email })
-        field(PASSWORD, Required { password }, MinLength(8) { password })
-        field(CONFIRM_PASSWORD, Required { confirmPassword }, MinLength(8) { confirmPassword}, Match { password to confirmPassword })
+        field(
+            id = EMAIL,
+            Required { email},
+            BasicEmailFormat { email },
+            EmailDoesNotExistsInRemoteStorage(async = true) { email }
+        )
+        field(
+            id = PASSWORD,
+            Required { password },
+            MinLength(8) { password },
+            Match { password to confirmPassword } on CONFIRM_PASSWORD,
+        )
+        field(
+            id = CONFIRM_PASSWORD,
+            Required { confirmPassword },
+            MinLength(8) { confirmPassword},
+            Match { password to confirmPassword }
+        )
         field(TERMS_ACCEPTED, RequiredTrue { termsAccepted })
         dispatcher = Dispatchers.Default
     }
