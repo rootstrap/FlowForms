@@ -11,6 +11,7 @@ import shared
 import SwiftUI
 import KMPNativeCoroutinesCombine
 import KMPNativeCoroutinesCore
+import KMPNativeCoroutinesAsync
 
 extension FormManager {
   //MARK: Bindings
@@ -107,9 +108,11 @@ extension FlowForm {
         get: { field },
         set: {
           completion($0)
-          self.validateOnValueChange(
-            fieldId: id
-          ) { _ , _ in }
+          Task {
+            let variable = try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
+            )
+            print(variable)
+          }
         }
       )
   }
@@ -124,9 +127,11 @@ extension FlowForm {
         get: { field },
         set: {
           completion($0)
-          self.validateOnValueChange(
-            fieldId: id
-          ) { _ , _ in }
+          Task {
+            let variable = try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
+            )
+            print(variable)
+          }
         }
       )
   }
