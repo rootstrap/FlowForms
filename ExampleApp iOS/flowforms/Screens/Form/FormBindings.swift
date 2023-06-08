@@ -107,6 +107,9 @@ extension FlowForm {
       Binding(
         get: { field },
         set: {
+          guard $0 != field else {
+            return
+          }
           completion($0)
           Task {
             let variable = try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
