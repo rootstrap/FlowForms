@@ -25,7 +25,11 @@ struct FormView: View {
   }
   
   func showPrompt(_ show: Bool) {
-    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.3)) {
+    withAnimation(.spring(
+      response: Animation.Duration.veryShort,
+      dampingFraction: Animation.Duration.short,
+      blendDuration: Animation.Duration.veryShort
+    )) {
       showPrompt = show
     }
   }
@@ -34,15 +38,15 @@ struct FormView: View {
     NavigationView {
       VStack {
         Spacer()
-        VStack(spacing: UI.Layout.mediumPadding) {
+        VStack(spacing: UI.Padding.medium) {
           FormModelTextView(
-            title: "Name",
+            title: LocalizedString.FFormView.nameTextfieldTitle,
             value: formManager.name,
             errorMessage: formManager.nameErrorMessage
           )
           HStack {
             FormModelTextView(
-              title: "Email",
+              title: LocalizedString.FFormView.emailTextfieldTitle,
               value: formManager.email,
               errorMessage: formManager.emailErrorMessage
             )
@@ -51,23 +55,25 @@ struct FormView: View {
             }
           }
           FormModelTextView(
-            title: "Password",
+            title: LocalizedString.FFormView.passwordTextfieldTitle,
+            secureField: true,
             value: formManager.password,
             errorMessage: formManager.passwordErrorMessage
           )
           FormModelTextView(
-            title: "Confirm password",
+            title: LocalizedString.FFormView.passwordConfirmationTextfieldTitle,
+            secureField: true,
             value: formManager.confirmPassword,
             errorMessage: formManager.confirmedPasswordErrorMessage
           )
         }
-        .padding([.leading, .trailing], UI.Layout.largePadding)
+        .padding([.leading, .trailing], UI.Padding.large)
         .frame(alignment: .center)
         Toggle(isOn: formManager.termsAccepted) {
           Text(LocalizedString.FFormView.termsAndConditionsText)
         }
         .tint(.pink)
-        .padding([.leading, .trailing], UI.Layout.largePadding)
+        .padding([.leading, .trailing], UI.Padding.large)
         Spacer()
         Button {
          ///bind to form
@@ -78,10 +84,10 @@ struct FormView: View {
         .disabled(!formManager.formValid)
         .frame(
           maxWidth: .infinity,
-          maxHeight: 40,
+          maxHeight: UI.FFormView.signUpButtonHeight,
           alignment: .center
         )
-        .padding(.bottom, 20)
+        .padding(.bottom, UI.Padding.medium)
       }
       /// Harcoded response
       .showPrompt(
@@ -101,5 +107,15 @@ extension LocalizedString {
     static let termsAndConditionsText = "terms_conditions_text".localized
     static let signUpTitle = "signup_title".localized
     static let successfullySignUpMessage = "successfully_signup".localized
+    static let nameTextfieldTitle = "name_textfield_title".localized
+    static let emailTextfieldTitle = "email_textfield_title".localized
+    static let passwordTextfieldTitle = "password_textfield_title".localized
+    static let passwordConfirmationTextfieldTitle = "password_confirmation_textfield_title".localized
+  }
+}
+
+private extension UI {
+  enum FFormView {
+    static let signUpButtonHeight: CGFloat = 40
   }
 }

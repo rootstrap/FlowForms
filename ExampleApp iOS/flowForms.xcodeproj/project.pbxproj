@@ -26,8 +26,6 @@
 		E5A0C8A62939029400C6E216 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A52939029400C6E216 /* KMPNativeCoroutinesAsync */; };
 		E5A0C8A82939029400C6E216 /* KMPNativeCoroutinesCombine in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A72939029400C6E216 /* KMPNativeCoroutinesCombine */; };
 		E5A0C8AA2939029400C6E216 /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = E5A0C8A92939029400C6E216 /* KMPNativeCoroutinesCore */; };
-		E5A8148729C208B400561F31 /* FormErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8148629C208B400561F31 /* FormErrors.swift */; };
-		E5A8148929C208F800561F31 /* FormBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8148829C208F800561F31 /* FormBindings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,8 +60,6 @@
 		E5408521290ADC6A00706CB4 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = flowforms/Resources/Colors.swift; sourceTree = SOURCE_ROOT; };
 		E5408525290ADE0800706CB4 /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptView.swift; path = flowforms/Components/Prompt/PromptView.swift; sourceTree = SOURCE_ROOT; };
 		E540852A290B140800706CB4 /* PromptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PromptPresenter.swift; path = flowforms/Components/Prompt/PromptPresenter.swift; sourceTree = SOURCE_ROOT; };
-		E5A8148629C208B400561F31 /* FormErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FormErrors.swift; path = FlowForms/Screens/Form/FormErrors.swift; sourceTree = SOURCE_ROOT; };
-		E5A8148829C208F800561F31 /* FormBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FormBindings.swift; path = flowforms/Screens/Form/FormBindings.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,10 +153,8 @@
 		E52B9C3B2909C13C004FD562 /* Form */ = {
 			isa = PBXGroup;
 			children = (
-				E5A8148629C208B400561F31 /* FormErrors.swift */,
 				E5408519290AD64700706CB4 /* FormView.swift */,
 				E540851A290AD64700706CB4 /* FormManager.swift */,
-				E5A8148829C208F800561F31 /* FormBindings.swift */,
 			);
 			path = Form;
 			sourceTree = "<group>";
@@ -313,9 +307,7 @@
 				E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */,
 				E535AD1D291D9562007E0707 /* FormManager.swift in Sources */,
 				E540851B290AD64700706CB4 /* FormView.swift in Sources */,
-				E5A8148729C208B400561F31 /* FormErrors.swift in Sources */,
 				E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */,
-				E5A8148929C208F800561F31 /* FormBindings.swift in Sources */,
 				E52B9C392909C134004FD562 /* Constants.swift in Sources */,
 				E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */,
 				E52B9C452909C7A5004FD562 /* LocalizedString.swift in Sources */,
