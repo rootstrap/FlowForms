@@ -15,9 +15,10 @@ import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationsCancelledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 
@@ -44,15 +45,18 @@ class FlowField(
     private val filteredOnBlurValidations = onBlurValidations
         .filter { it !is CrossFieldValidation }
 
-    private val _onValueChangeStatus = MutableStateFlow(FieldStatus(
-        if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
-    private val _onBlurStatus = MutableStateFlow(FieldStatus(
-        if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
-    private val _onFocusStatus = MutableStateFlow(FieldStatus(
-        if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
-    ))
+    private val _onValueChangeStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val _onBlurStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val _onFocusStatus = MutableSharedFlow<FieldStatus>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
 
     private var onValueChangeCoroutinesJob : Job? = null
     private var onFocusCoroutinesJob : Job? = null
@@ -67,15 +71,30 @@ class FlowField(
             thereAreFailedValidations(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
                 getIncorrectFieldStatus(onValueChangeStatus, onBlurStatus, onFocusStatus)
             thereAreValidationsInProgress(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(IN_PROGRESS)
+                FieldStatus(fieldId = id, code = IN_PROGRESS)
             noValidationsWereExecutedAtAll(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(UNMODIFIED)
+                FieldStatus(fieldId = id, code = UNMODIFIED)
             thereAreSomeValidationsNotExecutedYet(onValueChangeStatus, onBlurStatus, onFocusStatus) ->
-                FieldStatus(INCOMPLETE)
+                FieldStatus(fieldId = id, code = INCOMPLETE)
             else ->
-                FieldStatus(CORRECT)
+                FieldStatus(fieldId = id, code = CORRECT)
         }
         currentStatus
+    }
+
+    init {
+        _onValueChangeStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onValueChangeValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
+        _onBlurStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onBlurValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
+        _onFocusStatus.tryEmit(FieldStatus(
+            fieldId = id,
+            code = if (onFocusValidations.isEmpty()) UNSET else UNMODIFIED
+        ))
     }
 
     private fun thereAreFailedValidations(vararg fieldStatuses : FieldStatus) =
@@ -95,7 +114,11 @@ class FlowField(
         return if (failingFields.size == 1) {
             failingFields.first()
         } else {
-            FieldStatus(INCORRECT, failingFields.map { it.validationResults }.flatten())
+            FieldStatus(
+                fieldId = id,
+                code = INCORRECT,
+                validationResults = failingFields.map { it.validationResults }.flatten()
+            )
         }
     }
 
@@ -132,7 +155,12 @@ class FlowField(
         return coroutineScope {
             withContext(coroutinesJob) {
                 val finalValidations = validations.ifEmpty { fieldValidations }
-                validationBehavior.triggerValidations(statusFlow, finalValidations, asyncCoroutineDispatcher)
+                validationBehavior.triggerValidations(
+                    fieldId = id,
+                    mutableFieldStatus = statusFlow,
+                    validations = finalValidations,
+                    asyncCoroutineDispatcher = asyncCoroutineDispatcher
+                )
             }
         }
     }

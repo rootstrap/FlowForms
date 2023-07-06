@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("kotlin-kapt")
     kotlin("android")
 }
 
@@ -12,7 +13,7 @@ android {
         minSdk = (ExampleAppAndroidConfig.MIN_SDK)
         targetSdk = (ExampleAppAndroidConfig.TARGET_SDK)
         versionCode = 1
-        versionName = "1.3.0"
+        versionName = "1.4.1"
 
         testInstrumentationRunner = ExampleAppAndroidConfig.ANDROID_TEST_INSTRUMENTATION_RUNNER
     }
@@ -33,8 +34,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
@@ -52,6 +53,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     //app libs
     implementation(Dependencies.appLibraries)
+    kapt(Dependencies.appKaptLibraries)
     //test libs
     testImplementation(Dependencies.jvmTestLibraries)
     androidTestImplementation(Dependencies.androidTestLibraries)

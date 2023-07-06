@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.rootstrap"
-version = "1.3.0"
+version = "1.4.1"
 
 kotlin {
     android {
@@ -75,11 +75,10 @@ tasks.koverMergedHtmlReport {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 23
-        targetSdk = 32
     }
 
     buildTypes {

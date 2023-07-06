@@ -5,6 +5,7 @@ package com.rootstrap.flowforms.core.field
 import app.cash.turbine.test
 import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
+import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
 import com.rootstrap.flowforms.core.util.assertFieldStatusSequence
@@ -20,9 +21,10 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import java.util.Stack
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -30,9 +32,11 @@ class FlowFieldTest {
 
     @Test
     fun `GIVEN a new required field THEN assert its status is UNMODIFIED`() = runTest {
-        val field = FlowField("email")
+        val field = FlowField(FIELD_ID)
         field.status.test {
-            assertEquals(awaitItem().code, UNMODIFIED)
+            val status = awaitItem()
+            assertEquals(FIELD_ID, field.id)
+            assertEquals(UNMODIFIED, status.code)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -51,7 +55,7 @@ class FlowFieldTest {
         }
 
         val field = FlowField(
-            "email",
+            FIELD_ID,
             listOf(regularValidation, asyncValidation)
         )
 
@@ -63,13 +67,13 @@ class FlowFieldTest {
                     println("First async validation was cancelled : ${ex.message}")
                 }
             }
-            assertFieldStatusSequence(this, UNMODIFIED, IN_PROGRESS)
+            assertFieldStatusSequence(FIELD_ID, this, UNMODIFIED, IN_PROGRESS)
             launch {
                 field.triggerOnValueChangeValidations(testAsyncCoroutineDispatcher)
             }
             delay(50)
 
-            assertFieldStatusSequence(this, StatusCodes.INCORRECT)
+            assertFieldStatusSequence(FIELD_ID, this, StatusCodes.INCORRECT)
             coVerify(exactly = 2) { regularValidation.validate() }
             coVerify(exactly = 1) { asyncValidation.validate() }
 
@@ -80,27 +84,20 @@ class FlowFieldTest {
     @Test
     fun `GIVEN a field WHEN status change from UNMODIFIED to IN_PROGRESS to CORRECT THEN assert getCurrentStatus gives the respective status on each stage`()
         = runTest {
+        val nextStatus = Stack<FieldStatus>()
+        nextStatus.push(FieldStatus(fieldId = FIELD_ID, code = CORRECT))
+        nextStatus.push(FieldStatus(fieldId = FIELD_ID, code = IN_PROGRESS))
+        nextStatus.push(FieldStatus(fieldId = FIELD_ID, code = UNMODIFIED))
+
         val fieldValidationBehavior = mockk<FieldValidationBehavior> {}
-        val field = FlowField("id", validationBehavior = fieldValidationBehavior)
+        val field = FlowField(FIELD_ID, validationBehavior = fieldValidationBehavior)
 
         coEvery {
-            fieldValidationBehavior.triggerValidations(mutableFieldStatus = any(), emptyList())
+            fieldValidationBehavior.triggerValidations(any(), mutableFieldStatus = any(), emptyList())
         } coAnswers {
-            val onValueChangeStatusFlow = it.invocation.args[0] as MutableStateFlow<FieldStatus>
-            when (onValueChangeStatusFlow.value.code) {
-                UNMODIFIED -> {
-                    onValueChangeStatusFlow.value = FieldStatus(IN_PROGRESS)
-                    false
-                }
-                IN_PROGRESS -> {
-                    onValueChangeStatusFlow.value = FieldStatus(CORRECT)
-                    true
-                }
-                else -> {
-                    onValueChangeStatusFlow.value = FieldStatus(UNMODIFIED)
-                    false
-                }
-            }
+            val onValueChangeStatusFlow = it.invocation.args[1] as MutableSharedFlow<FieldStatus>
+            onValueChangeStatusFlow.emit(nextStatus.pop())
+            false
         }
 
         field.status.test {
@@ -133,11 +130,11 @@ class FlowFieldTest {
         )
         val fieldValidationBehavior = mockk<FieldValidationBehavior> {
             coEvery {
-                triggerValidations(mutableFieldStatus = any(), any(), any())
+                triggerValidations(any(), mutableFieldStatus = any(), any(), any())
             } coAnswers { true }
         }
         val field = FlowField(
-            "id",
+            FIELD_ID,
             onValueChangeValidations = fieldValidations,
             onFocusValidations = fieldValidations,
             onBlurValidations = fieldValidations,
@@ -149,11 +146,41 @@ class FlowFieldTest {
         field.triggerOnBlurValidations(validations = customValidations)
 
         coVerify(exactly = 0) {
-            fieldValidationBehavior.triggerValidations(any(), fieldValidations, any())
+            fieldValidationBehavior.triggerValidations(any(), any(), fieldValidations, any())
         }
         coVerify(exactly = 3) {
-            fieldValidationBehavior.triggerValidations(any(), customValidations, any())
+            fieldValidationBehavior.triggerValidations(any(), any(), customValidations, any())
         }
+    }
+
+    @Test
+    fun `GIVEN a field WHEN status change from UNMODIFIED to INCORRECT to INCORRECT again THEN assert the status emits a value with the same state twice`()
+            = runTest {
+        val nextStatus = Stack<FieldStatus>()
+        nextStatus.push(FieldStatus(fieldId = FIELD_ID, code = INCORRECT))
+        nextStatus.push(FieldStatus(fieldId = FIELD_ID, code = INCORRECT))
+
+        val fieldValidationBehavior = mockk<FieldValidationBehavior> {}
+        val field = FlowField(FIELD_ID, validationBehavior = fieldValidationBehavior)
+
+        coEvery {
+            fieldValidationBehavior.triggerValidations(any(), mutableFieldStatus = any(), emptyList())
+        } coAnswers {
+            val onValueChangeStatusFlow = it.invocation.args[1] as MutableSharedFlow<FieldStatus>
+            onValueChangeStatusFlow.emit(nextStatus.pop())
+            false
+        }
+
+        field.status.test {
+            field.triggerOnValueChangeValidations()
+            field.triggerOnValueChangeValidations()
+            assertFieldStatusSequence(FIELD_ID, this, UNMODIFIED, INCORRECT, INCORRECT)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    companion object {
+        const val FIELD_ID = "fieldId1"
     }
 
 }

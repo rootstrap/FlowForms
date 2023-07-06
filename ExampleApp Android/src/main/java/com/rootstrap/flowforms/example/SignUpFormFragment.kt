@@ -110,13 +110,19 @@ class SignUpFormFragment : Fragment() {
         binding?.apply {
             emailLoadingProgressBar.visibility = View.GONE
             emailAvailableText.visibility = View.GONE
-            emailInputLayout.error = null
             when (status.code) {
                 REQUIRED_UNSATISFIED -> emailInputLayout.error = getString(R.string.required_field)
                 BASIC_EMAIL_FORMAT_UNSATISFIED -> emailInputLayout.error = getString(R.string.invalid_email)
                 EMAIL_ALREADY_EXISTS -> emailInputLayout.error = getString(R.string.email_already_exist)
-                IN_PROGRESS -> emailLoadingProgressBar.visibility = View.VISIBLE
-                CORRECT -> emailAvailableText.visibility = View.VISIBLE
+                IN_PROGRESS -> {
+                    emailLoadingProgressBar.visibility = View.VISIBLE
+                    emailInputLayout.error = null
+                }
+                CORRECT -> {
+                    emailAvailableText.visibility = View.VISIBLE
+                    emailInputLayout.error = null
+                }
+                else -> emailInputLayout.error = null
             }
         }
     }
