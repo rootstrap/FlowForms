@@ -38,7 +38,7 @@ extension FlowForm {
   ///   - completion: The completion handler to be called when the field value changes.
   /// - Returns: A binding object for the field.
   func bind(
-    fieldNamed field: String,
+    fieldValue field: String,
     id: String,
     completion: @escaping (String) -> Void
   ) -> Binding<String> {
