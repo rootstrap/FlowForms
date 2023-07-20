@@ -16,7 +16,6 @@ import KMPNativeCoroutinesAsync
 final class FormState: ObservableObject {
   let formModel = FormModel()
   
-  // MARK: Validations
   @Published var nameStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var emailStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
@@ -91,7 +90,7 @@ final class FormState: ObservableObject {
   
   var name: Binding<String> {
     formModel.form.bind(
-      fieldNamed: formModel.name,
+      fieldValue: formModel.name,
       id: FormModel.companion.NAME
     ) {
       self.formModel.name = $0
@@ -101,7 +100,7 @@ final class FormState: ObservableObject {
   
   var email: Binding<String> {
     formModel.form.bind(
-      fieldNamed: formModel.email,
+      fieldValue: formModel.email,
       id: FormModel.companion.EMAIL
     ) {
       self.formModel.email = $0
@@ -111,7 +110,7 @@ final class FormState: ObservableObject {
   
   var password: Binding<String> {
     formModel.form.bind(
-      fieldNamed: formModel.password,
+      fieldValue: formModel.password,
       id: FormModel.companion.PASSWORD
     ) {
       self.formModel.password = $0
@@ -121,16 +120,14 @@ final class FormState: ObservableObject {
   
   var confirmPassword: Binding<String> {
     formModel.form.bind(
-      fieldNamed: formModel.confirmPassword,
+      fieldValue: formModel.confirmPassword,
       id: FormModel.companion.CONFIRM_PASSWORD
     ) {
       self.formModel.confirmPassword = $0
       self.objectWillChange.send()
     }
   }
-    
-  private var cancelBag: Set<AnyCancellable> = []
-  
+
   init() {
     configureBindings()
   }
