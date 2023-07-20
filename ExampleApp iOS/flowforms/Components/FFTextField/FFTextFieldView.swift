@@ -8,48 +8,61 @@
 import SwiftUI
 import shared
 
-struct FFTextFieldView: View {
+struct FormModelTextView: View {
 
-  @Binding var configuration: FFTextFieldViewConfiguration
+  @Binding var valueText: String
+  @Binding var title: String
+  private var errorMessage: String?
+  private let isSecureField: Bool
+  
+  init(title: String, isSecureField: Bool = false, value: Binding<String>, errorMessage: String? = nil) {
+    _title = Binding.constant(title)
+    self.isSecureField = isSecureField
+    _valueText = value
+    self.errorMessage = errorMessage
+  }
   
   var body: some View {
     VStack {
       ZStack {
-        Text(configuration.title)
+        Text(title)
           .frame(maxWidth: .infinity, alignment: .leading)
           .font(Font.headline.weight(.regular))
-          .foregroundColor(configuration.isEmpty ? .gray : .black)
-          .offset(configuration.isEmpty ? .zero : CGSize(width: .zero, height: UI.OssTextField.titleOffSet))
-          .animation(.easeOut(duration: UI.OssTextField.textAnimationDuration),
-                     value: configuration.value)
+          .foregroundColor(.black)
+          .offset(valueText.isEmpty ? .zero : CGSize(width: .zero, height: UI.FormModelTextView.titleOffSet))
+          .animation(.easeOut(duration: Animation.Duration.veryShort),
+                     value: valueText)
           .scaleEffect(
-            configuration.isEmpty ? UI.OssTextField.titleScaleEmpty : UI.OssTextField.titleScaleNonEmpty,
+            valueText.isEmpty ? UI.FormModelTextView.titleScaleEmpty : UI.FormModelTextView.titleScaleNonEmpty,
             anchor: .bottomLeading
           )
-        if configuration.isSecure {
-          SecureField("", text: $configuration.value)
+        if isSecureField {
+          SecureField("", text: $valueText)
+            .autocapitalization(.none)
         } else {
-          TextField("", text: $configuration.value)
+          TextField("", text: $valueText)
             .autocapitalization(.none)
         }
       }
-      Rectangle()
-        .frame(
-          maxWidth: .infinity,
-          maxHeight: UI.OssTextField.textfieldLineHeight,
-          alignment: .bottomLeading
-        )
-        .foregroundColor(configuration.shouldShowError ? .red : .gray)
-      Text(configuration.errorMessage)
-        .foregroundColor(.red)
-        .font(.footnote)
-        .animation(.easeInOut)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .offset(CGSize(
-          width: .zero,
-          height: UI.OssTextField.errorTextOffset
-        ))
-        .opacity(configuration.shouldShowError ? 1 : .zero)
-    }.frame(maxWidth: .infinity, maxHeight: 60)
+      LineView(
+        thickness: UI.FormModelTextView.textfieldLineHeight,
+        color: .gray
+      )
+      if let errorMessage = errorMessage {
+        ErrorMessageView(message: errorMessage)
+      }
+    }.frame(maxWidth: .infinity, maxHeight: UI.FormModelTextView.height)
   }
 }
+
+private extension UI {
+  enum FormModelTextView {
+    static let height: CGFloat = 60
+    static let titleScaleNonEmpty: Double = 0.8
+    static let titleScaleEmpty: Double = 1
+    static let textfieldLineHeight: CGFloat = 1
+    static let titleOffSet: CGFloat = -30
+    static let errorTextOffset: CGFloat = -5
+  }
+}
+

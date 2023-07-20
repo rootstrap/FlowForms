@@ -3,21 +3,35 @@ plugins {
     id("com.android.library")
 }
 
+fun flowFormsCoreProject() = project(":FlowForms-Core")
+
 kotlin {
     android()
-    
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
+        it.binaries {
+            framework {
+                export(flowFormsCoreProject())
+                baseName = "shared"
+            }
+            sharedLib {
+                export(flowFormsCoreProject())
+            }
         }
+
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                api(flowFormsCoreProject())
+                implementations(Dependencies.kotlinLibraries)
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -34,15 +48,6 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
         }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        val iosTest by creating {
-            dependsOn(commonTest)
-            iosX64Test.dependsOn(this)
-            iosArm64Test.dependsOn(this)
-            iosSimulatorArm64Test.dependsOn(this)
-        }
     }
 }
 
@@ -52,5 +57,13 @@ android {
     defaultConfig {
         minSdk = 21
         targetSdk = 32
+    }
+}
+
+// utility functions
+
+fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(list : List<String>) {
+    list.forEach {
+        implementation(it)
     }
 }

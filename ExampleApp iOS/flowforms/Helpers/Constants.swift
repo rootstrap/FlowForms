@@ -3,18 +3,54 @@ import shared
 
 struct UI {
 
-  enum Layout {
-    static let largePadding: CGFloat = 30
-    static let mediumPadding: CGFloat = 20
-    static let smallPadding: CGFloat = 10
+  private init() {
+    /* struct just used for structure of the code */
   }
+  
+  enum CornerRadius {
+    static let tiny: CGFloat = 2
+    static let small: CGFloat = 5
+    static let medium: CGFloat = 7
+    static let large: CGFloat = 10
+    static let huge: CGFloat = 20
+  }
+  
+  enum Padding {
+    static let tiny: CGFloat = 5
+    static let small: CGFloat = 10
+    static let medium: CGFloat = 20
+    static let large: CGFloat = 30
+    static let huge: CGFloat = 50
+  }
+  
+  enum ScaleFactor {
+    static let tiny: CGFloat = 0.3
+    static let small: CGFloat = 0.5
+    static let medium: CGFloat = 0.7
+    static let large: CGFloat = 0.8
+    static let huge: CGFloat = 0.9
+  }
+}
 
-  enum OssTextField {
-    static let titleScaleNonEmpty: Double = 0.8
-    static let titleScaleEmpty: Double = 1
-    static let textAnimationDuration: Double = 0.2
-    static let textfieldLineHeight: CGFloat = 1
-    static let titleOffSet: CGFloat = -30
-    static let errorTextOffset: CGFloat = -5
+struct Animation {
+  
+  private init() {
+    /* struct just used for structure of the code */
+  }
+  
+  enum Duration {
+    static let veryShort: CGFloat = 0.3
+    static let short: CGFloat = 0.5
+    static let normal: CGFloat = 0.7
+    static let long: CGFloat = 1
+    static let veryLong: CGFloat = 1.2
+  }
+  
+  enum Opacity {
+    static let translucent: CGFloat = 0
+    static let almostTranslucent: CGFloat = 0.3
+    static let medium: CGFloat = 0.5
+    static let almostOpaque: CGFloat = 0.8
+    static let opaque: CGFloat = 1
   }
 }

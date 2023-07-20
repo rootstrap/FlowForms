@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.REQUIRED_UNSATISFIED
 
@@ -20,6 +21,7 @@ class Required(
     val valueProvider: () -> String?
 ) : Validation(failFast = failFast, async = async) {
 
+    @NativeCoroutines
     override suspend fun validate() = ValidationResult(
         if (valueProvider().isNullOrEmpty())
             REQUIRED_UNSATISFIED

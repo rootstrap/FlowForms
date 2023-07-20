@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_REGEX_UNSATISFIED
 
@@ -22,6 +23,7 @@ open class MatchRegex(
     private val valueProvider: () -> String?
 ) : Validation(failFast = failFast, async = async) {
 
+    @NativeCoroutines
     override suspend fun validate() : ValidationResult {
         val stringToMatch = valueProvider() ?: return ValidationResult(MATCH_REGEX_UNSATISFIED)
         return ValidationResult(

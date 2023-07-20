@@ -17,3 +17,19 @@
 "signup_password_confirmation_textfield_error" = "Passwords don't match!";
 "terms_conditions_text" = "Accept terms and conditions";
 "successfully_signup" = "Registered user successfully";
+
+// MARK: FormErrors
+"bad_email_format" = "Bad Email format";
+"email_required" = "Email required";
+"email_already_exist" = "Email already exists";
+"name_required" = "Name required";
+"password_min_length" = "Min length unsatisfied";
+"password_required" = "Password required";
+"passwords_dont_match" = "Passwords don't match";
+"password_confirmation_required" = "Password confirmation required";
+
+// MARK: FormView
+"name_textfield_title" = "Name";
+"email_textfield_title" = "Email";
+"password_textfield_title" = "Password";
+"password_confirmation_textfield_title" = "Password confirmation";

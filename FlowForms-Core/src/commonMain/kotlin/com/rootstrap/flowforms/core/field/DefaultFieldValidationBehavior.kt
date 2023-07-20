@@ -1,11 +1,13 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.validation.Validation
 import com.rootstrap.flowforms.core.validation.ValidationResult
 import com.rootstrap.flowforms.core.validation.ValidationShortCircuitException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -29,6 +31,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
      * other validations will be cancelled.
      *
      */
+    @NativeCoroutines
     override suspend fun triggerValidations(
         fieldId: String,
         mutableFieldStatus: MutableSharedFlow<FieldStatus>,
@@ -86,6 +89,7 @@ class DefaultFieldValidationBehavior : FieldValidationBehavior {
         return updateFieldStatusWithFinalResult(data)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun runAsyncValidations(
         data: ValidationProcessData
     ) {

@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:${Versions.GRADLE}")
@@ -19,6 +20,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
+        gradlePluginPortal()
     }
 }
 

@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.form
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
@@ -33,6 +34,7 @@ class FlowForm internal constructor(
     /**
      * Flow with the map of fields contained in this form.
      */
+    @NativeCoroutines
     val fields = _fields.asStateFlow()
 
     /**
@@ -47,6 +49,7 @@ class FlowForm internal constructor(
      * the other fields are [UNMODIFIED]
      */
     @OptIn(ExperimentalCoroutinesApi::class)
+    @NativeCoroutines
     val status: Flow<FormStatus> = _fields.flatMapLatest { fieldsMap ->
         combine(fieldsMap.values.map { it.status }) { fieldStatuses ->
             var unmodifiedFieldStatuses = 0
@@ -100,6 +103,7 @@ class FlowForm internal constructor(
      *
      * @param fieldId id of the field to validate.
      */
+    @NativeCoroutines
     suspend fun validateOnValueChange(fieldId : String) : Boolean {
         return try {
             val field = _fields.value[fieldId] ?: return false
@@ -121,6 +125,7 @@ class FlowForm internal constructor(
      *
      * @param fieldId id of the field to validate.
      */
+    @NativeCoroutines
     suspend fun validateOnBlur(fieldId : String) : Boolean {
         return try {
             val field = this._fields.value[fieldId] ?: return false
@@ -141,6 +146,7 @@ class FlowForm internal constructor(
      *
      * @param fieldId id of the field to validate.
      */
+    @NativeCoroutines
     suspend fun validateOnFocus(fieldId : String) : Boolean {
         return try {
             val field = this._fields.value[fieldId] ?: return false
@@ -166,6 +172,7 @@ class FlowForm internal constructor(
      *
      * @return true if all the validations were completed successfully, false otherwise.
      */
+    @NativeCoroutines
     suspend fun validateAllFields() : Boolean {
         val validatedFieldsMap = mutableMapOf<String, Boolean>()
         this._fields.value.keys.forEach { id ->

@@ -1,5 +1,7 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
+
 /**
  * Validation decorator that defines the given validation should affect a different field rather
  * than the one which triggered this validation. The target field is specified via
@@ -14,6 +16,7 @@ class CrossFieldValidation(
 
     override val failFast = validation.failFast
     override val async = validation.async
+    @NativeCoroutines
     override suspend fun validate() = validation.validate()
 
 }

@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.BASIC_EMAIL_FORMAT_UNSATISFIED
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_REGEX_UNSATISFIED
@@ -42,6 +43,7 @@ class BasicEmailFormat(
                 ).toRegex()
     }
 
+    @NativeCoroutines
     override suspend fun validate() = super.validate().run {
         ValidationResult(
             if (resultId == MATCH_REGEX_UNSATISFIED) BASIC_EMAIL_FORMAT_UNSATISFIED

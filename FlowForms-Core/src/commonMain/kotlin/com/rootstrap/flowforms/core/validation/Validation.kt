@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.validation
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.field.FlowField
@@ -17,6 +18,7 @@ abstract class Validation(open val failFast : Boolean = true, open val async : B
     /**
      * Represents a validation that must return a result when invoked.
      */
+    @NativeCoroutines
     abstract suspend fun validate() : ValidationResult
 }
 

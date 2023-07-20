@@ -1,5 +1,6 @@
 package com.rootstrap.flowforms.core.field
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.validation.Validation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,6 +24,7 @@ interface FieldValidationBehavior {
      * @param validations The validations to trigger.
      * @param asyncCoroutineDispatcher The coroutine dispatcher to use for asynchronous validations.
      */
+    @NativeCoroutines
     suspend fun triggerValidations(
         fieldId: String,
         mutableFieldStatus: MutableSharedFlow<FieldStatus>,
