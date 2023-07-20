@@ -18,7 +18,7 @@
 "terms_conditions_text" = "Accept terms and conditions";
 "successfully_signup" = "Registered user successfully";
 
-// MARK: FormManager
+// MARK: FormErrors
 "bad_email_format" = "Bad Email format";
 "email_required" = "Email required";
 "email_already_exist" = "Email already exists";

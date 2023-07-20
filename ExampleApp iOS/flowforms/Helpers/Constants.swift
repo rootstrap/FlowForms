@@ -38,20 +38,6 @@ struct Animation {
     /* struct just used for structure of the code */
   }
   
-  enum DirectionToAppear {
-    case fromLeft
-    case fromRight
-    case fromTop
-    case fromBottom
-  }
-  
-  enum DirectionToDissapear {
-    case toLeft
-    case toRight
-    case toTop
-    case toBottom
-  }
-  
   enum Duration {
     static let veryShort: CGFloat = 0.3
     static let short: CGFloat = 0.5

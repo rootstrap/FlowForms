@@ -11,11 +11,6 @@ import com.rootstrap.flowforms.core.validation.Required
 import com.rootstrap.flowforms.core.validation.RequiredTrue
 import com.rootstrap.flowforms.core.validation.on
 import kotlinx.coroutines.Dispatchers
-
-class StatusCode {
-    var code = StatusCodes
-}
-
 class FormModel {
     var termsAccepted: Boolean = false
     var name: String = ""
@@ -55,5 +50,3 @@ class FormModel {
         const val TERMS_ACCEPTED = "terms_accepted"
     }
 }
-
-fun FlowForm.fieldFor(id: String) = fields.value[id] as FlowField

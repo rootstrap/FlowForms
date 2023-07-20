@@ -13,11 +13,11 @@ struct FormModelTextView: View {
   @Binding var valueText: String
   @Binding var title: String
   private var errorMessage: String?
-  private let secureField: Bool
+  private let isSecureField: Bool
   
-  init(title: String, secureField: Bool = false, value: Binding<String>, errorMessage: String? = nil) {
+  init(title: String, isSecureField: Bool = false, value: Binding<String>, errorMessage: String? = nil) {
     _title = Binding.constant(title)
-    self.secureField = secureField
+    self.isSecureField = isSecureField
     _valueText = value
     self.errorMessage = errorMessage
   }
@@ -36,7 +36,7 @@ struct FormModelTextView: View {
             valueText.isEmpty ? UI.FormModelTextView.titleScaleEmpty : UI.FormModelTextView.titleScaleNonEmpty,
             anchor: .bottomLeading
           )
-        if secureField {
+        if isSecureField {
           SecureField("", text: $valueText)
             .autocapitalization(.none)
         } else {
@@ -44,18 +44,12 @@ struct FormModelTextView: View {
             .autocapitalization(.none)
         }
       }
-      Rectangle()
-        .frame(
-          maxWidth: .infinity,
-          maxHeight: UI.FormModelTextView.textfieldLineHeight,
-          alignment: .bottomLeading
-        )
-        .foregroundColor(.gray)
+      LineView(
+        thickness: UI.FormModelTextView.textfieldLineHeight,
+        color: .gray
+      )
       if let errorMessage = errorMessage {
-        Text(errorMessage)
-          .font(.caption)
-          .frame(maxWidth: .infinity, maxHeight: UI.FormModelTextView.errorMessageHeight, alignment: .leading)
-          .foregroundColor(.red)
+        ErrorMessageView(message: errorMessage)
       }
     }.frame(maxWidth: .infinity, maxHeight: UI.FormModelTextView.height)
   }
@@ -64,7 +58,6 @@ struct FormModelTextView: View {
 private extension UI {
   enum FormModelTextView {
     static let height: CGFloat = 60
-    static let errorMessageHeight: CGFloat = 10
     static let titleScaleNonEmpty: Double = 0.8
     static let titleScaleEmpty: Double = 1
     static let textfieldLineHeight: CGFloat = 1

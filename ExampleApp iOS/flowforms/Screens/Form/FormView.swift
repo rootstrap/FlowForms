@@ -9,12 +9,13 @@ import SwiftUI
 import shared
 
 struct FormView: View {
+  private let signUpButtonHeight: CGFloat = 40
   
-  @ObservedObject private var formManager: FormManager
+  @ObservedObject private var formState: FormState
   @State var showPrompt: Bool = false
   
-  init(formManager: FormManager = FormManager()) {
-    self.formManager = formManager
+  init(formState: FormState = FormState()) {
+    self.formState = formState
   }
 
   func signUp() {
@@ -40,51 +41,51 @@ struct FormView: View {
         Spacer()
         VStack(spacing: UI.Padding.medium) {
           FormModelTextView(
-            title: LocalizedString.FFormView.nameTextfieldTitle,
-            value: formManager.name,
-            errorMessage: formManager.nameErrorMessage
+            title: LocalizedString.FormView.nameTextfieldTitle,
+            value: formState.name,
+            errorMessage: formState.nameErrorMessage
           )
           HStack {
             FormModelTextView(
-              title: LocalizedString.FFormView.emailTextfieldTitle,
-              value: formManager.email,
-              errorMessage: formManager.emailErrorMessage
+              title: LocalizedString.FormView.emailTextfieldTitle,
+              value: formState.email,
+              errorMessage: formState.emailErrorMessage
             )
-            if formManager.emailVerificationInProgress {
+            if formState.isEmailVerificationInProgress {
               ProgressView()
             }
           }
           FormModelTextView(
-            title: LocalizedString.FFormView.passwordTextfieldTitle,
-            secureField: true,
-            value: formManager.password,
-            errorMessage: formManager.passwordErrorMessage
+            title: LocalizedString.FormView.passwordTextfieldTitle,
+            isSecureField: true,
+            value: formState.password,
+            errorMessage: formState.passwordErrorMessage
           )
           FormModelTextView(
-            title: LocalizedString.FFormView.passwordConfirmationTextfieldTitle,
-            secureField: true,
-            value: formManager.confirmPassword,
-            errorMessage: formManager.confirmedPasswordErrorMessage
+            title: LocalizedString.FormView.passwordConfirmationTextfieldTitle,
+            isSecureField: true,
+            value: formState.confirmPassword,
+            errorMessage: formState.confirmedPasswordErrorMessage
           )
         }
         .padding([.leading, .trailing], UI.Padding.large)
         .frame(alignment: .center)
-        Toggle(isOn: formManager.termsAccepted) {
-          Text(LocalizedString.FFormView.termsAndConditionsText)
+        Toggle(isOn: formState.termsAccepted) {
+          Text(LocalizedString.FormView.termsAndConditionsText)
         }
         .tint(.pink)
         .padding([.leading, .trailing], UI.Padding.large)
         Spacer()
         Button {
-         ///bind to form
+          // Sign up
         } label: {
-          Text(LocalizedString.FFormView.signUpTitle)
+          Text(LocalizedString.FormView.signUpTitle)
             .foregroundColor(.black)
         }
-        .disabled(!formManager.formValid)
+        .disabled(!formState.isFormValid)
         .frame(
           maxWidth: .infinity,
-          maxHeight: UI.FFormView.signUpButtonHeight,
+          maxHeight: signUpButtonHeight,
           alignment: .center
         )
         .padding(.bottom, UI.Padding.medium)
@@ -93,17 +94,17 @@ struct FormView: View {
       .showPrompt(
         $showPrompt,
         style: .success,
-        message: LocalizedString.FFormView.successfullySignUpMessage
+        message: LocalizedString.FormView.successfullySignUpMessage
       )
       .navigationBarTitleDisplayMode(.large)
-      .navigationTitle(LocalizedString.FFormView.signUpTitle)
+      .navigationTitle(LocalizedString.FormView.signUpTitle)
       .background(Color.FFbackground)
     }
   }
 }
 
-extension LocalizedString {
-  enum FFormView {
+private extension LocalizedString {
+  enum FormView {
     static let termsAndConditionsText = "terms_conditions_text".localized
     static let signUpTitle = "signup_title".localized
     static let successfullySignUpMessage = "successfully_signup".localized
@@ -111,11 +112,5 @@ extension LocalizedString {
     static let emailTextfieldTitle = "email_textfield_title".localized
     static let passwordTextfieldTitle = "password_textfield_title".localized
     static let passwordConfirmationTextfieldTitle = "password_confirmation_textfield_title".localized
-  }
-}
-
-private extension UI {
-  enum FFormView {
-    static let signUpButtonHeight: CGFloat = 40
   }
 }

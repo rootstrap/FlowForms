@@ -1,5 +1,5 @@
 //
-//  FormViewModel.swift
+//  FormState.swift
 //  FlowForms
 //
 //  Created by Tarek Radovan on 26/10/2022.
@@ -13,7 +13,7 @@ import KMPNativeCoroutinesCombine
 import KMPNativeCoroutinesCore
 import KMPNativeCoroutinesAsync
 
-final class FormManager: ObservableObject {
+final class FormState: ObservableObject {
   let formModel = FormModel()
   
   // MARK: Validations
@@ -23,29 +23,15 @@ final class FormManager: ObservableObject {
   @Published var confirmPasswordStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var formStatus: String = StatusCodes.shared.UNMODIFIED
  
- var cancelBag: Set<AnyCancellable> = []
-
-  init() {
-    configureBindings()
-    
-    $confirmPasswordStatus
-      .sink { value in
-        print(value)
-      }.store(in: &cancelBag)
-  }
-}
-
-// MARK: Errors
-extension FormManager {
-  
+  // MARK: Errors
   var emailErrorMessage: String? {
     switch emailStatus {
     case StatusCodes.shared.BASIC_EMAIL_FORMAT_UNSATISFIED:
-      return LocalizedString.FormManager.emailBadFormatError
+      return LocalizedString.FormState.emailBadFormatError
     case StatusCodes.shared.REQUIRED_UNSATISFIED:
-      return LocalizedString.FormManager.emailRequiredError
+      return LocalizedString.FormState.emailRequiredError
     case EmailDoesNotExistsInRemoteStorage.companion.EMAIL_ALREADY_EXISTS:
-      return LocalizedString.FormManager.emailAlreadyExistError
+      return LocalizedString.FormState.emailAlreadyExistError
     default:
       return nil
     }
@@ -54,7 +40,7 @@ extension FormManager {
   var nameErrorMessage: String? {
     switch nameStatus {
     case StatusCodes.shared.REQUIRED_UNSATISFIED:
-      return LocalizedString.FormManager.nameRequiredError
+      return LocalizedString.FormState.nameRequiredError
     default:
       return nil
     }
@@ -63,9 +49,9 @@ extension FormManager {
   var passwordErrorMessage: String? {
     switch passwordStatus {
     case StatusCodes.shared.MIN_LENGTH_UNSATISFIED:
-      return LocalizedString.FormManager.passwordMinLengthError
+      return LocalizedString.FormState.passwordMinLengthError
     case StatusCodes.shared.REQUIRED_UNSATISFIED:
-      return LocalizedString.FormManager.passwordRequiredError
+      return LocalizedString.FormState.passwordRequiredError
     default:
       return nil
     }
@@ -74,28 +60,25 @@ extension FormManager {
   var confirmedPasswordErrorMessage: String? {
     switch confirmPasswordStatus {
     case StatusCodes.shared.MATCH_UNSATISFIED:
-      return LocalizedString.FormManager.passwordsDontMatchError
+      return LocalizedString.FormState.passwordsDontMatchError
     case StatusCodes.shared.REQUIRED_UNSATISFIED:
-      return LocalizedString.FormManager.passwordConfirmationRequiredError
+      return LocalizedString.FormState.passwordConfirmationRequiredError
     case StatusCodes.shared.MIN_LENGTH_UNSATISFIED:
-      return LocalizedString.FormManager.passwordMinLengthError
+      return LocalizedString.FormState.passwordMinLengthError
     default:
       return nil
     }
   }
   
-  var emailVerificationInProgress: Bool {
+  var isEmailVerificationInProgress: Bool {
     return emailStatus == StatusCodes.shared.IN_PROGRESS
   }
   
-  var formValid: Bool {
+  var isFormValid: Bool {
     return formStatus == StatusCodes.shared.CORRECT
   }
-}
-
-// MARK: Bindings
-extension FormManager {
   
+  // MARK: Bindings
   var termsAccepted: Binding<Bool> {
     formModel.form.bindSwitch(
       field: formModel.termsAccepted,
@@ -107,8 +90,8 @@ extension FormManager {
   }
   
   var name: Binding<String> {
-    formModel.form.bindField(
-      formModel.name,
+    formModel.form.bind(
+      fieldNamed: formModel.name,
       id: FormModel.companion.NAME
     ) {
       self.formModel.name = $0
@@ -117,8 +100,8 @@ extension FormManager {
   }
   
   var email: Binding<String> {
-    formModel.form.bindField(
-      formModel.email,
+    formModel.form.bind(
+      fieldNamed: formModel.email,
       id: FormModel.companion.EMAIL
     ) {
       self.formModel.email = $0
@@ -127,8 +110,8 @@ extension FormManager {
   }
   
   var password: Binding<String> {
-    formModel.form.bindField(
-      formModel.password,
+    formModel.form.bind(
+      fieldNamed: formModel.password,
       id: FormModel.companion.PASSWORD
     ) {
       self.formModel.password = $0
@@ -137,110 +120,42 @@ extension FormManager {
   }
   
   var confirmPassword: Binding<String> {
-    formModel.form.bindField(
-      formModel.confirmPassword,
+    formModel.form.bind(
+      fieldNamed: formModel.confirmPassword,
       id: FormModel.companion.CONFIRM_PASSWORD
     ) {
       self.formModel.confirmPassword = $0
       self.objectWillChange.send()
     }
   }
+    
+  private var cancelBag: Set<AnyCancellable> = []
+  
+  init() {
+    configureBindings()
+  }
   
   func configureBindings() {
     formModel.form.bindStatus(withPublisher: &$formStatus)
     
     formModel.form
-      .fieldFor(id: FormModel.companion.NAME)
+      .field(id: FormModel.companion.NAME)?
       .bindStatus(withPublisher: &$nameStatus)
     formModel.form
-      .fieldFor(id: FormModel.companion.EMAIL)
+      .field(id: FormModel.companion.EMAIL)?
       .bindStatus(withPublisher: &$emailStatus)
     formModel.form
-      .fieldFor(id: FormModel.companion.PASSWORD)
+      .field(id: FormModel.companion.PASSWORD)?
       .bindStatus(withPublisher: &$passwordStatus)
     formModel.form
-      .fieldFor(id: FormModel.companion.CONFIRM_PASSWORD)
+      .field(id: FormModel.companion.CONFIRM_PASSWORD)?
       .bindStatus(withPublisher: &$confirmPasswordStatus)
-  }
-}
-
-// MARK: FFCFlowForm
-extension FlowForm {
-  
-  func bindStatus(withPublisher publisher: inout Published<String>.Publisher) {
-    let formPublisher = createPublisher(for: status)
-    
-    formPublisher
-      .receive(on: DispatchQueue.main)
-      .map({ status in
-        return status.code
-      })
-      .replaceError(with: StatusCodes.shared.INCORRECT)
-      .assign(to: &publisher)
-  }
-  
-  func bindField(
-    _ field: String,
-    id: String,
-    completion: @escaping (String) -> Void
-  ) -> Binding<String> {
-    return
-      Binding(
-        get: { field },
-        set: {
-          guard $0 != field else {
-            return
-          }
-          completion($0)
-          Task {
-            let variable = try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
-            )
-            print(variable)
-          }
-        }
-      )
-  }
-  
-  func bindSwitch(
-    field: Bool,
-    id: String,
-    completion: @escaping (Bool) -> Void
-  ) -> Binding<Bool> {
-    return
-      Binding(
-        get: { field },
-        set: {
-          completion($0)
-          Task {
-            let variable = try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
-            )
-            print(variable)
-          }
-        }
-      )
-  }
-}
-
-//MARK: FFCFlowField
-extension FlowField {
-  func bindStatus(withPublisher
-    publisher: inout Published<String>.Publisher
-  ){
-      let fieldPublisher = createPublisher(for: self.status)
-    
-    fieldPublisher
-      .receive(on: DispatchQueue.main)
-      .map({ status in
-        return status.code
-      })
-      .replaceError(with: StatusCodes.shared.INCORRECT)
-      .assign(to: &publisher)
   }
 }
 
 
 private extension LocalizedString {
-  enum FormManager {
+  enum FormState {
     static let emailBadFormatError = "bad_email_format".localized
     static let emailRequiredError = "email_required".localized
     static let emailAlreadyExistError = "email_already_exist".localized
