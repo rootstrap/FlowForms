@@ -1,3 +1,5 @@
+---
+layout: default
 title: FlowForms docs - Forms
 ---
 

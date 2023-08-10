@@ -39,5 +39,5 @@ title: FlowForms docs - index
  * [Flow collection](android-utils/Flow-collection)
 
 **iOS utilities** 
- * [Fields bindings](iOS-utils/FieldDefinition-binding.md)
- * [Form binding](iOS-utils/FlowForm-bindings.md)
+ * [Fields bindings](iOS-utils/FieldDefinition-binding)
+ * [Form binding](iOS-utils/FlowForm-bindings)

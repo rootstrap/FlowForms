@@ -1,3 +1,5 @@
+---
+layout: default
 title: FlowForms docs - Forms
 ---
 
@@ -15,7 +17,7 @@ It provides a function that allows you to bind the publisher in your Swift code 
 
 Also there are functions that allow us to bind the form fields to swift @Published variables and react to them directly from the view 
 <pre><code class="swift">
-     var username: Binding<String> {
+     var username: Binding&lt;String&gt; {
         formModel.form.bind(
             fieldValue: formModel.username,
             id: FormModel.companion.USERNAME
@@ -31,7 +33,7 @@ Also there are functions that allow us to bind the form fields to swift @Publish
 For switcher controls, we have a special function that allows you to observe the `termsAccepted` state and react to it:
 
 <pre><code class="swift">
-     var termsAccepted: Binding<Bool> {
+     var termsAccepted: Binding&lt;Bool&gt; {
         formModel.form.bindSwitch(
             field: formModel.termsAccepted,
             id: FormModel.companion.TERMS_ACCEPTED
