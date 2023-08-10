@@ -101,7 +101,15 @@ class Foo {
 
 And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable the continue button.
 
-### Example apps: 
+### How to use the library in a iOS app
+
+* Please refer to the [iOS quickStart guide](ios-quickstart)
+
+### How to use the library in an android app 
+
+* Please refer to the [android quickStart guide](android-quickstart)
+
+### Example apps:
 
 * For an android usage example you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) (there is an example using Activity and another one using Fragment).
 
@@ -111,11 +119,3 @@ And that's one of the easiest forms we can create using **FlowForms** in KMP, we
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-wand-magic-sparkles"></i> <div class="comment">Want to collaborate? Fork the repository and make a Pull request! </div> </div>
 
-
-### How to use the library in a iOS app
-
-* Please refer to the [iOS quickStart guide](ios-quickstart)
-
-### How to use the library in an android app 
-
-* Please refer to the [android quickStart guide](android-quickstart)
