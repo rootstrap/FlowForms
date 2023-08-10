@@ -98,18 +98,24 @@ class Foo {
 <p class="comment">In the above snippet we are triggering the USERNAME field's validations whenever the text changes, these validations are the ones we specify when declaring the form in the Foo class.</p>
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">userNameInput and passwordInput are not part of kotlin's API and does not exists. We just used them to illustrate how to apply the code</div> </div>
 
-### How to use the library in a swift module
 
-Please refer to the [iOS quickStart guide](ios-quickstart)
+And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable the continue button.
 
+### Example apps: 
 
-And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable the continue button. 
+* For an android usage example you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) (there is an example using Activity and another one using Fragment).
 
-**FlowForms**'s full potential is better appreciated when making more complex forms. 
+* For an ios usage example you can review the [ios example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20iOS/flowforms/Screens/Form) (using swiftUI).
 
-For an android usage example you can review the [android example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20Android/src/main/java/com/rootstrap/flowforms/example) (there is an example using Activity and another one using Fragment).
-For an ios usage example you can review the [ios example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20iOS/flowforms/Screens/Form) (using swiftUI).
-
-However, the example app and this guide may not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](documentation-index)
+**FlowForms**'s full potential is better appreciated when making more complex forms. However, the example app and this guide may not cover all **FlowForms**'s features, so for a detailed list of all the available features please refer to the [documentation index](documentation-index).
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-wand-magic-sparkles"></i> <div class="comment">Want to collaborate? Fork the repository and make a Pull request! </div> </div>
+
+
+### How to use the library in a iOS app
+
+* Please refer to the [iOS quickStart guide](ios-quickstart)
+
+### How to use the library in an android app 
+
+* Please refer to the [android quickStart guide](android-quickstart)
