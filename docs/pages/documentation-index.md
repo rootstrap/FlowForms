@@ -38,6 +38,6 @@ title: FlowForms docs - index
  * [Binding](android-utils/Binding)
  * [Flow collection](android-utils/Flow-collection)
 
-**iOS utilities** 
- * [Fields bindings](iOS-utils/FieldDefinition-binding)
- * [Form binding](iOS-utils/FlowForm-bindings)
+**iOS utilities**
+ * [Fields bindings](iOS-utils/FieldDefinition-binding.md)
+ * [Form binding](iOS-utils/FlowForm-bindings.md)
