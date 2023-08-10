@@ -57,11 +57,3 @@ private fun bindFields() {
 In this case, whenever the specified LiveData's value change the indicated field's `onValueChange` validations will be triggered. This is very useful for use cases like confirming terms and conditions of use, which require using a Checkbox to define a boolean value.
 
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">when interacting with a checkbox and using Two-way View binding at the same time, it becomes almost necessary to use a LiveData to get notified of the value changes, because Checkbox Views doesn't allow to have more than one onValueChange listener and doesn't provide any method to get the current listener.</div> </div>
-
-
-### Why do we need to pass lifecycleScope when using the bind extensions?
-
-The bind methods require to pass the `lifecycleScope` as argument because the validate functions in the FlowForm are `suspending functions`, hence they need to be called from a `coroutine`, and using the `lifecycleScope` gives us the benefit that anything we called will be immediately cancelled if the `lifecycleScope` is `cancelled/destroyed`. 
-
-In the case of binding a `LiveData` to a `FlowField`, we also need to pass a `LifecycleOwner` to be able to listen to the `LiveData` changes only when the fragment's/activity's lifecycle is on an active state (`started` or `resumed`). basically we call the `LiveData.observe(...)` method using the given `LifecycleOwner`.
-
