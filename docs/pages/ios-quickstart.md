@@ -4,35 +4,12 @@ title: FlowForms iOS quickstart
 ---
 
 ## iOS quickstart
-In order to use FlowForms in iOS you just need to make 3 steps :
 
-**1 :** Create a FormModel class to declare all the fields for use in your form.
+Continuing from the [KMP quickStart](kmp-quickstart)
 
-<pre><code class="swift">
-class FormModel {
-    var username: String = ""
-    var password: String = ""
+**1 :** Add the [KMPNativeCoroutines library](https://github.com/rickclephas/KMP-NativeCoroutines) that will help you to listen to flow state changes from swift  
 
-    val form = flowForm {
-        field(USERNAME, Required { username })
-        field(
-            id = PASSWORD,
-            Required { password },
-            MinLength(8) { password }
-        )
-        dispatcher = Dispatchers.Default
-    }
-
-    companion object {
-        const val USERNAME = "username"
-        const val PASSWORD = "password"
-    }
-}
-
-</code></pre>
-<p class="comment">In the above snippet, we are declaring a form with two fields (Username & Password). Both fields are required, and the password field also requires at least 8 characters. </p>
-
-**2 :** Create an instance of **FormModel** within our **ViewModel** or class that stores the state of the form:
+**2 :** Create an instance of **FormModel** within our **FormState** or class that stores the state of the form:
 
 <pre><code class="swift">
 final class FormState: ObservableObject {
