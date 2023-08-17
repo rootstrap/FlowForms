@@ -33,7 +33,7 @@ extension FlowForm {
   
   /// Binds a field with the validation of the respective ID for that field.
   /// - Parameters:
-  ///   - field: The field to bind.
+  ///   - fieldValue: The current field's value.
   ///   - id: The ID of the field.
   ///   - completion: The completion handler to be called when the field value changes.
   /// - Returns: A binding object for the field.
@@ -60,18 +60,18 @@ extension FlowForm {
   
   /// Binds a switch field with a completion handler and returns a binding object.
   /// - Parameters:
-  ///   - field: The switch field to bind.
+  ///   - fieldValue: The current field's value..
   ///   - id: The ID of the switch field.
   ///   - completion: The completion handler to be called when the switch value changes.
   /// - Returns: A binding object for the switch field.
   func bindSwitch(
-    field: Bool,
+    fieldValue: Bool,
     id: String,
     completion: @escaping (Bool) -> Void
   ) -> Binding<Bool> {
     return
       Binding(
-        get: { field },
+        get: { fieldValue },
         set: {
           completion($0)
           Task {

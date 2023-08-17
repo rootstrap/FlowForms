@@ -16,7 +16,6 @@ import KMPNativeCoroutinesAsync
 final class FormState: ObservableObject {
   let formModel = FormModel()
   
-  // MARK: Validations
   @Published var nameStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var emailStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
@@ -128,9 +127,7 @@ final class FormState: ObservableObject {
       self.objectWillChange.send()
     }
   }
-    
-  private var cancelBag: Set<AnyCancellable> = []
-  
+
   init() {
     configureBindings()
   }
