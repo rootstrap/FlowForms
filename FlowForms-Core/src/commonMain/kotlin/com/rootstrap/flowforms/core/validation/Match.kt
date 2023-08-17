@@ -1,6 +1,5 @@
 package com.rootstrap.flowforms.core.validation
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.MATCH_UNSATISFIED
 
@@ -32,7 +31,6 @@ class Match(
     val valueProvider: () -> Pair<Any?, Any?>
 ) : Validation(failFast = failFast, async = async) {
 
-    @NativeCoroutines
     override suspend fun validate() : ValidationResult {
         val value = valueProvider()
 

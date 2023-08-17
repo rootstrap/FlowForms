@@ -1,7 +1,5 @@
 plugins {
     kotlin("multiplatform")
-    id("com.google.devtools.ksp") version "1.8.21-1.0.11"
-    id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-9"
     id("org.jetbrains.kotlinx.kover") version "0.5.1"
     id("com.android.library")
     `maven-publish`
@@ -100,4 +98,8 @@ tasks.withType<Test> {
     testLogging {
         showStandardStreams = true
     }
+}
+
+task("testClasses").doLast {
+    println("This is a dummy testClasses task")
 }

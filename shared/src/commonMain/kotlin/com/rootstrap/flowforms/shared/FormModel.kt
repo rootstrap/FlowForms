@@ -1,17 +1,21 @@
 package com.rootstrap.flowforms.shared
 
-import com.rootstrap.flowforms.core.common.StatusCodes
 import com.rootstrap.flowforms.core.dsl.flowForm
-import com.rootstrap.flowforms.core.field.FlowField
-import com.rootstrap.flowforms.core.form.FlowForm
 import com.rootstrap.flowforms.core.validation.BasicEmailFormat
 import com.rootstrap.flowforms.core.validation.Match
 import com.rootstrap.flowforms.core.validation.MinLength
 import com.rootstrap.flowforms.core.validation.Required
 import com.rootstrap.flowforms.core.validation.RequiredTrue
 import com.rootstrap.flowforms.core.validation.on
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-class FormModel {
+class FormModel constructor(
+    private val asyncDispatcher: CoroutineDispatcher
+) {
+
+    // needed for Swift default parameters interop
+    constructor() : this(Dispatchers.Default)
+
     var termsAccepted: Boolean = false
     var name: String = ""
     var email: String = ""
@@ -39,7 +43,7 @@ class FormModel {
             Match { password to confirmPassword }
         )
         field(TERMS_ACCEPTED, RequiredTrue { termsAccepted })
-        dispatcher = Dispatchers.Default
+        dispatcher = asyncDispatcher
     }
 
     companion object {

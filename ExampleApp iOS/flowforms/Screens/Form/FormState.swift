@@ -9,9 +9,6 @@
 import Combine
 import shared
 import SwiftUI
-import KMPNativeCoroutinesCombine
-import KMPNativeCoroutinesCore
-import KMPNativeCoroutinesAsync
 
 final class FormState: ObservableObject {
   let formModel = FormModel()
@@ -80,7 +77,7 @@ final class FormState: ObservableObject {
   // MARK: Bindings
   var termsAccepted: Binding<Bool> {
     formModel.form.bindSwitch(
-      field: formModel.termsAccepted,
+      fieldValue: formModel.termsAccepted,
       id: FormModel.companion.TERMS_ACCEPTED
     ) {
       self.formModel.termsAccepted = $0
@@ -133,23 +130,33 @@ final class FormState: ObservableObject {
   }
   
   func configureBindings() {
-    formModel.form.bindStatus(withPublisher: &$formStatus)
+    formModel.form.onStatusChange { [weak self] status in
+        self?.formStatus = status.code
+    }
     
     formModel.form
       .field(id: FormModel.companion.NAME)?
-      .bindStatus(withPublisher: &$nameStatus)
+      .onStatusChange(onStatusChange: { [weak self] status in
+        self?.nameStatus = status.code
+      })
+    
     formModel.form
       .field(id: FormModel.companion.EMAIL)?
-      .bindStatus(withPublisher: &$emailStatus)
+      .onStatusChange(onStatusChange: { [weak self] status in
+        self?.emailStatus = status.code
+      })
     formModel.form
       .field(id: FormModel.companion.PASSWORD)?
-      .bindStatus(withPublisher: &$passwordStatus)
+      .onStatusChange(onStatusChange: { [weak self] status in
+        self?.passwordStatus = status.code
+      })
     formModel.form
       .field(id: FormModel.companion.CONFIRM_PASSWORD)?
-      .bindStatus(withPublisher: &$confirmPasswordStatus)
+      .onStatusChange(onStatusChange: { [weak self] status in
+        self?.confirmPasswordStatus = status.code
+      })
   }
 }
-
 
 private extension LocalizedString {
   enum FormState {

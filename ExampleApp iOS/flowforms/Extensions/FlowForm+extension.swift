@@ -9,27 +9,10 @@
 import Foundation
 import shared
 import SwiftUI
-import KMPNativeCoroutinesCombine
-import KMPNativeCoroutinesAsync
 
 // MARK: FFCFlowForm
 /// This extension provides additional functionality for the FlowForm class.
 extension FlowForm {
-  
-  /// Binds the status of the form with a publisher.
-  /// - Parameters:
-  ///   - publisher: The publisher to bind the status with.
-  func bindStatus(withPublisher publisher: inout Published<String>.Publisher) {
-    let formPublisher = createPublisher(for: status)
-    
-    formPublisher
-      .receive(on: DispatchQueue.main)
-      .map({ status in
-        return status.code
-      })
-      .replaceError(with: StatusCodes.shared.INCORRECT)
-      .assign(to: &publisher)
-  }
   
   /// Binds a field with the validation of the respective ID for that field.
   /// - Parameters:
@@ -51,8 +34,7 @@ extension FlowForm {
           }
           completion($0)
           Task {
-            try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
-            )
+            self.validateOnValueChange(fieldId: id, onCompletion: { _ in })
           }
         }
       )
@@ -75,8 +57,7 @@ extension FlowForm {
         set: {
           completion($0)
           Task {
-            try await asyncFunction(for: self.validateOnValueChange(fieldId: id)
-            )
+            self.validateOnValueChange(fieldId: id, onCompletion: { _ in })
           }
         }
       )
