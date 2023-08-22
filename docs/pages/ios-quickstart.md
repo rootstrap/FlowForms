@@ -80,6 +80,7 @@ class FormState: ObservableObject {
 	//...
 	@Published var usernameStatus: String = StatusCodes.shared.UNMODIFIED
     @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
+    @Published var formStatus: String = StatusCodes.shared.UNMODIFIED
 	//...
 }
 </code></pre>
@@ -95,8 +96,11 @@ class FormState: ObservableObject {
 	//...
 	@Published var usernameStatus: String = StatusCodes.shared.UNMODIFIED
     @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
-	
+	@Published var formStatus: String = StatusCodes.shared.UNMODIFIED
+
 	init() {
+        formModel.form.bindStatus(withPublisher: &$formStatus)
+
         formModel.form
             .field(id: FormModel.companion.USERNAME)?
             .bindStatus(withPublisher: &$usernameStatus)
@@ -108,14 +112,15 @@ class FormState: ObservableObject {
 }
 </code></pre>
 
-<p class="comment">Then we can customize the errorMessages that we want to show depending of the UI or wording that we are managing in any case</p>
+<p class="comment">Then, we can customize the errorMessage or boolean that we want to show or listen to, depending on the UI or wording that we are managing in each case</p>
 
 <pre><code class="swift">
 final class FormState: ObservableObject {
 	//...
 	@Published var usernameStatus: String = StatusCodes.shared.UNMODIFIED
     @Published var passwordStatus: String = StatusCodes.shared.UNMODIFIED
-	
+	@Published var formStatus: String = StatusCodes.shared.UNMODIFIED
+
 	var usernameErrorMessage: String? {
         switch usernameStatus {
         case StatusCodes.shared.REQUIRED_UNSATISFIED:
@@ -123,7 +128,7 @@ final class FormState: ObservableObject {
         default:
             return nil
         }
-  }
+    }
   
     var passwordErrorMessage: String? {
         switch passwordStatus {
@@ -135,12 +140,16 @@ final class FormState: ObservableObject {
             return nil
         }
     }
+
+    var isFormValid: Bool {
+        return formStatus == StatusCodes.shared.CORRECT
+    }
 	//...
 }
 </code></pre>
 <p class="comment">As we can see in the above snippet, we are responding to the publisher statuses that we capture from the `StatusCodes` types that exist in the library source code.</p>
 
-<p>In the view we can implement this error responses in this way:</p>
+<p>In the view, we can implement the error responses and react to the formStatus as follows:</p>
 
 <pre><code class="swift">
 struct FormView: View {
@@ -156,6 +165,12 @@ struct FormView: View {
             if let passwordErrorMessage = formState.passwordErrorMessage {
                 ErrorMessageView(message: passwordErrorMessage)
             }
+            ...
+            Button {
+                // Perform sign up
+            } label: {
+                Text("Sign Up")
+            }.disabled(!formState.isFormValid)
         }
     }
 }
