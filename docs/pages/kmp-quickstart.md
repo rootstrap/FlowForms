@@ -99,9 +99,9 @@ class Foo {
 <div class="rs-row comment"> <i class="comment-icon fa-solid fa-circle-info"></i> <div class="comment">userNameInput and passwordInput are not part of kotlin's API and does not exists. We just used them to illustrate how to apply the code</div> </div>
 
 
-And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable the continue button.
+And that's one of the easiest forms we can create using **FlowForms** in KMP, we don't need to care about managing the field's status manually nor making any complex logic to enable or disable a continue or save changes button.
 
-### How to use the library in a iOS app
+### How to use the library in an iOS app
 
 * Please refer to the [iOS quickStart guide](ios-quickstart)
 
