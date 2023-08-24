@@ -83,6 +83,7 @@ dependencies {
 To start creating forms at lightning speed please refer to one of our quickstart guides below :
  - [Android quickstart guide](https://rootstrap.github.io/FlowForms/pages/android-quickstart)
  - [Kotlin Multi-Platform quickstart guide](https://rootstrap.github.io/FlowForms/pages/kmp-quickstart)
+ - [iOS quickstart guide](https://rootstrap.github.io/FlowForms/pages/ios-quickstart)
 
 ## Features
  - Declarative way of creating a form and define its behavior
