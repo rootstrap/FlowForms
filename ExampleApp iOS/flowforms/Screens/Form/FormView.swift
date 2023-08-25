@@ -42,13 +42,19 @@ struct FormView: View {
         VStack(spacing: UI.Padding.medium) {
           FormModelTextView(
             title: LocalizedString.FormView.nameTextfieldTitle,
-            value: formState.name,
+            value: Binding(
+              get: { formState.uiState?.name ?? "" },
+              set: { formState.viewModel.onNameChange(value: $0) }
+            ),
             errorMessage: formState.nameErrorMessage
           )
           HStack {
             FormModelTextView(
               title: LocalizedString.FormView.emailTextfieldTitle,
-              value: formState.email,
+              value: Binding(
+                get: { formState.uiState?.email ?? "" },
+                set: { formState.viewModel.onEmailChange(value: $0) }
+              ),
               errorMessage: formState.emailErrorMessage
             )
             if formState.isEmailVerificationInProgress {
@@ -58,19 +64,28 @@ struct FormView: View {
           FormModelTextView(
             title: LocalizedString.FormView.passwordTextfieldTitle,
             isSecureField: true,
-            value: formState.password,
+            value: Binding(
+              get: { formState.uiState?.password ?? "" },
+              set: { formState.viewModel.onPasswordChange(value: $0) }
+            ),
             errorMessage: formState.passwordErrorMessage
           )
           FormModelTextView(
             title: LocalizedString.FormView.passwordConfirmationTextfieldTitle,
             isSecureField: true,
-            value: formState.confirmPassword,
+            value: Binding(
+              get: { formState.uiState?.confirmPassword ?? "" },
+              set: { formState.viewModel.onPasswordConfirmChange(value: $0) }
+            ),
             errorMessage: formState.confirmedPasswordErrorMessage
           )
         }
         .padding([.leading, .trailing], UI.Padding.large)
         .frame(alignment: .center)
-        Toggle(isOn: formState.termsAccepted) {
+        Toggle(isOn: Binding(
+          get: { formState.uiState?.termsAccepted ?? false },
+          set: { formState.viewModel.onAcceptTermsChange(value: $0) }
+        )) {
           Text(LocalizedString.FormView.termsAndConditionsText)
         }
         .tint(.pink)

@@ -11,7 +11,7 @@ import shared
 import SwiftUI
 
 final class FormState: ObservableObject {
-  let formModel = FormModel()
+  let viewModel = SignupViewModel()
   
   @Published var nameStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var emailStatus: String = StatusCodes.shared.UNMODIFIED
@@ -19,6 +19,8 @@ final class FormState: ObservableObject {
   @Published var confirmPasswordStatus: String = StatusCodes.shared.UNMODIFIED
   @Published var formStatus: String = StatusCodes.shared.UNMODIFIED
  
+  @Published var uiState: SignUpFormUiState?
+  
   // MARK: Errors
   var emailErrorMessage: String? {
     switch emailStatus {
@@ -74,84 +76,38 @@ final class FormState: ObservableObject {
     return formStatus == StatusCodes.shared.CORRECT
   }
   
-  // MARK: Bindings
-  var termsAccepted: Binding<Bool> {
-    formModel.form.bindSwitch(
-      fieldValue: formModel.termsAccepted,
-      id: FormModel.companion.TERMS_ACCEPTED
-    ) {
-      self.formModel.termsAccepted = $0
-      self.objectWillChange.send()
-    }
-  }
-  
-  var name: Binding<String> {
-    formModel.form.bind(
-      fieldValue: formModel.name,
-      id: FormModel.companion.NAME
-    ) {
-      self.formModel.name = $0
-      self.objectWillChange.send()
-    }
-  }
-  
-  var email: Binding<String> {
-    formModel.form.bind(
-      fieldValue: formModel.email,
-      id: FormModel.companion.EMAIL
-    ) {
-      self.formModel.email = $0
-      self.objectWillChange.send()
-    }
-  }
-  
-  var password: Binding<String> {
-    formModel.form.bind(
-      fieldValue: formModel.password,
-      id: FormModel.companion.PASSWORD
-    ) {
-      self.formModel.password = $0
-      self.objectWillChange.send()
-    }
-  }
-  
-  var confirmPassword: Binding<String> {
-    formModel.form.bind(
-      fieldValue: formModel.confirmPassword,
-      id: FormModel.companion.CONFIRM_PASSWORD
-    ) {
-      self.formModel.confirmPassword = $0
-      self.objectWillChange.send()
-    }
-  }
-
   init() {
+    
+    viewModel.observeUiState { state in
+      self.uiState = state
+    }
+    
     configureBindings()
   }
   
   func configureBindings() {
-    formModel.form.onStatusChange { [weak self] status in
+    viewModel.form.onStatusChange { [weak self] status in
         self?.formStatus = status.code
     }
     
-    formModel.form
-      .field(id: FormModel.companion.NAME)?
+    viewModel.form
+      .field(id: SignupViewModel.companion.NAME)?
       .onStatusChange(onStatusChange: { [weak self] status in
         self?.nameStatus = status.code
       })
     
-    formModel.form
-      .field(id: FormModel.companion.EMAIL)?
+    viewModel.form
+      .field(id: SignupViewModel.companion.EMAIL)?
       .onStatusChange(onStatusChange: { [weak self] status in
         self?.emailStatus = status.code
       })
-    formModel.form
-      .field(id: FormModel.companion.PASSWORD)?
+    viewModel.form
+      .field(id: SignupViewModel.companion.PASSWORD)?
       .onStatusChange(onStatusChange: { [weak self] status in
         self?.passwordStatus = status.code
       })
-    formModel.form
-      .field(id: FormModel.companion.CONFIRM_PASSWORD)?
+    viewModel.form
+      .field(id: SignupViewModel.companion.CONFIRM_PASSWORD)?
       .onStatusChange(onStatusChange: { [weak self] status in
         self?.confirmPasswordStatus = status.code
       })
