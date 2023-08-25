@@ -23,7 +23,6 @@
 		E5408522290ADC6A00706CB4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408521290ADC6A00706CB4 /* Colors.swift */; };
 		E5408526290ADE0800706CB4 /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408525290ADE0800706CB4 /* PromptView.swift */; };
 		E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540852A290B140800706CB4 /* PromptPresenter.swift */; };
-		E5EFB3E32A5DE2D90020F441 /* FlowForm+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EFB3E22A5DE2D90020F441 /* FlowForm+extension.swift */; };
 		E5FEA7972A6983CF00A6B913 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FEA7962A6983CF00A6B913 /* ErrorMessageView.swift */; };
 		E5FEA79B2A69858500A6B913 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FEA79A2A69858500A6B913 /* LineView.swift */; };
 /* End PBXBuildFile section */
@@ -60,7 +59,6 @@
 		E5408521290ADC6A00706CB4 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = flowforms/Resources/Colors.swift; sourceTree = SOURCE_ROOT; };
 		E5408525290ADE0800706CB4 /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptView.swift; path = flowforms/Components/Prompt/PromptView.swift; sourceTree = SOURCE_ROOT; };
 		E540852A290B140800706CB4 /* PromptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PromptPresenter.swift; path = flowforms/Components/Prompt/PromptPresenter.swift; sourceTree = SOURCE_ROOT; };
-		E5EFB3E22A5DE2D90020F441 /* FlowForm+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FlowForm+extension.swift"; path = "flowforms/Extensions/FlowForm+extension.swift"; sourceTree = SOURCE_ROOT; };
 		E5FEA7962A6983CF00A6B913 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ErrorMessageView.swift; path = flowforms/Components/FFTextField/ErrorMessageView.swift; sourceTree = SOURCE_ROOT; };
 		E5FEA79A2A69858500A6B913 /* LineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LineView.swift; path = flowforms/Components/LineView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -175,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				E52B9C4A2909C886004FD562 /* String+extension.swift */,
-				E5EFB3E22A5DE2D90020F441 /* FlowForm+extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -307,7 +304,6 @@
 				E5FEA7972A6983CF00A6B913 /* ErrorMessageView.swift in Sources */,
 				E535AD1D291D9562007E0707 /* FormState.swift in Sources */,
 				E540851B290AD64700706CB4 /* FormView.swift in Sources */,
-				E5EFB3E32A5DE2D90020F441 /* FlowForm+extension.swift in Sources */,
 				E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */,
 				E52B9C392909C134004FD562 /* Constants.swift in Sources */,
 				E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */,

@@ -46,7 +46,7 @@ struct FormView: View {
               get: { formState.uiState?.name ?? "" },
               set: { formState.viewModel.onNameChange(value: $0) }
             ),
-            errorMessage: formState.nameErrorMessage
+            errorMessage: formState.uiState?.nameError
           )
           HStack {
             FormModelTextView(
@@ -55,9 +55,9 @@ struct FormView: View {
                 get: { formState.uiState?.email ?? "" },
                 set: { formState.viewModel.onEmailChange(value: $0) }
               ),
-              errorMessage: formState.emailErrorMessage
+              errorMessage: formState.uiState?.emailError
             )
-            if formState.isEmailVerificationInProgress {
+            if formState.uiState?.isEmailVerificationInProgress == true {
               ProgressView()
             }
           }
@@ -68,7 +68,7 @@ struct FormView: View {
               get: { formState.uiState?.password ?? "" },
               set: { formState.viewModel.onPasswordChange(value: $0) }
             ),
-            errorMessage: formState.passwordErrorMessage
+            errorMessage: formState.uiState?.passwordError
           )
           FormModelTextView(
             title: LocalizedString.FormView.passwordConfirmationTextfieldTitle,
@@ -77,7 +77,7 @@ struct FormView: View {
               get: { formState.uiState?.confirmPassword ?? "" },
               set: { formState.viewModel.onPasswordConfirmChange(value: $0) }
             ),
-            errorMessage: formState.confirmedPasswordErrorMessage
+            errorMessage: formState.uiState?.confirmPasswordError
           )
         }
         .padding([.leading, .trailing], UI.Padding.large)
@@ -97,7 +97,7 @@ struct FormView: View {
           Text(LocalizedString.FormView.signUpTitle)
             .foregroundColor(.black)
         }
-        .disabled(!formState.isFormValid)
+        .disabled(formState.uiState?.isFormValid == false)
         .frame(
           maxWidth: .infinity,
           maxHeight: signUpButtonHeight,
