@@ -37,7 +37,11 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementations(Dependencies.appLibraries)
+            }
+        }
         val androidTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
@@ -53,10 +57,10 @@ kotlin {
 
 android {
     namespace = "com.rootstrap.flowforms.shared"
-    compileSdk = 32
+    compileSdk = FlowFormsAndroidConfig.COMPILE_SDK
     defaultConfig {
-        minSdk = 21
-        targetSdk = 32
+        minSdk = FlowFormsAndroidConfig.MIN_SDK
+        targetSdk = FlowFormsAndroidConfig.TARGET_SDK
     }
 }
 
@@ -66,4 +70,8 @@ fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.implementations(l
     list.forEach {
         implementation(it)
     }
+}
+
+task("testClasses").doLast {
+    println("This is a dummy testClasses task")
 }

@@ -1,12 +1,10 @@
 package com.rootstrap.flowforms.core.field
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_BLUR
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_FOCUS
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_VALUE_CHANGE
@@ -36,7 +34,7 @@ class FlowField(
     override val onBlurValidations : List<Validation> = emptyList(),
     override val onFocusValidations : List<Validation> = emptyList(),
     private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior(),
-) : FieldDefinition {
+) : FieldDefinition() {
 
     private val filteredOnValueChangeValidations = onValueChangeValidations
         .filter { it !is CrossFieldValidation }
@@ -64,7 +62,6 @@ class FlowField(
 
     private lateinit var currentStatus : FieldStatus
 
-    @NativeCoroutines
     override val status : Flow<FieldStatus> = combine(_onValueChangeStatus, _onBlurStatus, _onFocusStatus) {
             onValueChangeStatus, onBlurStatus, onFocusStatus ->
         currentStatus = when {
@@ -122,19 +119,16 @@ class FlowField(
         }
     }
 
-    @NativeCoroutines
     override suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>
     ) = triggerValidations(ON_VALUE_CHANGE, validations, asyncCoroutineDispatcher)
 
-    @NativeCoroutines
     override suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>
     ) = triggerValidations(ON_BLUR, validations, asyncCoroutineDispatcher)
 
-    @NativeCoroutines
     override suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher?,
         validations: List<Validation>

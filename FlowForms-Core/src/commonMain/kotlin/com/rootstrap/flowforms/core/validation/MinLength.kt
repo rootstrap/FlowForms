@@ -1,6 +1,5 @@
 package com.rootstrap.flowforms.core.validation
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rootstrap.flowforms.core.common.StatusCodes.CORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.MIN_LENGTH_UNSATISFIED
 
@@ -32,7 +31,6 @@ class MinLength(
     val valueProvider: () -> String?
 ) : Validation(failFast = failFast, async = async) {
 
-    @NativeCoroutines
     override suspend fun validate() : ValidationResult {
         val value = valueProvider() ?: return ValidationResult(MIN_LENGTH_UNSATISFIED)
         return ValidationResult(

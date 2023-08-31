@@ -42,35 +42,50 @@ struct FormView: View {
         VStack(spacing: UI.Padding.medium) {
           FormModelTextView(
             title: LocalizedString.FormView.nameTextfieldTitle,
-            value: formState.name,
-            errorMessage: formState.nameErrorMessage
+            value: Binding(
+              get: { formState.uiState?.name ?? "" },
+              set: { formState.viewModel.onNameChange(value: $0) }
+            ),
+            errorMessage: formState.uiState?.nameError
           )
           HStack {
             FormModelTextView(
               title: LocalizedString.FormView.emailTextfieldTitle,
-              value: formState.email,
-              errorMessage: formState.emailErrorMessage
+              value: Binding(
+                get: { formState.uiState?.email ?? "" },
+                set: { formState.viewModel.onEmailChange(value: $0) }
+              ),
+              errorMessage: formState.uiState?.emailError
             )
-            if formState.isEmailVerificationInProgress {
+            if formState.uiState?.isEmailVerificationInProgress == true {
               ProgressView()
             }
           }
           FormModelTextView(
             title: LocalizedString.FormView.passwordTextfieldTitle,
             isSecureField: true,
-            value: formState.password,
-            errorMessage: formState.passwordErrorMessage
+            value: Binding(
+              get: { formState.uiState?.password ?? "" },
+              set: { formState.viewModel.onPasswordChange(value: $0) }
+            ),
+            errorMessage: formState.uiState?.passwordError
           )
           FormModelTextView(
             title: LocalizedString.FormView.passwordConfirmationTextfieldTitle,
             isSecureField: true,
-            value: formState.confirmPassword,
-            errorMessage: formState.confirmedPasswordErrorMessage
+            value: Binding(
+              get: { formState.uiState?.confirmPassword ?? "" },
+              set: { formState.viewModel.onPasswordConfirmChange(value: $0) }
+            ),
+            errorMessage: formState.uiState?.confirmPasswordError
           )
         }
         .padding([.leading, .trailing], UI.Padding.large)
         .frame(alignment: .center)
-        Toggle(isOn: formState.termsAccepted) {
+        Toggle(isOn: Binding(
+          get: { formState.uiState?.termsAccepted ?? false },
+          set: { formState.viewModel.onAcceptTermsChange(value: $0) }
+        )) {
           Text(LocalizedString.FormView.termsAndConditionsText)
         }
         .tint(.pink)
@@ -82,7 +97,7 @@ struct FormView: View {
           Text(LocalizedString.FormView.signUpTitle)
             .foregroundColor(.black)
         }
-        .disabled(!formState.isFormValid)
+        .disabled(formState.uiState?.isFormValid == false)
         .frame(
           maxWidth: .infinity,
           maxHeight: signUpButtonHeight,
