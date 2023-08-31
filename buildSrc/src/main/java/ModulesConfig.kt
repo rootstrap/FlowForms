@@ -1,9 +1,9 @@
 
 //FlowForms Android config constants
 object FlowFormsAndroidConfig {
-    const val COMPILE_SDK = 31
+    const val COMPILE_SDK = 33
     const val MIN_SDK = 23
-    const val TARGET_SDK = 31
+    const val TARGET_SDK = 33
     const val BUILD_TOOLS_VERSION = "30.0.3"
 
     const val ANDROID_TEST_INSTRUMENTATION_RUNNER = "androidx.test.runner.AndroidJUnitRunner"

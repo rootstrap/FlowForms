@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.exampleappandroidcompose.ui.screens.SignUpScreen
 import com.example.exampleappandroidcompose.ui.theme.FlowFormsTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,46 +29,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    SignUpScreen()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Column {
-        Text(
-            text = "Test1",
-            modifier = modifier
-        )
-        Text(
-            text = "Test2",
-            modifier = modifier
-        )
-        Test(modifier = modifier.background(Color.Magenta))
-    }
-}
-
-@Composable
-fun Test(modifier: Modifier) {
-    Row(modifier = modifier) {
-        Text(
-            text = "Test1",
-            modifier = Modifier.padding(4.dp).background(Color.Green).padding(2.dp),
-            color = Color.Blue
-        )
-        Text(
-            text = "Test2"
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FlowFormsTheme {
-        Greeting("Android")
     }
 }

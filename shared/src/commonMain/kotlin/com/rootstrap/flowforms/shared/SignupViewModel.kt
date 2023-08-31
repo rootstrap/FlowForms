@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -74,6 +75,7 @@ class SignupViewModel constructor(
         coroutineScope.launch {
             flowOf(elements = form.fieldStatusFlows.toTypedArray())
                 .flattenMerge()
+                .distinctUntilChanged()
                 .collect { fieldStatus ->
                     updateFieldError(fieldStatus)
                     updateEmailVerificationInProgress(fieldStatus)
