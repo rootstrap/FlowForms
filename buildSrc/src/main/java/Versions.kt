@@ -4,7 +4,7 @@ object Versions {
 
     //app level
     const val GRADLE = "7.4.1"
-    const val KOTLIN = "1.8.10"
+    const val KOTLIN = "1.8.21"
 
     //libs
     const val CORE_KTX = "1.7.0"
