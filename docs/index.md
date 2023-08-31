@@ -55,6 +55,7 @@ dependencies {
 ## Excellent! Lets get started
 To start creating forms at lightning speed please refer to one of our quickstart guides below :
  - [Android quickStart guide](pages/android-quickstart)
+ - [iOS quickStart guide](pages/ios-quickstart)
  - [Kotlin Multi-Platform quickstart guide](pages/kmp-quickstart)
 
 For additional features and advanced use cases please refer to our Documentation index

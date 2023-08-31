@@ -9,30 +9,30 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Represent the necessary field actions, variables, and their definitions
  */
-interface FieldDefinition {
+abstract class FieldDefinition {
 
     /**
      * field unique identifier
      */
-    val id : String
+    abstract val id : String
 
     /**
      * field validations that defines this field's behavior when its value changes.
      * Usually used on the [triggerOnValueChangeValidations] method when called by a FlowForm
      */
-    val onValueChangeValidations : List<Validation>
+    abstract val onValueChangeValidations : List<Validation>
 
     /**
      * field validations that defines this field's behavior when it loses the focus.
      * Usually used on the [triggerOnBlurValidations] method when called by a FlowForm
      */
-    val onBlurValidations : List<Validation>
+    abstract val onBlurValidations : List<Validation>
 
     /**
      * field validations that defines this field's behavior when it gets focus.
      * Usually used on the [triggerOnFocusValidations] method when called by a FlowForm
      */
-    val onFocusValidations : List<Validation>
+    abstract val onFocusValidations : List<Validation>
 
     /**
      * Flow with the field's status. Initially it will be in an [UNMODIFIED] state.
@@ -41,7 +41,7 @@ interface FieldDefinition {
      *
      * For more information about the possible statuses check [FieldStatus]
      */
-    val status : Flow<FieldStatus>
+    abstract val status : Flow<FieldStatus>
 
     /**
      * Triggers the onValueChange validations associated on a [Field][com.rootstrap.flowforms.core.field.FlowField]
@@ -57,7 +57,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
-    suspend fun triggerOnValueChangeValidations(
+    abstract suspend fun triggerOnValueChangeValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()
     ) : Boolean
@@ -76,7 +76,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
-    suspend fun triggerOnBlurValidations(
+    abstract suspend fun triggerOnBlurValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()
     ) : Boolean
@@ -94,7 +94,7 @@ interface FieldDefinition {
      * @param validations list of validations to trigger on this field. The field's validations
      * are used if it is empty. Defaults to empty.
      */
-    suspend fun triggerOnFocusValidations(
+    abstract suspend fun triggerOnFocusValidations(
         asyncCoroutineDispatcher: CoroutineDispatcher? = null,
         validations: List<Validation> = emptyList()
     ) : Boolean
@@ -104,7 +104,7 @@ interface FieldDefinition {
      *
      * @return the current status of this field in its raw format
      */
-    fun getCurrentStatus() : FieldStatus
+    abstract fun getCurrentStatus() : FieldStatus
 
     /**
      * Describe the types of validations actually supported.

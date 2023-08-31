@@ -3,26 +3,26 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
-		E52B9C362909C127004FD562 /* FFTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C352909C127004FD562 /* FFTextFieldView.swift */; };
+		E51B465B2AA0DA2A00265FE4 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */; };
+		E52B9C362909C127004FD562 /* FormModelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C352909C127004FD562 /* FormModelTextView.swift */; };
 		E52B9C392909C134004FD562 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C382909C134004FD562 /* Constants.swift */; };
-		E52B9C412909C424004FD562 /* FFTextFieldViewConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */; };
-		E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C422909C4FE004FD562 /* Validatable.swift */; };
 		E52B9C452909C7A5004FD562 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C442909C7A5004FD562 /* LocalizedString.swift */; };
 		E52B9C482909C823004FD562 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E52B9C472909C823004FD562 /* Localizable.strings */; };
 		E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C4A2909C886004FD562 /* String+extension.swift */; };
+		E535AD1D291D9562007E0707 /* FormState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540851A290AD64700706CB4 /* FormState.swift */; };
 		E5408518290AD62E00706CB4 /* FlowFormsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408517290AD62E00706CB4 /* FlowFormsApp.swift */; };
-		E540851B290AD64700706CB4 /* FFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408519290AD64700706CB4 /* FFormView.swift */; };
-		E540851C290AD64700706CB4 /* FFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540851A290AD64700706CB4 /* FFormViewModel.swift */; };
+		E540851B290AD64700706CB4 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408519290AD64700706CB4 /* FormView.swift */; };
 		E5408520290ADC2E00706CB4 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E540851F290ADC2E00706CB4 /* Colors.xcassets */; };
 		E5408522290ADC6A00706CB4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408521290ADC6A00706CB4 /* Colors.swift */; };
 		E5408526290ADE0800706CB4 /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408525290ADE0800706CB4 /* PromptView.swift */; };
 		E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540852A290B140800706CB4 /* PromptPresenter.swift */; };
+		E5FEA79B2A69858500A6B913 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FEA79A2A69858500A6B913 /* LineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,20 +43,20 @@
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* FlowForms.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowForms.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E52B9C352909C127004FD562 /* FFTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTextFieldView.swift; sourceTree = "<group>"; };
+		E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorMessageView.swift; path = flowforms/Components/FormModelTextView/ErrorMessageView.swift; sourceTree = SOURCE_ROOT; };
+		E52B9C352909C127004FD562 /* FormModelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormModelTextView.swift; sourceTree = "<group>"; };
 		E52B9C382909C134004FD562 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFTextFieldViewConfiguration.swift; sourceTree = "<group>"; };
-		E52B9C422909C4FE004FD562 /* Validatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validatable.swift; sourceTree = "<group>"; };
 		E52B9C442909C7A5004FD562 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
 		E52B9C472909C823004FD562 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E52B9C4A2909C886004FD562 /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
 		E5408517290AD62E00706CB4 /* FlowFormsApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlowFormsApp.swift; path = flowforms/FlowFormsApp.swift; sourceTree = SOURCE_ROOT; };
-		E5408519290AD64700706CB4 /* FFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FFormView.swift; path = flowforms/Screens/Form/FFormView.swift; sourceTree = SOURCE_ROOT; };
-		E540851A290AD64700706CB4 /* FFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FFormViewModel.swift; path = flowforms/Screens/Form/FFormViewModel.swift; sourceTree = SOURCE_ROOT; };
+		E5408519290AD64700706CB4 /* FormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormView.swift; path = flowforms/Screens/Form/FormView.swift; sourceTree = SOURCE_ROOT; };
+		E540851A290AD64700706CB4 /* FormState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FormState.swift; path = flowforms/Screens/Form/FormState.swift; sourceTree = SOURCE_ROOT; };
 		E540851F290ADC2E00706CB4 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = flowforms/Resources/Colors.xcassets; sourceTree = SOURCE_ROOT; };
 		E5408521290ADC6A00706CB4 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = flowforms/Resources/Colors.swift; sourceTree = SOURCE_ROOT; };
 		E5408525290ADE0800706CB4 /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptView.swift; path = flowforms/Components/Prompt/PromptView.swift; sourceTree = SOURCE_ROOT; };
 		E540852A290B140800706CB4 /* PromptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PromptPresenter.swift; path = flowforms/Components/Prompt/PromptPresenter.swift; sourceTree = SOURCE_ROOT; };
+		E5FEA79A2A69858500A6B913 /* LineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LineView.swift; path = flowforms/Components/LineView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				E5408524290ADDFB00706CB4 /* Prompt */,
-				E5408523290ADDEA00706CB4 /* FFTextField */,
+				E5408523290ADDEA00706CB4 /* FormModelTextView */,
+				E5FEA79A2A69858500A6B913 /* LineView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -130,7 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				E52B9C382909C134004FD562 /* Constants.swift */,
-				E52B9C422909C4FE004FD562 /* Validatable.swift */,
 				E52B9C442909C7A5004FD562 /* LocalizedString.swift */,
 			);
 			path = Helpers;
@@ -147,8 +147,8 @@
 		E52B9C3B2909C13C004FD562 /* Form */ = {
 			isa = PBXGroup;
 			children = (
-				E5408519290AD64700706CB4 /* FFormView.swift */,
-				E540851A290AD64700706CB4 /* FFormViewModel.swift */,
+				E5408519290AD64700706CB4 /* FormView.swift */,
+				E540851A290AD64700706CB4 /* FormState.swift */,
 			);
 			path = Form;
 			sourceTree = "<group>";
@@ -172,13 +172,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		E5408523290ADDEA00706CB4 /* FFTextField */ = {
+		E5408523290ADDEA00706CB4 /* FormModelTextView */ = {
 			isa = PBXGroup;
 			children = (
-				E52B9C352909C127004FD562 /* FFTextFieldView.swift */,
-				E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */,
+				E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */,
+				E52B9C352909C127004FD562 /* FormModelTextView.swift */,
 			);
-			path = FFTextField;
+			path = FormModelTextView;
 			sourceTree = "<group>";
 		};
 		E5408524290ADDFB00706CB4 /* Prompt */ = {
@@ -208,6 +208,8 @@
 			dependencies = (
 			);
 			name = FlowForms;
+			packageProductDependencies = (
+			);
 			productName = iOss;
 			productReference = 7555FF7B242A565900829871 /* FlowForms.app */;
 			productType = "com.apple.product-type.application";
@@ -218,8 +220,9 @@
 		7555FF73242A565900829871 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = orgName;
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
@@ -227,7 +230,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7555FF76242A565900829871 /* Build configuration list for PBXProject "FlowForms" */;
+			buildConfigurationList = 7555FF76242A565900829871 /* Build configuration list for PBXProject "flowForms" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -236,6 +239,8 @@
 				Base,
 			);
 			mainGroup = 7555FF72242A565900829871;
+			packageReferences = (
+			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -262,7 +267,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		7555FFB5242A651A00829871 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -284,17 +289,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E52B9C362909C127004FD562 /* FFTextFieldView.swift in Sources */,
+				E52B9C362909C127004FD562 /* FormModelTextView.swift in Sources */,
 				E5408522290ADC6A00706CB4 /* Colors.swift in Sources */,
 				E5408518290AD62E00706CB4 /* FlowFormsApp.swift in Sources */,
-				E52B9C412909C424004FD562 /* FFTextFieldViewConfiguration.swift in Sources */,
-				E540851C290AD64700706CB4 /* FFormViewModel.swift in Sources */,
 				E5408526290ADE0800706CB4 /* PromptView.swift in Sources */,
-				E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */,
-				E540851B290AD64700706CB4 /* FFormView.swift in Sources */,
+				E535AD1D291D9562007E0707 /* FormState.swift in Sources */,
+				E540851B290AD64700706CB4 /* FormView.swift in Sources */,
 				E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */,
+				E51B465B2AA0DA2A00265FE4 /* ErrorMessageView.swift in Sources */,
 				E52B9C392909C134004FD562 /* Constants.swift in Sources */,
 				E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */,
+				E5FEA79B2A69858500A6B913 /* LineView.swift in Sources */,
 				E52B9C452909C7A5004FD562 /* LocalizedString.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,6 +429,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlowForms/Preview Content\"";
+				DEVELOPMENT_TEAM = K8RM345779;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = FlowForms/Info.plist;
@@ -449,6 +455,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlowForms/Preview Content\"";
+				DEVELOPMENT_TEAM = K8RM345779;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = FlowForms/Info.plist;
@@ -471,7 +478,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7555FF76242A565900829871 /* Build configuration list for PBXProject "FlowForms" */ = {
+		7555FF76242A565900829871 /* Build configuration list for PBXProject "flowForms" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7555FFA3242A565B00829871 /* Debug */,

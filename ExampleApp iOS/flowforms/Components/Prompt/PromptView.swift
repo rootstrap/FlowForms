@@ -16,7 +16,7 @@ struct PromptView: View {
     var body: some View {
       HStack {
         Text(message)
-          .minimumScaleFactor(0.5)
+          .minimumScaleFactor(UI.ScaleFactor.small)
           .lineLimit(2)
         style.image
           .foregroundColor(style.color)

@@ -5,7 +5,6 @@ import com.rootstrap.flowforms.core.common.StatusCodes.INCOMPLETE
 import com.rootstrap.flowforms.core.common.StatusCodes.INCORRECT
 import com.rootstrap.flowforms.core.common.StatusCodes.IN_PROGRESS
 import com.rootstrap.flowforms.core.common.StatusCodes.UNMODIFIED
-import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_BLUR
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_FOCUS
 import com.rootstrap.flowforms.core.field.FieldDefinition.ValidationType.ON_VALUE_CHANGE
@@ -35,7 +34,7 @@ class FlowField(
     override val onBlurValidations : List<Validation> = emptyList(),
     override val onFocusValidations : List<Validation> = emptyList(),
     private val validationBehavior: FieldValidationBehavior = DefaultFieldValidationBehavior(),
-) : FieldDefinition {
+) : FieldDefinition() {
 
     private val filteredOnValueChangeValidations = onValueChangeValidations
         .filter { it !is CrossFieldValidation }
