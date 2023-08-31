@@ -16,11 +16,8 @@ final class FormState: ObservableObject {
   @Published var uiState: SignUpFormUiState?
   
   init() {
-
     viewModel.observeUiState { state in
       self.uiState = state
     }
-    
   }
-  
 }

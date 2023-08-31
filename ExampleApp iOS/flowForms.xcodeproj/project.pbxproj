@@ -9,10 +9,9 @@
 /* Begin PBXBuildFile section */
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
-		E52B9C362909C127004FD562 /* FFTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C352909C127004FD562 /* FFTextFieldView.swift */; };
+		E51B465B2AA0DA2A00265FE4 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */; };
+		E52B9C362909C127004FD562 /* FormModelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C352909C127004FD562 /* FormModelTextView.swift */; };
 		E52B9C392909C134004FD562 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C382909C134004FD562 /* Constants.swift */; };
-		E52B9C412909C424004FD562 /* FFTextFieldViewConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */; };
-		E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C422909C4FE004FD562 /* Validatable.swift */; };
 		E52B9C452909C7A5004FD562 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C442909C7A5004FD562 /* LocalizedString.swift */; };
 		E52B9C482909C823004FD562 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E52B9C472909C823004FD562 /* Localizable.strings */; };
 		E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B9C4A2909C886004FD562 /* String+extension.swift */; };
@@ -23,7 +22,6 @@
 		E5408522290ADC6A00706CB4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408521290ADC6A00706CB4 /* Colors.swift */; };
 		E5408526290ADE0800706CB4 /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5408525290ADE0800706CB4 /* PromptView.swift */; };
 		E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540852A290B140800706CB4 /* PromptPresenter.swift */; };
-		E5FEA7972A6983CF00A6B913 /* ErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FEA7962A6983CF00A6B913 /* ErrorMessageView.swift */; };
 		E5FEA79B2A69858500A6B913 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FEA79A2A69858500A6B913 /* LineView.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,10 +43,9 @@
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* FlowForms.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowForms.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E52B9C352909C127004FD562 /* FFTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTextFieldView.swift; sourceTree = "<group>"; };
+		E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorMessageView.swift; path = flowforms/Components/FormModelTextView/ErrorMessageView.swift; sourceTree = SOURCE_ROOT; };
+		E52B9C352909C127004FD562 /* FormModelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormModelTextView.swift; sourceTree = "<group>"; };
 		E52B9C382909C134004FD562 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFTextFieldViewConfiguration.swift; sourceTree = "<group>"; };
-		E52B9C422909C4FE004FD562 /* Validatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validatable.swift; sourceTree = "<group>"; };
 		E52B9C442909C7A5004FD562 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
 		E52B9C472909C823004FD562 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E52B9C4A2909C886004FD562 /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
@@ -59,7 +56,6 @@
 		E5408521290ADC6A00706CB4 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = flowforms/Resources/Colors.swift; sourceTree = SOURCE_ROOT; };
 		E5408525290ADE0800706CB4 /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptView.swift; path = flowforms/Components/Prompt/PromptView.swift; sourceTree = SOURCE_ROOT; };
 		E540852A290B140800706CB4 /* PromptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PromptPresenter.swift; path = flowforms/Components/Prompt/PromptPresenter.swift; sourceTree = SOURCE_ROOT; };
-		E5FEA7962A6983CF00A6B913 /* ErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ErrorMessageView.swift; path = flowforms/Components/FFTextField/ErrorMessageView.swift; sourceTree = SOURCE_ROOT; };
 		E5FEA79A2A69858500A6B913 /* LineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LineView.swift; path = flowforms/Components/LineView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -125,7 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				E5408524290ADDFB00706CB4 /* Prompt */,
-				E5408523290ADDEA00706CB4 /* FFTextField */,
+				E5408523290ADDEA00706CB4 /* FormModelTextView */,
 				E5FEA79A2A69858500A6B913 /* LineView.swift */,
 			);
 			path = Components;
@@ -135,7 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				E52B9C382909C134004FD562 /* Constants.swift */,
-				E52B9C422909C4FE004FD562 /* Validatable.swift */,
 				E52B9C442909C7A5004FD562 /* LocalizedString.swift */,
 			);
 			path = Helpers;
@@ -177,14 +172,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		E5408523290ADDEA00706CB4 /* FFTextField */ = {
+		E5408523290ADDEA00706CB4 /* FormModelTextView */ = {
 			isa = PBXGroup;
 			children = (
-				E52B9C352909C127004FD562 /* FFTextFieldView.swift */,
-				E52B9C402909C424004FD562 /* FFTextFieldViewConfiguration.swift */,
-				E5FEA7962A6983CF00A6B913 /* ErrorMessageView.swift */,
+				E51B465A2AA0DA2A00265FE4 /* ErrorMessageView.swift */,
+				E52B9C352909C127004FD562 /* FormModelTextView.swift */,
 			);
-			path = FFTextField;
+			path = FormModelTextView;
 			sourceTree = "<group>";
 		};
 		E5408524290ADDFB00706CB4 /* Prompt */ = {
@@ -295,16 +289,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E52B9C362909C127004FD562 /* FFTextFieldView.swift in Sources */,
+				E52B9C362909C127004FD562 /* FormModelTextView.swift in Sources */,
 				E5408522290ADC6A00706CB4 /* Colors.swift in Sources */,
 				E5408518290AD62E00706CB4 /* FlowFormsApp.swift in Sources */,
-				E52B9C412909C424004FD562 /* FFTextFieldViewConfiguration.swift in Sources */,
 				E5408526290ADE0800706CB4 /* PromptView.swift in Sources */,
-				E52B9C432909C4FE004FD562 /* Validatable.swift in Sources */,
-				E5FEA7972A6983CF00A6B913 /* ErrorMessageView.swift in Sources */,
 				E535AD1D291D9562007E0707 /* FormState.swift in Sources */,
 				E540851B290AD64700706CB4 /* FormView.swift in Sources */,
 				E52B9C4B2909C886004FD562 /* String+extension.swift in Sources */,
+				E51B465B2AA0DA2A00265FE4 /* ErrorMessageView.swift in Sources */,
 				E52B9C392909C134004FD562 /* Constants.swift in Sources */,
 				E540852B290B140800706CB4 /* PromptPresenter.swift in Sources */,
 				E5FEA79B2A69858500A6B913 /* LineView.swift in Sources */,
