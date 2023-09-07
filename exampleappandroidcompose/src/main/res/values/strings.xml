@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Example App Android Compose</string>
     <string name="name">Name</string>
+    <string name="signup">Signup</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>

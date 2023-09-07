@@ -1,9 +1,11 @@
 package com.example.exampleappandroidcompose.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +33,7 @@ fun SignUpScreen(
         onNameChanged = viewModel::onNameChange,
         onPasswordChanged = viewModel::onPasswordChange,
         onPasswordConfirmationChanged = viewModel::onPasswordConfirmChange,
+        onTermsAcceptedChange = viewModel::onAcceptTermsChange,
         onSignupButtonClicked = {}
     )
 }
@@ -42,10 +45,10 @@ fun SignUpScreen(
     onNameChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onPasswordConfirmationChanged: (String) -> Unit,
+    onTermsAcceptedChange: (Boolean) -> Unit,
     onSignupButtonClicked: () -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .background(Color.White)
@@ -80,6 +83,15 @@ fun SignUpScreen(
             errorMessage = uiState.confirmPasswordError,
             isPasswordField = true
         )
+        Button(
+            onClick = onSignupButtonClicked,
+            enabled = uiState.isFormValid,
+            colors = ButtonDefaults.buttonColors(
+                disabledContainerColor = Color.DarkGray
+            )
+        ) {
+            Text(text = stringResource(id = R.string.signup))
+        }
     }
 }
 
@@ -89,11 +101,12 @@ fun SignUpScreenPreview() {
     FlowFormsTheme {
         SignUpScreen(
             SignUpFormUiState(),
-            {},
-            {},
-            {},
-            {},
-            {}
+            onNameChanged = {},
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onPasswordConfirmationChanged = {},
+            onTermsAcceptedChange = {},
+            onSignupButtonClicked = {}
         )
     }
 }
