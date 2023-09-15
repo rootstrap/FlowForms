@@ -2,9 +2,11 @@ package com.example.exampleappandroidcompose.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -83,14 +85,30 @@ fun SignUpScreen(
             errorMessage = uiState.confirmPasswordError,
             isPasswordField = true
         )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = uiState.termsAccepted,
+                onCheckedChange = onTermsAcceptedChange
+            )
+
+            Text(
+                text = stringResource(R.string.confirmation),
+                color = Color.DarkGray
+            )
+        }
+
         Button(
             onClick = onSignupButtonClicked,
             enabled = uiState.isFormValid,
             colors = ButtonDefaults.buttonColors(
-                disabledContainerColor = Color.DarkGray
+                disabledContainerColor = Color.LightGray
             )
         ) {
-            Text(text = stringResource(id = R.string.signup))
+            Text(
+                text = stringResource(id = R.string.signup),
+                color = Color.DarkGray
+            )
         }
     }
 }
