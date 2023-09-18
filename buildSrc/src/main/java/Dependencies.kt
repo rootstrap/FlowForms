@@ -18,6 +18,13 @@ object Dependencies {
     private const val LIFECYCLE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
     private const val GUAVA = "com.google.guava:guava:${Versions.GUAVA}"
 
+    // Compose
+    private const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose:${Versions.ACTIVITY_COMPOSE}"
+    private const val COMPOSE_UI = "androidx.compose.ui:ui"
+    private const val COMPOSE_UI_GRAPHICS = "androidx.compose.ui:ui-graphics"
+    private const val COMPOSE_UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
+    private const val COMPOSE_MATERIAL = "androidx.compose.material3:material3"
+
     // Test libs
     private const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES_TEST}"
     private const val TURBINE = "app.cash.turbine:turbine:${Versions.TURBINE}"
@@ -49,6 +56,17 @@ object Dependencies {
         add(LIFECYCLE_EXTENSIONS)
         add(LIFECYCLE_VIEW_MODEL)
         add(GUAVA)
+    }
+
+    val appComposeLibraries = arrayListOf<String>().apply {
+        add(KOTLIN_STD_LIB)
+        add(CORE_KTX)
+        add(LIFECYCLE_RUNTIME)
+        add(ACTIVITY_COMPOSE)
+        add(COMPOSE_UI)
+        add(COMPOSE_UI_GRAPHICS)
+        add(COMPOSE_UI_PREVIEW)
+        add(COMPOSE_MATERIAL)
     }
 
     val appKaptLibraries = arrayListOf<String>().apply {

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Example App Android Compose</string>
+    <string name="name">Name</string>
+    <string name="signup">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="confirmation">Confirm data</string>
+    <string name="required_field">This field is required</string>
+    <string name="invalid_email">This email is invalid</string>
+    <string name="email_already_exist">This email is already in use</string>
+    <string name="email_is_available">Email is available</string>
+    <string name="min_length">This field should have %1$d characters</string>
+    <string name="password_match">The passwords don\'t match</string>
+    <string name="account_registered">Account registered</string>
+    <string name="review_form">Please review the form</string>
+    <string name="incorrect_form_warning">Form is incorrect but you can try to continue</string>
+</resources>
