@@ -16,6 +16,8 @@ object Versions {
     const val LIFECYCLE_COMMON = "2.5.1"
     const val LIFECYCLE_EXTENSIONS = "2.2.0"
     const val GUAVA = "31.1-jre"
+    const val ACTIVITY_COMPOSE = "1.7.2"
+    const val COMPOSE_BOM = "2022.10.00"
 
     //test
     const val COROUTINES_TEST = "1.6.4"
