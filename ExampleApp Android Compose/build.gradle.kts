@@ -52,7 +52,7 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(Dependencies.appComposeLibraries)
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(platform(Dependencies.COMPOSE_BOM))
+    debugImplementation(Dependencies.COMPOSE_TOOLING)
+    debugImplementation(Dependencies.COMPOSE_MANIFEST)
 }

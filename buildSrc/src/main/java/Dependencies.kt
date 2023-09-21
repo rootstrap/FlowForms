@@ -24,6 +24,9 @@ object Dependencies {
     private const val COMPOSE_UI_GRAPHICS = "androidx.compose.ui:ui-graphics"
     private const val COMPOSE_UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     private const val COMPOSE_MATERIAL = "androidx.compose.material3:material3"
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:${Versions.COMPOSE_BOM}"
+    const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
+    const val COMPOSE_MANIFEST = "androidx.compose.ui:ui-test-manifest"
 
     // Test libs
     private const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES_TEST}"
