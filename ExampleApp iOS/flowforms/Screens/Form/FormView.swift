@@ -41,7 +41,7 @@ struct FormView: View {
         Spacer()
         VStack(spacing: UI.Padding.medium) {
           FormModelTextView(
-            title: LocalizedString.FormView.nameTextfieldTitle,
+            title: "Name",
             value: Binding(
               get: { formState.uiState?.name ?? "" },
               set: { formState.viewModel.onNameChange(value: $0) }
@@ -50,7 +50,7 @@ struct FormView: View {
           )
           HStack {
             FormModelTextView(
-              title: LocalizedString.FormView.emailTextfieldTitle,
+              title: "Email",
               value: Binding(
                 get: { formState.uiState?.email ?? "" },
                 set: { formState.viewModel.onEmailChange(value: $0) }
@@ -92,7 +92,7 @@ struct FormView: View {
         .padding([.leading, .trailing], UI.Padding.large)
         Spacer()
         Button {
-          // Sign up
+          signUp()
         } label: {
           Text(LocalizedString.FormView.signUpTitle)
             .foregroundColor(.black)

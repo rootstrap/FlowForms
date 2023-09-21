@@ -7,7 +7,7 @@ title: FlowForms iOS quickstart
 
 Continuing from the [KMP quickStart](kmp-quickstart)
 
-**2 :** Create an instance of **SignupViewModel** within our **FormState** or class that stores the state of the form:
+**1 :** Create an instance of **SignupViewModel** within our **FormState** or class that stores the state of the form:
 
 <pre><code class="swift">
 import shared
@@ -22,7 +22,7 @@ final class FormState: ObservableObject {
 
 <p class="comment">Since SignupViewModel is located within the common module and it is pure kotlin code we can use it directly in iOS</p>
 
-**2 :** Now, we can declare a **@Published** property of type **SignUpFormUiState** to observe state changes from **SignupViewModel**, which holds the states of all the fields    
+**2 :** Now, we can declare a **@Published** property of type **SignUpFormUiState** to observe state changes from **SignupViewModel**, which holds the states of all the fields
 
 <pre><code class="swift">
 import shared
@@ -72,7 +72,7 @@ struct FormView: View {
             }
             ...
             Button {
-                // Sign up
+                signUp()
             } label: {
                 Text("Sign Up")
                     .foregroundColor(.black)
@@ -82,4 +82,6 @@ struct FormView: View {
 }
 </code></pre>
 
-And that's one of the easiest forms we can create using **FlowForms**, we don't need to care about managing the field's validation triggering nor making any complex logic to enable or disable the continue button.
+And that's one of the easiest forms we can create using **FlowForms**, we don't need to care about managing the field's validation triggering or making any complex logic to enable or disable the signup button.
+
+For more complex use cases and detailed insights into advanced functionalities and showcases of the **FlowForms** library on iOS, you can refer to the [iOS example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20iOS) in the official repository. This comprehensive example provides
