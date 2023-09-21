@@ -20,7 +20,7 @@ final class FormState: ObservableObject {
 }
 </code></pre>
 
-<p class="comment"> SignupViewModel is located within the common module and its pure kotlin code so it can be used by both platforms</p>
+<p class="comment">Since SignupViewModel is located within the common module and it is pure kotlin code we can use it directly in iOS</p>
 
 **2 :** Now, we can declare a **@Published** property of type **SignUpFormUiState** to observe state changes from **SignupViewModel**, which holds the states of all the fields    
 
