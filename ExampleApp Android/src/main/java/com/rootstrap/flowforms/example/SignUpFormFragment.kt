@@ -155,8 +155,8 @@ class SignUpFormFragment : Fragment() {
     private fun onFormStatusChange(status: FormStatus) {
         binding?.apply {
             when (status.code) {
-                CORRECT -> formIncorrectWarningText.visibility = View.GONE
-                else -> formIncorrectWarningText.visibility = View.VISIBLE
+                CORRECT -> continueButton.isEnabled = true
+                else -> continueButton.isEnabled = false
             }
         }
     }
