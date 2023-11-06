@@ -84,4 +84,4 @@ struct FormView: View {
 
 And that's one of the easiest forms we can create using **FlowForms**, we don't need to care about managing the field's validation triggering or making any complex logic to enable or disable the signup button.
 
-For more complex use cases and detailed insights into advanced functionalities and showcases of the **FlowForms** library on iOS, you can refer to the [iOS example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20iOS) in the official repository. This comprehensive example provides
+For more complex use cases and detailed insights into advanced functionalities and showcases of the **FlowForms** library on iOS, you can refer to the [iOS example app](https://github.com/rootstrap/FlowForms/tree/main/ExampleApp%20iOS) in the official repository.
